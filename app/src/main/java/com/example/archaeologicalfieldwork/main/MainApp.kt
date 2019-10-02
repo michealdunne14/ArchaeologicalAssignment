@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork.Main
+package com.example.archaeologicalfieldwork.main
 
 import android.app.Application
 import org.jetbrains.anko.AnkoLogger
