@@ -3,14 +3,15 @@
     package="com.example.archaeologicalfieldwork">
 
     <application
+        android:name=".main.MainApp"
         android:allowBackup="true"
-        android:name=".Main.MainApp"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.AddFortActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.StartActivity" />
@@ -22,4 +23,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

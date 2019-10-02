@@ -1,9 +1,12 @@
 package com.example.archaeologicalfieldwork.activities
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import com.example.archaeologicalfieldwork.Main.MainApp
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.main.MainApp
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,5 +18,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         app = application as MainApp
 
+
+        toolbar.title = title
+        setSupportActionBar(toolbar)
+
+        val layoutManager = LinearLayoutManager(this)
+        mListRecyclerView.layoutManager = layoutManager
+//        mListRecyclerView.adapter = HillFortMemoryStore(app,this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 }
