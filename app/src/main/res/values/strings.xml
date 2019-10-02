@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">ArchaeologicalFieldwork</string>
-    <string name="start.register">Register</string>
-    <string name="start.login">Login</string>
-    <string name="addfort.descrition">Descrition</string>
-    <string name="addfort.add">Add</string>
-    <string name="addfort.description">Description</string>
-    <string name="addfort.name">Name</string>
+    <string name="start_register">Register</string>
+    <string name="start_login">Login</string>
+    <string name="addfort_descrition">Descrition</string>
+    <string name="addfort_add">Add</string>
+    <string name="addfort_description">Description</string>
+    <string name="addfort_name">Name</string>
+    <string name="mainmenu_add">Add</string>
+    <string name="addfort_location">Location</string>
+    <string name="addfort_entertitle">Please Enter a Title</string>
 </resources>

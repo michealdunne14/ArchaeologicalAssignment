@@ -25,56 +25,82 @@
                 android:id="@+id/toolbarAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:titleTextColor="@color/colorPrimary"/>
+                app:titleTextColor="@color/colorPrimary" />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/appBarLayout">
+            android:layout_below="@+id/appBarLayout"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <EditText
-                    android:id="@+id/placemarkTitle"
+
+                <ImageView
+                    android:id="@+id/hillFortImage"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_margin="8dp"
-                    android:hint="@string/addfort.name"
-                    android:inputType="text"
-                    android:maxLength="25"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp"
-                    android:importantForAutofill="no" />
+                    android:layout_height="300dp"
+                    app:srcCompat="@mipmap/ic_launcher" />
 
                 <EditText
-                    android:id="@+id/description"
+                    android:id="@+id/hillFortLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:hint="@string/addfort.description"
+                    android:hint="@string/addfort_location"
+                    android:importantForAutofill="no"
                     android:inputType="text"
                     android:maxLength="25"
                     android:maxLines="1"
                     android:padding="8dp"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp"
-                    android:importantForAutofill="no" />
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/hillFortName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:hint="@string/addfort_name"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/hillFortDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:hint="@string/addfort_description"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/btnAdd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:background="@color/colourRoyalBlue"
+                    android:background="@color/colourBlue"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/addfort.add"
-                    android:textColor="@color/colorPrimary"
+                    android:text="@string/addfort_add"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
