@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ArchaeologicalFieldwork</string>
+    <string name="start.register">Register</string>
+    <string name="start.login">Login</string>
 </resources>
