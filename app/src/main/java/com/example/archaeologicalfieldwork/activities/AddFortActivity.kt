@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.readImageFromPath
 import kotlinx.android.synthetic.main.activity_addfort.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -26,6 +27,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
         btnAdd.setOnClickListener(){
             hillfort.name = hillFortName.text.toString()
             hillfort.description = hillFortDescription.text.toString()
+            hillFortImage.setImageBitmap(readImageFromPath(this,hillfort.image))
             if (hillfort.name.isNotEmpty()){
                 app.hillforts.create(hillfort.copy())
                 info { "add Button Pressed: ${hillfort}" }

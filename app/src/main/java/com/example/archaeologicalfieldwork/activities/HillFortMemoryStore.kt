@@ -9,7 +9,9 @@ class HillFortMemoryStore : HillFortStore, AnkoLogger {
 
     val hillforts = ArrayList<HillFortModel>()
 
+
     override fun findAll(): List<HillFortModel> {
+//        hillforts.add(0,HillFortModel(5,"hello","hello","5",5))
         return hillforts
     }
 
