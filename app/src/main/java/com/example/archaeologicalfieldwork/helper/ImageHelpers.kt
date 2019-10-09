@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork
+package com.example.archaeologicalfieldwork.helper
 
 import android.app.Activity
 import android.content.Context
@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.archaeologicalfieldwork.R
 import java.io.IOException
 
 fun showImagePicker(parent: Activity, id: Int) {
