@@ -1,26 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="500dp">
+
+        <!--        <ImageView-->
+<!--            android:id="@+id/mCardImage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginStart="2dp"-->
+<!--            android:layout_marginTop="71dp"-->
+<!--            android:layout_marginEnd="-2dp"-->
+<!--            android:contentDescription="TODO"-->
+<!--            tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/mCardImageList"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="150dp" />
 
         <TextView
-            android:id="@+id/cardName"
+            android:id="@+id/mCardName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="350dp"
+            android:text="helloworld"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/cardDescription"
+            android:id="@+id/mCardDescription"
+            android:text="helloworld"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardName" />
+            android:layout_below="@id/mCardName" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

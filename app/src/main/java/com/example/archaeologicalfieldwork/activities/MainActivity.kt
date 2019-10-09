@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
@@ -23,12 +24,11 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         setContentView(R.layout.activity_main)
         app = application as MainApp
 
-
         toolbar.title = title
         setSupportActionBar(toolbar)
 
         val layoutManager = LinearLayoutManager(this)
-        mListRecyclerView.layoutManager = layoutManager
+        mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         mListRecyclerView.adapter = HillFortAdapter(app.hillforts.findAll(),this)
     }
 
@@ -50,6 +50,6 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     }
 
     override fun onHillFortClick(hillfort: HillFortModel) {
-        startActivityForResult(intentFor<AddFortActivity>().putExtra("placemark_edit", hillfort).putExtra("editing_Placemark", true), 0)
+        startActivityForResult(intentFor<AddFortActivity>().putExtra("hillfort_edit", hillfort), 0)
     }
 }

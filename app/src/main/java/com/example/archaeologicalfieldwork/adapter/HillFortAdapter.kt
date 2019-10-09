@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import kotlinx.android.synthetic.main.card_list.view.*
 
@@ -38,8 +40,12 @@ class HillFortAdapter constructor(private var hillforts: List<HillFortModel>,
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(hillfort: HillFortModel,listener: HillFortListener) {
-            itemView.cardName.text = hillfort.name
-            itemView.cardDescription.text = hillfort.description
+            itemView.mCardName.text = hillfort.name
+            itemView.mCardDescription.text = hillfort.description
+            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
+            val adapter = ImageAdapter(itemView.context,hillfort.imageStore)
+            viewPager.adapter = adapter
+//            itemView.mCardImage.setImageBitmap(readImageFromPath(itemView.context,hillfort.image))
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
     }
