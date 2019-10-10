@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
+import com.example.archaeologicalfieldwork.helper.readImageFromPath
 
 class ImageAdapter(private val mContext: Context,private val  imageList: ArrayList<String>) : PagerAdapter() {
     override fun isViewFromObject(view: View, obj: Any): Boolean {
@@ -19,7 +20,7 @@ class ImageAdapter(private val mContext: Context,private val  imageList: ArrayLi
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(mContext)
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        imageView.setImageURI(Uri.parse(imageList[position]))
+        imageView.setImageBitmap(readImageFromPath(mContext,imageList[position]))
         container.addView(imageView,0)
         return imageView
     }
