@@ -10,4 +10,5 @@ data class HillFortModel(
     var description: String = "",
     var image: String = "",
     var imageStore: ArrayList<String> = ArrayList(),
+    var visitCheck: Boolean = true,
     var location: Int = 0) : Parcelable

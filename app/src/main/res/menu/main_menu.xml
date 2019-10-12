@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_message"
-            android:icon="@drawable/abc_vector_test"
-            android:title="title"></item>
+            android:id="@+id/mNavHome"
+            android:icon="@mipmap/home_icon"
+            android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_message2"
-            android:icon="@drawable/abc_vector_test"
-            android:title="title"></item>
-        <item
-            android:id="@+id/nav_message1"
-            android:icon="@drawable/abc_vector_test"
-            android:title="title"></item>
+            android:id="@+id/mNavSettings"
+            android:icon="@mipmap/settings_icon"
+            android:title="@string/menu_settings" />
     </group>
-
-    <item
-        android:id="@+id/item_add"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/mainmenu_add"
-        app:showAsAction="always" />
 </menu>
