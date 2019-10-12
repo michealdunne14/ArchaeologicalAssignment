@@ -3,10 +3,12 @@ package com.example.archaeologicalfieldwork.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.ImageAdapter
+import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import kotlinx.android.synthetic.main.card_list.view.*
 
@@ -42,6 +44,27 @@ class HillFortAdapter constructor(private var hillforts: List<HillFortModel>,
         fun bind(hillfort: HillFortModel,listener: HillFortListener) {
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
+
+            itemView.mCardCheckButton.setOnClickListener {
+                var visitedCheck = hillfort.visitCheck
+                if (visitedCheck) {
+                    val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
+                    val interpolator = Bounce(0.2, 20.0)
+                    myAnim.interpolator = interpolator
+                    itemView.mCardCheckButton.startAnimation(myAnim)
+                    itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
+                    hillfort.visitCheck = false
+
+                }else{
+                    val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
+                    val interpolator = Bounce(0.2, 20.0)
+                    myAnim.interpolator = interpolator
+                    itemView.mCardCheckButton.startAnimation(myAnim)
+                    itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
+                    hillfort.visitCheck = true
+                }
+            }
+
             val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
             val adapter = ImageAdapter(itemView.context,hillfort.imageStore)
             viewPager.adapter = adapter

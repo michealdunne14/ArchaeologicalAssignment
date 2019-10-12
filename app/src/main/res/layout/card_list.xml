@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -9,19 +10,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="500dp">
-
-        <!--        <ImageView-->
-<!--            android:id="@+id/mCardImage"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_marginStart="2dp"-->
-<!--            android:layout_marginTop="71dp"-->
-<!--            android:layout_marginEnd="-2dp"-->
-<!--            android:contentDescription="TODO"-->
-<!--            tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/mCardImageList"
@@ -47,6 +35,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mCardName" />
+
+        <ImageButton
+            android:id="@+id/mCardCheckButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginEnd="355dp"
+            android:layout_marginRight="355dp"
+            android:layout_marginBottom="3dp"
+            android:background="@null"
+            app:srcCompat="@mipmap/check_icon_clear" />
 
     </RelativeLayout>
 

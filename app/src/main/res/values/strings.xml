@@ -14,4 +14,29 @@
     <string name="save_hillfort">Save Hillfort</string>
     <string name="add_images_to_post">Add Images to Post</string>
     <string name="welcome_to_hillforts">Welcome to Hillforts</string>
+    <string name="email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login">Login</string>
+    <string name="login_return">Return</string>
+    <string name="register_name">Name</string>
+    <string name="register_password">Password</string>
+    <string name="register_button">Register</string>
+    <string name="title_activity_navigationdrawertest">Navigationdrawertest</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
