@@ -5,27 +5,36 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.example.archaeologicalfieldwork.MapsActivity
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Location
 import kotlinx.android.synthetic.main.activity_addfort.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import java.util.*
 
 class AddFortActivity : AppCompatActivity(),AnkoLogger {
 
     var hillfort = HillFortModel()
+    var location = Location(52.245696, -7.139102, 15f)
     lateinit var app : MainApp
 
     var editinghillfort = false
     private val imageList = ArrayList<String>()
 
     val IMAGE_REQUEST = 1
+    val LOCATION_REQUEST = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,22 +50,35 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
             mHillFortName.setText(hillfort.name)
             mHillFortDescription.setText(hillfort.description)
+            mVisitedCheckbox.isChecked = hillfort.visitCheck
+            mHillFortLocationText.text = hillfort.location.toString()
 
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
             val adapter = ImageAdapter(this,hillfort.imageStore)
             viewPager.adapter = adapter
-//            mHillFortImage.setImageBitmap(readImageFromPath(this,hillfort.image))
             editinghillfort = true
             mBtnAdd.text = getString(R.string.save_hillfort)
+        }
+
+        mVisitedCheckbox.setOnClickListener{
+            hillfort.visitCheck = mVisitedCheckbox.isChecked
+        }
+
+        mMap.setOnClickListener {
+            startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
         }
 
         mBtnAdd.setOnClickListener(){
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
+            hillfort.location = location
+
+
             for (images in imageList) {
                 hillfort.imageStore.add(images)
             }
-            if (hillfort.name.isNotEmpty()){
+
+            if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
                 if(editinghillfort){
                     app.hillforts.update(hillfort.copy())
                 }else{
@@ -66,7 +88,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
                 setResult(Activity.RESULT_OK)
                 finish()
             } else {
-                toast(getString(R.string.addfort_entertitle))
+                toast(getString(R.string.addfort_entertitleandimage))
             }
         }
 
@@ -101,7 +123,12 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
                     val adapter = ImageAdapter(this,imageList)
                     viewPager.adapter = adapter
                 }
+            }            LOCATION_REQUEST -> {
+            if (data != null) {
+                location = data.extras?.getParcelable<Location>("location")!!
+                mHillFortLocationText.text = location.toString()
             }
+        }
         }
     }
 }

@@ -54,25 +54,17 @@
                     android:layout_height="50dp"
                     android:text="@string/add_images_to_post"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
-<!--                <ImageView-->
-<!--                    android:id="@+id/mHillFortImage"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="300dp"-->
-<!--                    app:srcCompat="@mipmap/ic_launcher" />-->
 
-                <EditText
-                    android:id="@+id/mHillFortLocation"
+                <TextView
+                    android:id="@+id/mHillFortLocationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/mMap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:hint="@string/addfort_location"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    android:maxLength="25"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp" />
+                    android:text="@string/addfort_location" />
 
                 <EditText
                     android:id="@+id/mHillFortName"
@@ -102,6 +94,12 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp" />
 
+                <CheckBox
+                    android:id="@+id/mVisitedCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addford_visited" />
+
                 <Button
                     android:id="@+id/mBtnAdd"
                     android:layout_width="match_parent"
@@ -113,6 +111,11 @@
                     android:text="@string/addfort_add"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mNotesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>
