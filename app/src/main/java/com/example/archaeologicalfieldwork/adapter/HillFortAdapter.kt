@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.animation.Bounce
+import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import kotlinx.android.synthetic.main.card_list.view.*
 
@@ -16,8 +17,11 @@ interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
 }
 
-class HillFortAdapter constructor(private var hillforts: List<HillFortModel>,
-                                  private val listener:HillFortListener)
+class HillFortAdapter(
+    private var hillforts: List<HillFortModel>,
+    private val listener: HillFortListener,
+    private val app: MainApp
+)
                                   : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
 
@@ -35,25 +39,40 @@ class HillFortAdapter constructor(private var hillforts: List<HillFortModel>,
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener)
+        holder.bind(hillfort,listener,app)
     }
 
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(hillfort: HillFortModel,listener: HillFortListener) {
+        fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp) {
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
+            val location = "Latitude " + hillfort.location.lat +
+                    "\nLongitude" + hillfort.location.lng
+            itemView.mCardLocation.text = location
+            itemView.mCardSendButton.setOnClickListener {
+                hillfort.note.add(itemView.mCardNote.text.toString())
+                app.hillforts.update(hillfort)
+            }
+
+
+            var visitedCheck = hillfort.visitCheck
+
+            if (visitedCheck){
+                itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
+            }else{
+                itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
+            }
 
             itemView.mCardCheckButton.setOnClickListener {
-                var visitedCheck = hillfort.visitCheck
+                visitedCheck = !visitedCheck
                 if (visitedCheck) {
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
                     myAnim.interpolator = interpolator
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
-                    hillfort.visitCheck = false
 
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
@@ -61,7 +80,6 @@ class HillFortAdapter constructor(private var hillforts: List<HillFortModel>,
                     myAnim.interpolator = interpolator
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
-                    hillfort.visitCheck = true
                 }
             }
 

@@ -8,7 +8,7 @@
     <string name="addfort_name">Name</string>
     <string name="mainmenu_add">Add</string>
     <string name="addfort_location">Location</string>
-    <string name="addfort_entertitle">Please Enter a Title</string>
+    <string name="addfort_entertitleandimage">Please Enter a Title and an Image</string>
     <string name="select_image">Please Enter a Title</string>
     <string name="addfort_menu_cancel">Cancel</string>
     <string name="save_hillfort">Save Hillfort</string>
@@ -37,6 +37,14 @@
     <string name="menu_send">Send</string>
     <string name="menu_settings">Settings</string>
 
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="addford_visited">Visited</string>
+    <string name="settings_password">Password</string>
+    <string name="settings_name">Name</string>
+    <string name="settings_logout">Logout</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

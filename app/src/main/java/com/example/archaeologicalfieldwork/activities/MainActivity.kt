@@ -1,9 +1,12 @@
 package com.example.archaeologicalfieldwork.activities
 
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -25,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity(),HillFortListener {
 
@@ -42,9 +46,17 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
 
         toolbar.title = title
+        toolbar.setNavigationOnClickListener {
+            if (mMainDrawerLayout.isDrawerOpen(GravityCompat.START)){
+                mMainDrawerLayout.closeDrawer(GravityCompat.START)
+            }else{
+                mMainDrawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
         setSupportActionBar(toolbar)
 
         val navController = findNavController(R.id.host_fragment)
+
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -52,23 +64,36 @@ class MainActivity : AppCompatActivity(),HillFortListener {
             ),mMainDrawerLayout
         )
 
+
+
         setupActionBarWithNavController(navController,appBarConfiguration)
         nav_view.setupWithNavController(navController)
+
+
+
+//        nav_view.setNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.mNavLogout -> {
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
 
     }
 
 //    override fun onStart() {
-////        val users = app.users.findAll()
-////        if(users.isNotEmpty()) {
-////            for (user in users) {
-////                if (user.email.isEmpty() && user.password.isEmpty()) {
-////                    startActivity(Intent(this, StartActivity::class.java))
-////                }
-////            }
-////        }else{
-////            startActivity(Intent(this, StartActivity::class.java))
-////        }
+//        val users = app.users.findAll()
+//        if(users.isNotEmpty()) {
+//            for (user in users) {
+//                if (user.email.isEmpty() && user.password.isEmpty()) {
+//                    startActivity(Intent(this, StartActivity::class.java))
+//                }
+//            }
+//        }else{
+//            startActivity(Intent(this, StartActivity::class.java))
+//        }
 //        super.onStart()
 //    }
 
@@ -78,7 +103,7 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         }
         return super.onOptionsItemSelected(item)
     }
-
+    
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
         menuInflater.inflate(R.menu.add_main_menu,menu)

@@ -1,6 +1,5 @@
 package com.example.archaeologicalfieldwork.activities
 
-import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.UserStore
 import org.jetbrains.anko.AnkoLogger
@@ -19,7 +18,9 @@ class UserMemoryStore : UserStore, AnkoLogger {
 
     }
 
-
+    fun findOne(user: UserModel): UserModel {
+        return user
+    }
 
     override fun findAll(): List<UserModel> {
         return users

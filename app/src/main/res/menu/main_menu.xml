@@ -6,10 +6,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/mNavHome"
-            android:icon="@mipmap/home_icon"
+            android:icon="@drawable/ic_launcher_background"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/mNavSettings"
+            android:icon="@mipmap/settings_icon"
+            android:title="@string/menu_settings" />
+        <item
+            android:id="@+id/mNavLogout"
             android:icon="@mipmap/settings_icon"
             android:title="@string/menu_settings" />
     </group>
