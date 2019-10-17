@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     lateinit var app : MainApp
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +47,16 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
 
         toolbar.title = title
-        toolbar.setNavigationOnClickListener {
+        setSupportActionBar(toolbar)
+
+        actionBarDrawerToggle = ActionBarDrawerToggle(this,mMainDrawerLayout,R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        actionBarDrawerToggle.setToolbarNavigationClickListener {
             if (mMainDrawerLayout.isDrawerOpen(GravityCompat.START)){
                 mMainDrawerLayout.closeDrawer(GravityCompat.START)
             }else{
                 mMainDrawerLayout.openDrawer(GravityCompat.START)
             }
         }
-        setSupportActionBar(toolbar)
 
         val navController = findNavController(R.id.host_fragment)
 
@@ -68,18 +71,6 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
         setupActionBarWithNavController(navController,appBarConfiguration)
         nav_view.setupWithNavController(navController)
-
-
-
-//        nav_view.setNavigationItemSelectedListener {
-//            when (it.itemId) {
-//                R.id.mNavLogout -> {
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
-
 
     }
 
@@ -105,7 +96,7 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     }
     
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu,menu)
+//        menuInflater.inflate(R.menu.main_menu,menu)
         menuInflater.inflate(R.menu.add_main_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }

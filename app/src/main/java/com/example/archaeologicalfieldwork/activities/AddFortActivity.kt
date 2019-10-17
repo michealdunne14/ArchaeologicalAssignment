@@ -5,30 +5,32 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.MapsActivity
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_addfort.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import java.util.*
 
-class AddFortActivity : AppCompatActivity(),AnkoLogger {
+class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
     var hillfort = HillFortModel()
     var location = Location(52.245696, -7.139102, 15f)
     lateinit var app : MainApp
+    private lateinit var mMapGoogle: GoogleMap
 
     var editinghillfort = false
     private val imageList = ArrayList<String>()
@@ -58,20 +60,28 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
             viewPager.adapter = adapter
             editinghillfort = true
             mBtnAdd.text = getString(R.string.save_hillfort)
+
         }
 
-        mVisitedCheckbox.setOnClickListener{
-            hillfort.visitCheck = mVisitedCheckbox.isChecked
-        }
-
-        mMap.setOnClickListener {
+        mMapButton.setOnClickListener {
             startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
         }
+
+        val layoutManager = LinearLayoutManager(this)
+
+        mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+        mNotesRecyclerView.adapter = NotesAdapter(hillfort.note)
+
+        val mMap = (supportFragmentManager
+            .findFragmentById(R.id.mMapFragment) as SupportMapFragment)
+        mMap.getMapAsync(this)
+
 
         mBtnAdd.setOnClickListener(){
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.location = location
+            hillfort.visitCheck = mVisitedCheckbox.isChecked
 
 
             for (images in imageList) {
@@ -111,6 +121,28 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMapGoogle = googleMap
+
+        if(hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0){
+            val loc = LatLng(hillfort.location.lat, hillfort.location.lng)
+            val options = MarkerOptions()
+                .title("HillForts")
+                .snippet("GPS : " + loc.toString())
+                .position(loc)
+            mMapGoogle.addMarker(options)
+            mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, hillfort.location.zoom))
+        }else if (location.lat != 0.0 && location.lng != 0.0) {
+            val loc = LatLng(location.lat, location.lng)
+            val options = MarkerOptions()
+                .title("HillForts")
+                .snippet("GPS : " + loc.toString())
+                .position(loc)
+            mMapGoogle.addMarker(options)
+            mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
@@ -130,5 +162,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger {
             }
         }
         }
+        val mMap = (supportFragmentManager
+            .findFragmentById(R.id.mMapFragment) as SupportMapFragment)
+        mMap.getMapAsync(this)
     }
 }

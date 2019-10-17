@@ -60,8 +60,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <fragment
+                    android:id="@+id/mMapFragment"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"/>
+
                 <Button
-                    android:id="@+id/mMap"
+                    android:id="@+id/mMapButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/addfort_location" />

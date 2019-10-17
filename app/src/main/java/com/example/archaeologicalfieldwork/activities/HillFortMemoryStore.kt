@@ -14,6 +14,7 @@ class HillFortMemoryStore : HillFortStore, AnkoLogger {
         return hillforts
     }
 
+
     override fun create(hillfort: HillFortModel) {
         hillforts.add(hillfort)
         logAll()

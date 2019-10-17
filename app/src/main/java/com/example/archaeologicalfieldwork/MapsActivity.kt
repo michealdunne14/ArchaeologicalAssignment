@@ -34,7 +34,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerD
         val loc = LatLng(location.lat, location.lng)
         mMap.setOnMarkerDragListener(this)
         val options = MarkerOptions()
-            .title("Placemark")
+            .title("HillForts")
             .snippet("GPS : " + loc.toString())
             .draggable(true)
             .position(loc)
