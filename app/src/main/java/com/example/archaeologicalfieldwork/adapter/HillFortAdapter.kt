@@ -11,6 +11,7 @@ import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.card_list.view.*
 
 interface HillFortListener {
@@ -48,16 +49,17 @@ class HillFortAdapter(
         fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp) {
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
+
+            var visitedCheck = hillfort.visitCheck
+
             val location = "Latitude " + hillfort.location.lat +
                     "\nLongitude" + hillfort.location.lng
             itemView.mCardLocation.text = location
             itemView.mCardSendButton.setOnClickListener {
                 hillfort.note.add(itemView.mCardNote.text.toString())
                 app.hillforts.update(hillfort)
+                itemView.mCardNote.text.clear()
             }
-
-
-            var visitedCheck = hillfort.visitCheck
 
             if (visitedCheck){
                 itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
@@ -86,7 +88,6 @@ class HillFortAdapter(
             val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
             val adapter = ImageAdapter(itemView.context,hillfort.imageStore)
             viewPager.adapter = adapter
-//            itemView.mCardImage.setImageBitmap(readImageFromPath(itemView.context,hillfort.image))
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
     }
