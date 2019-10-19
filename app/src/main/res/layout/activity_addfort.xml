@@ -48,12 +48,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
 
-                <Button
-                    android:id="@+id/mAddImage"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="@string/add_images_to_post"
-                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                    android:layout_height="70dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <Button
+                        android:id="@+id/mAddImage"
+                        android:layout_width="195dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bluebutton"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/add_images_to_post"
+                        android:textColor="@color/colorwhite"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/mMapButton"
+                        app:layout_constraintHorizontal_bias="0.086"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                    <Button
+                        android:id="@+id/mMapButton"
+                        android:layout_width="195dp"
+                        android:layout_height="49dp"
+                        android:background="@drawable/bluebutton"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/addfort_location"
+                        android:textColor="@color/colorwhite"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <TextView
                     android:id="@+id/mHillFortLocationText"
@@ -64,13 +98,16 @@
                     android:id="@+id/mMapFragment"
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"/>
+                    android:layout_height="150dp" />
 
-                <Button
-                    android:id="@+id/mMapButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/addfort_location" />
+<!--                <Button-->
+<!--                    android:id="@+id/button1"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="53dp"-->
+<!--                    android:background="@drawable/bluebutton"-->
+<!--                    android:text="Add money"-->
+<!--                    android:textColor="#FFFFFFFF"-->
+<!--                    android:textSize="18sp" />-->
 
                 <EditText
                     android:id="@+id/mHillFortName"
@@ -111,12 +148,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:background="@color/colourBlue"
+                    android:background="@drawable/bluebutton"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/addfort_add"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFFFF"
+                    android:text="@string/addfort_add" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/mNotesRecyclerView"

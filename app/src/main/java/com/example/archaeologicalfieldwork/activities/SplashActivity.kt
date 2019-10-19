@@ -1,10 +1,9 @@
-package com.example.archaeologicalfieldwork
+package com.example.archaeologicalfieldwork.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import com.example.archaeologicalfieldwork.activities.MainActivity
+import com.example.archaeologicalfieldwork.R
 
 class SplashActivity : AppCompatActivity() {
 

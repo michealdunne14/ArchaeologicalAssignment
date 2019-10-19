@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundcolor"
     tools:context=".activities.RegisterActivity">
 
     <EditText
@@ -44,21 +45,27 @@
 
     <Button
         android:id="@+id/mRegisterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="50dp"
         android:text="@string/register_button"
         app:layout_constraintBottom_toTopOf="@+id/mRegisterReturnButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.513"
+        android:background="@drawable/bluebutton"
+        android:backgroundTint="@color/colourBlue"
+        android:textColor="@color/colorwhite"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/mRegisterReturnButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/redbutton"
         android:text="@string/login_return"
+        android:textColor="@color/colorwhite"
+        android:backgroundTint="@color/color_red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.513"

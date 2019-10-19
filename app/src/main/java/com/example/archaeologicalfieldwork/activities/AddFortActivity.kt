@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.example.archaeologicalfieldwork.MapsActivity
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp

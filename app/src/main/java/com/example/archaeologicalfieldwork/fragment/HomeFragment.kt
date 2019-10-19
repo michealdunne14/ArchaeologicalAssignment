@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork
+package com.example.archaeologicalfieldwork.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.AddFortActivity
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
