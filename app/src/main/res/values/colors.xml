@@ -6,4 +6,6 @@
     <color name="colourBabyBlue">#89cff0</color>
     <color name="colourBlue">#0d6fcd</color>
     <color name="white">#FFFFFF</color>
+    <color name="colorwhite">#FFFFFFFF</color>
+    <color name="color_red">#dc1949</color>
 </resources>

@@ -1,9 +1,10 @@
-package com.example.archaeologicalfieldwork
+package com.example.archaeologicalfieldwork.activities
 
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.models.Location
 
 import com.google.android.gms.maps.CameraUpdateFactory

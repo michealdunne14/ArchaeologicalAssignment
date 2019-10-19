@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,8 +37,6 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     lateinit var app : MainApp
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,15 +47,6 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
         toolbar.title = title
         setSupportActionBar(toolbar)
-
-        actionBarDrawerToggle = ActionBarDrawerToggle(this,mMainDrawerLayout,R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        actionBarDrawerToggle.setToolbarNavigationClickListener {
-            if (mMainDrawerLayout.isDrawerOpen(GravityCompat.START)){
-                mMainDrawerLayout.closeDrawer(GravityCompat.START)
-            }else{
-                mMainDrawerLayout.openDrawer(GravityCompat.START)
-            }
-        }
 
         val navController = findNavController(R.id.host_fragment)
 
@@ -74,19 +64,19 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
     }
 
-//    override fun onStart() {
-//        val users = app.users.findAll()
-//        if(users.isNotEmpty()) {
-//            for (user in users) {
-//                if (user.email.isEmpty() && user.password.isEmpty()) {
-//                    startActivity(Intent(this, StartActivity::class.java))
-//                }
-//            }
-//        }else{
-//            startActivity(Intent(this, StartActivity::class.java))
-//        }
-//        super.onStart()
-//    }
+    override fun onStart() {
+        val users = app.users.findAll()
+        if(users.isNotEmpty()) {
+            for (user in users) {
+                if (user.email.isEmpty() && user.password.isEmpty()) {
+                    startActivity(Intent(this, StartActivity::class.java))
+                }
+            }
+        }else{
+            startActivity(Intent(this, StartActivity::class.java))
+        }
+        super.onStart()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -108,5 +98,10 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
     override fun onHillFortClick(hillfort: HillFortModel) {
         startActivityForResult(intentFor<AddFortActivity>().putExtra("hillfort_edit", hillfort), 0)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.host_fragment)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
