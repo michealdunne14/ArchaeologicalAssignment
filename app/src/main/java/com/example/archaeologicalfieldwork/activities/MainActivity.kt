@@ -1,22 +1,16 @@
 package com.example.archaeologicalfieldwork.activities
 
-import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
@@ -24,12 +18,9 @@ import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.card_list.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity(),HillFortListener {
 
@@ -64,19 +55,19 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
     }
 
-    override fun onStart() {
-        val users = app.users.findAll()
-        if(users.isNotEmpty()) {
-            for (user in users) {
-                if (user.email.isEmpty() && user.password.isEmpty()) {
-                    startActivity(Intent(this, StartActivity::class.java))
-                }
-            }
-        }else{
-            startActivity(Intent(this, StartActivity::class.java))
-        }
-        super.onStart()
-    }
+//    override fun onStart() {
+//        val users = app.users.findAll()
+//        if(users.isNotEmpty()) {
+//            for (user in users) {
+//                if (user.email.isEmpty() && user.password.isEmpty()) {
+//                    startActivity(Intent(this, StartActivity::class.java))
+//                }
+//            }
+//        }else{
+//            startActivity(Intent(this, StartActivity::class.java))
+//        }
+//        super.onStart()
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {

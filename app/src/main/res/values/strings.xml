@@ -48,4 +48,6 @@
     <string name="settings_logout">Logout</string>
     <string name="title_activity_maps">Map</string>
     <string name="mainmenu_logout">Logout</string>
+    <string name="remove_image">Remove Image</string>
+    <string name="remove">Remove</string>
 </resources>

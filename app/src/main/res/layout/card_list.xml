@@ -34,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mCardName"
+            android:textSize="20sp"
             android:text="helloworld" />
 
         <TextView
@@ -42,8 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/mCardDescription"
             android:layout_marginTop="3dp"
-            android:text="TextView"
-            android:textSize="20sp" />
+            android:text="TextView" />
 
         <EditText
             android:id="@+id/mCardNote"

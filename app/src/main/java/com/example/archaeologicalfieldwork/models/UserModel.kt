@@ -8,4 +8,5 @@ import kotlinx.android.parcel.Parcelize
         var id: Long = 0,
         var name: String = "",
         var password: String = "",
+        var hillforts: HillFortModel = HillFortModel(),
         var email: String = "") : Parcelable

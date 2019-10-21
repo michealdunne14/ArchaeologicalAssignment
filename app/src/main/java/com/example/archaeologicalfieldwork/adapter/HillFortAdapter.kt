@@ -75,13 +75,16 @@ class HillFortAdapter(
                     myAnim.interpolator = interpolator
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
-
+                    hillfort.visitCheck = true
+                    app.hillforts.update(hillfort)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
                     myAnim.interpolator = interpolator
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
+                    hillfort.visitCheck = false
+                    app.hillforts.update(hillfort)
                 }
             }
 

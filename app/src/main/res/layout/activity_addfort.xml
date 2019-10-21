@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".activities.AddFortActivity">
 
     <RelativeLayout
@@ -65,7 +65,7 @@
                         android:textColor="@color/colorwhite"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/mMapButton"
+                        app:layout_constraintEnd_toStartOf="@+id/mHillFortRemoveImage"
                         app:layout_constraintHorizontal_bias="0.086"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -73,13 +73,13 @@
                         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
                     <Button
-                        android:id="@+id/mMapButton"
+                        android:id="@+id/mHillFortRemoveImage"
                         android:layout_width="195dp"
-                        android:layout_height="49dp"
+                        android:layout_height="50dp"
                         android:background="@drawable/bluebutton"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
-                        android:text="@string/addfort_location"
+                        android:text="@string/remove_image"
                         android:textColor="@color/colorwhite"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,13 +92,25 @@
                 <TextView
                     android:id="@+id/mHillFortLocationText"
                     android:layout_width="match_parent"
+                    android:textStyle="bold"
                     android:layout_height="wrap_content" />
+
 
                 <fragment
                     android:id="@+id/mMapFragment"
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp" />
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <Button
+                    android:id="@+id/mMapButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bluebutton"
+                    android:text="@string/addfort_location"
+                    android:textColor="@color/colorwhite"
+                    android:textSize="14sp" />
 
 <!--                <Button-->
 <!--                    android:id="@+id/button1"-->
@@ -154,6 +166,19 @@
                     android:textSize="18sp"
                     android:textColor="#FFFFFFFF"
                     android:text="@string/addfort_add" />
+
+                <Button
+                    android:id="@+id/mBtnDelete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/redbutton"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFFFF"
+                    android:visibility="invisible"
+                    android:text="@string/remove" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/mNotesRecyclerView"
