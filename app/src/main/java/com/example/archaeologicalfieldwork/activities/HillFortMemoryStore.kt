@@ -20,12 +20,20 @@ class HillFortMemoryStore : HillFortStore, AnkoLogger {
         logAll()
     }
 
+    override fun delete(hillfort: HillFortModel) {
+        hillforts.remove(hillfort)
+        logAll()
+    }
+
     override fun update(hillfort: HillFortModel) {
-        var foundHillFort: HillFortModel? = hillforts.find { hill -> hill.id == hillfort.id }
+        val foundHillFort: HillFortModel? = hillforts.find { hill -> hill.id == hillfort.id }
         if (foundHillFort != null){
             foundHillFort.name = hillfort.name
             foundHillFort.description = hillfort.description
-            foundHillFort.image = hillfort.image
+            foundHillFort.imageStore = hillfort.imageStore
+            foundHillFort.note = hillfort.note
+            foundHillFort.location = hillfort.location
+            foundHillFort.visitCheck = hillfort.visitCheck
             logAll()
         }
     }

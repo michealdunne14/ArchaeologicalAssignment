@@ -13,13 +13,9 @@ import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.intentFor
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class HomeFragment : Fragment(),HillFortListener {
     override fun onHillFortClick(hillfort: HillFortModel) {
@@ -39,8 +35,17 @@ class HomeFragment : Fragment(),HillFortListener {
         app = activity?.application as MainApp
 
         view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        view.mListRecyclerView.adapter = HillFortAdapter(app.hillforts.findAll(),this,app)
+        loadHillforts(view)
         return view
+    }
+
+    fun loadHillforts(view: View) {
+        showHillforts(app.hillforts.findAll(),view)
+    }
+
+    fun showHillforts (hillforts: List<HillFortModel>,view: View) {
+        view.mListRecyclerView.adapter = HillFortAdapter(hillforts, this,app)
+        view.mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
 }

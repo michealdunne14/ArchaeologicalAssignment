@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,6 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
     private lateinit var mMapGoogle: GoogleMap
 
     var editinghillfort = false
-    private val imageList = ArrayList<String>()
 
     val IMAGE_REQUEST = 1
     val LOCATION_REQUEST = 2
@@ -47,7 +47,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
         info("Add Hill Fort Started..")
 
-        if(intent.hasExtra("hillfort_edit")){
+        if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
             mHillFortName.setText(hillfort.name)
             mHillFortDescription.setText(hillfort.description)
@@ -59,7 +59,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             viewPager.adapter = adapter
             editinghillfort = true
             mBtnAdd.text = getString(R.string.save_hillfort)
-
+            mBtnDelete.visibility = View.VISIBLE
         }
 
         mMapButton.setOnClickListener {
@@ -75,17 +75,16 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             .findFragmentById(R.id.mMapFragment) as SupportMapFragment)
         mMap.getMapAsync(this)
 
+        mBtnDelete.setOnClickListener {
+            app.hillforts.delete(hillfort.copy())
+            startActivity(Intent(baseContext,MainActivity::class.java))
+        }
 
-        mBtnAdd.setOnClickListener(){
+        mBtnAdd.setOnClickListener{
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.location = location
             hillfort.visitCheck = mVisitedCheckbox.isChecked
-
-
-            for (images in imageList) {
-                hillfort.imageStore.add(images)
-            }
 
             if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
                 if(editinghillfort){
@@ -99,6 +98,13 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             } else {
                 toast(getString(R.string.addfort_entertitleandimage))
             }
+        }
+
+        mHillFortRemoveImage.setOnClickListener {
+            hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
+            val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
+            val adapter = ImageAdapter(this,hillfort.imageStore)
+            viewPager.adapter = adapter
         }
 
         mAddImage.setOnClickListener{
@@ -148,10 +154,9 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             IMAGE_REQUEST -> {
                 if (data != null){
                     hillfort.image = data.data.toString()
-//                    mHillFortImage.setImageBitmap(readImage(this,resultCode,data))
-                    imageList.add(hillfort.image)
+                    hillfort.imageStore.add(hillfort.image)
                     val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-                    val adapter = ImageAdapter(this,imageList)
+                    val adapter = ImageAdapter(this,hillfort.imageStore)
                     viewPager.adapter = adapter
                 }
             }            LOCATION_REQUEST -> {

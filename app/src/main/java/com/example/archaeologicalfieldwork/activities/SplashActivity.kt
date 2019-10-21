@@ -17,8 +17,7 @@ class SplashActivity : AppCompatActivity() {
                 try {
                     sleep(3000)
 
-                    val intent = Intent(baseContext,MainActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(baseContext,MainActivity::class.java))
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
