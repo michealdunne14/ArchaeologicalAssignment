@@ -21,8 +21,8 @@ class LoginActivity : AppCompatActivity() {
 
             for (i in users){
                 if (i.email == mLoginEmail.text.toString() && i.password == mLoginPassword.text.toString()){
+                    app.user = app.users.findUser(i.id)!!
                     startActivity(Intent(this, MainActivity::class.java))
-//                    app.users.findOne(i)
                     finish()
                 }
             }

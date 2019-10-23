@@ -25,6 +25,7 @@ class RegisterActivity : AppCompatActivity() {
             user.password = mRegisterPassword.text.toString()
             if (user.name.isNotEmpty() && user.email.isNotEmpty() && user.password.isNotEmpty()){
                 app.users.create(user.copy())
+                app.user = app.users.findUserByEmail(user.email)!!
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }

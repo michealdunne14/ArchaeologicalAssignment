@@ -22,48 +22,48 @@ fun generateRandomId(): Long{
 
 class HillfortJsonStore(val context: Context) : HillFortStore,AnkoLogger {
 
-    var hillforts = mutableListOf<HillFortModel>()
-
-    init {
-        if (exists(context, JSON_FILE)){
-            deserialize()
-        }
-    }
-
-    override fun findAll(): List<HillFortModel> {
-        return hillforts
-    }
-
-    override fun create(hillfort: HillFortModel) {
-        hillfort.id = generateRandomId()
-        hillforts.add(hillfort)
-        serialize()
-    }
-
-    override fun update(hillfort: HillFortModel) {
-        val foundHillFort: HillFortModel? = hillforts.find { hill -> hill.id == hillfort.id }
-        if (foundHillFort != null){
-            foundHillFort.name = hillfort.name
-            foundHillFort.description = hillfort.description
-            foundHillFort.imageStore = hillfort.imageStore
-            foundHillFort.note = hillfort.note
-            foundHillFort.location = hillfort.location
-            foundHillFort.visitCheck = hillfort.visitCheck
-        }
-    }
-
-    override fun delete(hillfort: HillFortModel) {
-        hillforts.remove(hillfort)
-        serialize()
-    }
-
-    private fun serialize(){
-        val jsonString = gsonBuilder.toJson(hillforts, listType)
-        write(context, JSON_FILE,jsonString)
-    }
-
-    private fun deserialize(){
-        val jsonString = read(context, JSON_FILE)
-        hillforts = Gson().fromJson(jsonString, listType)
-    }
+//    var hillforts = mutableListOf<HillFortModel>()
+//
+//    init {
+//        if (exists(context, JSON_FILE)){
+//            deserialize()
+//        }
+//    }
+//
+//    override fun findAll(): List<HillFortModel> {
+//        return hillforts
+//    }
+//
+//    override fun create(hillfort: HillFortModel) {
+//        hillfort.id = generateRandomId()
+//        hillforts.add(hillfort)
+//        serialize()
+//    }
+//
+//    override fun updateHillforts(hillfort: HillFortModel) {
+//        val foundHillFort: HillFortModel? = hillforts.find { hill -> hill.id == hillfort.id }
+//        if (foundHillFort != null){
+//            foundHillFort.name = hillfort.name
+//            foundHillFort.description = hillfort.description
+//            foundHillFort.imageStore = hillfort.imageStore
+//            foundHillFort.note = hillfort.note
+//            foundHillFort.location = hillfort.location
+//            foundHillFort.visitCheck = hillfort.visitCheck
+//        }
+//    }
+//
+//    override fun deleteHillforts(hillfort: HillFortModel) {
+//        hillforts.remove(hillfort)
+//        serialize()
+//    }
+//
+//    private fun serialize(){
+//        val jsonString = gsonBuilder.toJson(hillforts, listType)
+//        write(context, JSON_FILE,jsonString)
+//    }
+//
+//    private fun deserialize(){
+//        val jsonString = read(context, JSON_FILE)
+//        hillforts = Gson().fromJson(jsonString, listType)
+//    }
 }
