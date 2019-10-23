@@ -23,10 +23,9 @@ fun generateRandomIduser(): Long{
     return Random().nextLong()
 }
 
-class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
+class UsersJsonStore(val context: Context) : UserStore,HillFortStore, AnkoLogger {
 
     var users = mutableListOf<UserModel>()
-    var hillforts = mutableListOf<HillFortModel>()
 
     init {
         if (exists(context, JSON_FILE)){
@@ -34,9 +33,65 @@ class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
         }
     }
 
+    override fun findAllHillforts(user: UserModel): List<HillFortModel> {
+        return user.hillforts
+    }
+
+
+    override fun createHillfort(hillFortModel: HillFortModel, user: UserModel) {
+        hillFortModel.id = generateRandomId()
+        user.hillforts.add(hillFortModel)
+        val foundUsers: UserModel? = users.find { hill -> hill.id == user.id }
+        if (foundUsers != null){
+            foundUsers.hillforts = user.hillforts
+        }
+        serialize()
+    }
+
+    override fun findUser(id: Long): UserModel? {
+        val foundUser: UserModel? = users.find { hill -> hill.id == id}
+        return foundUser
+    }
+
+    override fun findUserByEmail(email: String): UserModel? {
+        val foundUser: UserModel? = users.find { hill -> hill.email == email}
+        return foundUser
+    }
+
+
+    override fun updateHillforts(hillfort: HillFortModel,user: UserModel) {
+        val foundUser: UserModel? = users.find { hill -> hill.id == user.id }
+
+        if (foundUser != null) {
+            for(hillforts in foundUser.hillforts){
+                if(hillforts.id == hillfort.id) {
+                    hillforts.name = hillfort.name
+                    hillforts.description = hillfort.description
+                    hillforts.imageStore = hillfort.imageStore
+                    hillforts.note = hillfort.note
+                    hillforts.location = hillfort.location
+                    hillforts.visitCheck = hillfort.visitCheck
+                }
+            }
+        }
+    }
+
+    override fun deleteHillforts(hillfort: HillFortModel,user: UserModel) {
+        val foundUser: UserModel? = users.find { hill -> hill.id == user.id }
+        if (foundUser != null) {
+            for (hillforts in foundUser.hillforts) {
+                if (hillforts.id == hillfort.id) {
+                    user.hillforts.remove(hillfort)
+                    serialize()
+                }
+            }
+        }
+    }
+
     override fun findAll(): List<UserModel> {
         return users
     }
+
 
     override fun create(user: UserModel) {
         user.id = generateRandomIduser()

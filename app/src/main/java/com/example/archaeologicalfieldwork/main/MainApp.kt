@@ -13,12 +13,13 @@ import org.jetbrains.anko.info
 
 class MainApp : Application(), AnkoLogger {
 
-    lateinit var hillforts: HillFortStore
+//    lateinit var hillforts: HillFortStore
     lateinit var users: UserStore
+    lateinit var user: UserModel
 
     override fun onCreate() {
         super.onCreate()
-        hillforts = HillfortJsonStore(applicationContext)
+//        hillforts = HillfortJsonStore(applicationContext)
         users = UsersJsonStore(applicationContext)
         info { "App has Started" }
     }

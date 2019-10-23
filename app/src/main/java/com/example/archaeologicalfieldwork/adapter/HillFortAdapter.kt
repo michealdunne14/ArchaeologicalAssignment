@@ -11,6 +11,7 @@ import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.card_list.view.*
 
 interface HillFortListener {
@@ -20,7 +21,8 @@ interface HillFortListener {
 class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
-    private val app: MainApp
+    private val app: MainApp,
+    private val userModel: UserModel
 )
                                   : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
@@ -39,13 +41,13 @@ class HillFortAdapter(
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,app)
+        holder.bind(hillfort,listener,app,userModel)
     }
 
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp) {
+        fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp,userModel: UserModel) {
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
 
@@ -56,7 +58,7 @@ class HillFortAdapter(
             itemView.mCardLocation.text = location
             itemView.mCardSendButton.setOnClickListener {
                 hillfort.note.add(itemView.mCardNote.text.toString())
-                app.hillforts.update(hillfort)
+                app.users.updateHillforts(hillfort,userModel)
                 itemView.mCardNote.text.clear()
             }
 
@@ -75,7 +77,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    app.hillforts.update(hillfort)
+                    app.users.updateHillforts(hillfort,userModel)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -83,7 +85,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    app.hillforts.update(hillfort)
+                    app.users.updateHillforts(hillfort,userModel)
                 }
             }
 

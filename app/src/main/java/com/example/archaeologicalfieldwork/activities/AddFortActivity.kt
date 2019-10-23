@@ -15,6 +15,7 @@ import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
+import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -23,11 +24,11 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
-import java.util.*
 
 class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
     var hillfort = HillFortModel()
+    var user = UserModel()
     var location = Location(52.245696, -7.139102, 15f)
     lateinit var app : MainApp
     private lateinit var mMapGoogle: GoogleMap
@@ -46,6 +47,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         setSupportActionBar(toolbarAdd)
 
         info("Add Hill Fort Started..")
+        user = app.user
 
         if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
@@ -53,6 +55,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             mHillFortDescription.setText(hillfort.description)
             mVisitedCheckbox.isChecked = hillfort.visitCheck
             mHillFortLocationText.text = hillfort.location.toString()
+
+//            This is where the location is not being taken in
 
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
             val adapter = ImageAdapter(this,hillfort.imageStore)
@@ -76,7 +80,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         mMap.getMapAsync(this)
 
         mBtnDelete.setOnClickListener {
-            app.hillforts.delete(hillfort.copy())
+            app.users.deleteHillforts(hillfort.copy(),user)
             startActivity(Intent(baseContext,MainActivity::class.java))
         }
 
@@ -88,9 +92,9 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
             if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
                 if(editinghillfort){
-                    app.hillforts.update(hillfort.copy())
+                    app.users.updateHillforts(hillfort.copy(),user)
                 }else{
-                    app.hillforts.create(hillfort.copy())
+                    app.users.createHillfort(hillfort.copy(),user)
                 }
                 info { "add Button Pressed: ${hillfort}" }
                 setResult(Activity.RESULT_OK)
