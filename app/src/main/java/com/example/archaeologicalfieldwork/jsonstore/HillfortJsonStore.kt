@@ -12,9 +12,9 @@ import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
-val JSON_FILE = "hillforts.json"
-val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
-val listType = object : TypeToken<ArrayList<HillFortModel>>() {}.type
+private val JSON_FILE = "hillforts.json"
+private val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
+private val listType = object : TypeToken<ArrayList<HillFortModel>>() {}.type
 
 fun generateRandomId(): Long{
     return Random().nextLong()

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
@@ -19,6 +20,7 @@ import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivityForResult
 
@@ -55,19 +57,19 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
     }
 
-//    override fun onStart() {
-//        val users = app.users.findAll()
-//        if(users.isNotEmpty()) {
-//            for (user in users) {
-//                if (user.email.isEmpty() && user.password.isEmpty()) {
-//                    startActivity(Intent(this, StartActivity::class.java))
-//                }
-//            }
-//        }else{
-//            startActivity(Intent(this, StartActivity::class.java))
-//        }
-//        super.onStart()
-//    }
+    override fun onStart() {
+        val users = app.users.findAll()
+        if(users.isNotEmpty()) {
+            for (user in users) {
+                if (user.email.isEmpty() && user.password.isEmpty()) {
+                    startActivity(Intent(this, StartActivity::class.java))
+                }
+            }
+        }else{
+            startActivity(Intent(this, StartActivity::class.java))
+        }
+        super.onStart()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -83,8 +85,13 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mListRecyclerView.adapter?.notifyDataSetChanged()
+        showHillforts(app.hillforts.findAll())
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    fun showHillforts (hillforts: List<HillFortModel>) {
+        mListRecyclerView.adapter = HillFortAdapter(hillforts, this,app)
+        mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun onHillFortClick(hillfort: HillFortModel) {

@@ -11,7 +11,6 @@ import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.card_list.view.*
 
 interface HillFortListener {
