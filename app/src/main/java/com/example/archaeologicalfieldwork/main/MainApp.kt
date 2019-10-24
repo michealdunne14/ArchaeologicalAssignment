@@ -1,11 +1,7 @@
 package com.example.archaeologicalfieldwork.main
 
 import android.app.Application
-import com.example.archaeologicalfieldwork.activities.HillFortMemoryStore
-import com.example.archaeologicalfieldwork.activities.UserMemoryStore
-import com.example.archaeologicalfieldwork.jsonstore.HillfortJsonStore
 import com.example.archaeologicalfieldwork.jsonstore.UsersJsonStore
-import com.example.archaeologicalfieldwork.models.HillFortStore
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.UserStore
 import org.jetbrains.anko.AnkoLogger

@@ -5,7 +5,6 @@ import com.example.archaeologicalfieldwork.helper.exists
 import com.example.archaeologicalfieldwork.helper.read
 import com.example.archaeologicalfieldwork.helper.write
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.example.archaeologicalfieldwork.models.HillFortStore
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.UserStore
 import com.google.gson.Gson
@@ -19,11 +18,11 @@ private val JSON_FILE = "users.json"
 private val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
 private val listType = object : TypeToken<ArrayList<UserModel>>() {}.type
 
-fun generateRandomIduser(): Long{
+fun generateRandomId(): Long{
     return Random().nextLong()
 }
 
-class UsersJsonStore(val context: Context) : UserStore,HillFortStore, AnkoLogger {
+class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
 
     var users = mutableListOf<UserModel>()
 
@@ -71,6 +70,8 @@ class UsersJsonStore(val context: Context) : UserStore,HillFortStore, AnkoLogger
                     hillforts.note = hillfort.note
                     hillforts.location = hillfort.location
                     hillforts.visitCheck = hillfort.visitCheck
+                    hillforts.datevisted = hillfort.datevisted
+                    serialize()
                 }
             }
         }
@@ -94,7 +95,7 @@ class UsersJsonStore(val context: Context) : UserStore,HillFortStore, AnkoLogger
 
 
     override fun create(user: UserModel) {
-        user.id = generateRandomIduser()
+        user.id = generateRandomId()
         users.add(user)
         serialize()
     }
@@ -108,6 +109,7 @@ class UsersJsonStore(val context: Context) : UserStore,HillFortStore, AnkoLogger
             foundUsers.id = user.id
             foundUsers.hillforts = user.hillforts
         }
+        serialize()
     }
 
     private fun serialize() {

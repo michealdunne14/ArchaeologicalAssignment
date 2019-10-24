@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.SettingsFragment">
 
     <ScrollView
@@ -36,17 +37,67 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/settings_name" />
 
-            <TextView
-                android:id="@+id/mSettingsDelete"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:layout_height="70dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <Button
+                    android:id="@+id/mSettingsUpdate"
+                    android:layout_width="195dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bluebutton"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/update"
+                    android:textColor="@color/colorwhite"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/mHillFortRemoveImage"
+                    app:layout_constraintHorizontal_bias="0.086"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <Button
+                    android:id="@+id/mSettingsDelete"
+                    android:layout_width="195dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bluebutton"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/delete"
+                    android:textColor="@color/colorwhite"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/mSettingsPosts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="AllImagesGridList" />
+                android:textSize="20sp"
+                android:text="@string/posts" />
+
+            <TextView
+                android:id="@+id/mSettingsUsersTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/total_users" />
+
+            <TextView
+                android:id="@+id/mSettingsPostsTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/total_posts" />
+
         </LinearLayout>
     </ScrollView>
 

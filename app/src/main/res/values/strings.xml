@@ -50,4 +50,11 @@
     <string name="mainmenu_logout">Logout</string>
     <string name="remove_image">Remove Image</string>
     <string name="remove">Remove</string>
+    <string name="datepicker">DatePicker</string>
+    <string name="timepicker">TimePicker</string>
+    <string name="posts">Posts</string>
+    <string name="total_users">Total Users</string>
+    <string name="total_posts">Total Posts</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

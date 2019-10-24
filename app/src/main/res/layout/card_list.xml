@@ -45,15 +45,23 @@
             android:layout_marginTop="3dp"
             android:text="TextView" />
 
+        <TextView
+            android:id="@+id/mDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mCardLocation"
+            android:layout_marginTop="4dp"
+            android:text="TextView" />
+
         <EditText
             android:id="@+id/mCardNote"
-            android:layout_width="307dp"
-            android:layout_height="71dp"
+            android:layout_width="312dp"
+            android:layout_height="55dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="-2dp"
-            android:layout_marginLeft="-2dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginBottom="52dp"
             android:ems="10"
             android:hint="Note"
@@ -83,7 +91,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="7dp"
             android:layout_marginLeft="7dp"
-            android:layout_marginBottom="62dp"
+            android:layout_marginBottom="50dp"
             android:layout_toEndOf="@+id/mCardNote"
             android:layout_toRightOf="@+id/mCardNote"
             app:srcCompat="@android:drawable/ic_menu_send" />

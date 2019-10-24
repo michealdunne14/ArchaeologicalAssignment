@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/mNavHome"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/nav_home"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/mNavSettings"
-            android:icon="@mipmap/settings_icon"
+            android:icon="@drawable/phone_settings"
             android:title="@string/menu_settings" />
         <item
             android:id="@+id/mNavLogout"
-            android:icon="@mipmap/settings_icon"
+            android:icon="@drawable/leave_phone"
             android:title="@string/mainmenu_logout" />
     </group>
 </menu>

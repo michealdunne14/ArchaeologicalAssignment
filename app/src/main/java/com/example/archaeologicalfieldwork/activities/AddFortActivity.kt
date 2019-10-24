@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.adapter.ImageAdapter
+import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
@@ -24,6 +26,8 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
@@ -59,7 +63,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 //            This is where the location is not being taken in
 
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-            val adapter = ImageAdapter(this,hillfort.imageStore)
+            val adapter =
+                ImageAdapter(this, hillfort.imageStore)
             viewPager.adapter = adapter
             editinghillfort = true
             mBtnAdd.text = getString(R.string.save_hillfort)
@@ -90,6 +95,11 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             hillfort.location = location
             hillfort.visitCheck = mVisitedCheckbox.isChecked
 
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            val selectedDate = sdf.format(Date(mDatePicker.date))
+
+            hillfort.datevisted = selectedDate
+
             if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
                 if(editinghillfort){
                     app.users.updateHillforts(hillfort.copy(),user)
@@ -107,7 +117,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         mHillFortRemoveImage.setOnClickListener {
             hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-            val adapter = ImageAdapter(this,hillfort.imageStore)
+            val adapter = ImageAdapter(this, hillfort.imageStore)
             viewPager.adapter = adapter
         }
 
@@ -160,7 +170,10 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
                     hillfort.image = data.data.toString()
                     hillfort.imageStore.add(hillfort.image)
                     val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-                    val adapter = ImageAdapter(this,hillfort.imageStore)
+                    val adapter = ImageAdapter(
+                        this,
+                        hillfort.imageStore
+                    )
                     viewPager.adapter = adapter
                 }
             }            LOCATION_REQUEST -> {
