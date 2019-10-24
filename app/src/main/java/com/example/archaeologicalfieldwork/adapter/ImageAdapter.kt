@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.adapter
 
 import android.content.Context
 import android.net.Uri

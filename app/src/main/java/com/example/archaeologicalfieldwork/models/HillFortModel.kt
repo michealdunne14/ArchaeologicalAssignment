@@ -2,6 +2,7 @@ package com.example.archaeologicalfieldwork.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlin.collections.ArrayList
 
 @Parcelize
 data class HillFortModel(
@@ -12,6 +13,7 @@ data class HillFortModel(
     var imageStore: ArrayList<String> = ArrayList(),
     var location: Location = Location(),
     var note: ArrayList<String> = ArrayList(),
+    var datevisted: String = "",
     var visitCheck: Boolean = false) : Parcelable
 
 @Parcelize

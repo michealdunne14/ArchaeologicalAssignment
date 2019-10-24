@@ -7,7 +7,6 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.ImageAdapter
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
@@ -50,6 +49,7 @@ class HillFortAdapter(
         fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp,userModel: UserModel) {
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
+            itemView.mDate.text = hillfort.datevisted
 
             var visitedCheck = hillfort.visitCheck
 
@@ -90,7 +90,10 @@ class HillFortAdapter(
             }
 
             val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
-            val adapter = ImageAdapter(itemView.context,hillfort.imageStore)
+            val adapter = ImageAdapter(
+                itemView.context,
+                hillfort.imageStore
+            )
             viewPager.adapter = adapter
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }

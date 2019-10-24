@@ -92,8 +92,8 @@
                 <TextView
                     android:id="@+id/mHillFortLocationText"
                     android:layout_width="match_parent"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
 
 
                 <fragment
@@ -101,7 +101,7 @@
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp" />
 
                 <Button
                     android:id="@+id/mMapButton"
@@ -111,15 +111,6 @@
                     android:text="@string/addfort_location"
                     android:textColor="@color/colorwhite"
                     android:textSize="14sp" />
-
-<!--                <Button-->
-<!--                    android:id="@+id/button1"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="53dp"-->
-<!--                    android:background="@drawable/bluebutton"-->
-<!--                    android:text="Add money"-->
-<!--                    android:textColor="#FFFFFFFF"-->
-<!--                    android:textSize="18sp" />-->
 
                 <EditText
                     android:id="@+id/mHillFortName"
@@ -149,6 +140,11 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp" />
 
+                <CalendarView
+                    android:id="@+id/mDatePicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <CheckBox
                     android:id="@+id/mVisitedCheckbox"
                     android:layout_width="match_parent"
@@ -163,9 +159,9 @@
                     android:background="@drawable/bluebutton"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textSize="18sp"
+                    android:text="@string/addfort_add"
                     android:textColor="#FFFFFFFF"
-                    android:text="@string/addfort_add" />
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/mBtnDelete"
@@ -175,10 +171,10 @@
                     android:background="@drawable/redbutton"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textSize="18sp"
+                    android:text="@string/remove"
                     android:textColor="#FFFFFFFF"
-                    android:visibility="invisible"
-                    android:text="@string/remove" />
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/mNotesRecyclerView"

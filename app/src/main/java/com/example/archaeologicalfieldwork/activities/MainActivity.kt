@@ -1,6 +1,5 @@
 package com.example.archaeologicalfieldwork.activities
 
-import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -16,13 +15,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
-import com.example.archaeologicalfieldwork.fragment.HomeFragment
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 
@@ -40,25 +38,31 @@ class MainActivity : AppCompatActivity(),HillFortListener {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
 
+
         toolbar.title = title
-        setSupportActionBar(toolbar)
         user = app.user
+
+
+        setSupportActionBar(toolbar)
+
         
         val navController = findNavController(R.id.host_fragment)
 
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.mNavHome , R.id.mNavSettings,R.id.mNavLogout
+                R.id.mNavHome , R.id.mNavSettings
             ),mMainDrawerLayout
         )
 
-//        appBarConfiguration.drawerLayout.setOnClickListener {
-
-  //      }
-
 
         setupActionBarWithNavController(navController,appBarConfiguration)
+        nav_view.setNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.mNavLogout -> toast("message")
+            }
+            true
+        }
         nav_view.setupWithNavController(navController)
 
     }
@@ -69,7 +73,7 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.add_main_menu,menu)
         return super.onCreateOptionsMenu(menu)
