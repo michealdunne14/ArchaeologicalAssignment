@@ -7,9 +7,11 @@ import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.activity_register.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity(),AnkoLogger {
 
     lateinit var app : MainApp
     var user = UserModel()
@@ -24,11 +26,12 @@ class RegisterActivity : AppCompatActivity() {
             user.name = mRegisterName.text.toString()
             user.email = mRegisterEmail.text.toString()
             user.password = mRegisterPassword.text.toString()
-            val usercheck = app.users.findUserByEmail(user.email)!!
+            val usercheck = app.hillforts.findUserByEmail(user.email)
             if (usercheck == null) {
                 if (user.name.isNotEmpty() && user.email.isNotEmpty() && user.password.isNotEmpty()) {
-                    app.users.create(user.copy())
-                    startActivity(Intent(this, MainActivity::class.java))
+                    app.hillforts.createUsers(user.copy())
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    info { "Main activity has Started" }
                     finish()
                 }
             }else{
@@ -38,6 +41,7 @@ class RegisterActivity : AppCompatActivity() {
 
         mRegisterReturnButton.setOnClickListener {
             startActivity(Intent(this, StartActivity::class.java))
+            info { "Return to Start Activity from Register" }
             finish()
         }
     }

@@ -15,9 +15,11 @@ import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 
-class HomeFragment : Fragment(),HillFortListener {
+class HomeFragment : Fragment(),HillFortListener,AnkoLogger {
     override fun onHillFortClick(hillfort: HillFortModel) {
         startActivityForResult(context?.intentFor<AddFortActivity>()?.putExtra("hillfort_edit", hillfort), 0)
     }
@@ -31,6 +33,7 @@ class HomeFragment : Fragment(),HillFortListener {
     ): View? {
         // Inflate the layout for this fragment
         val layoutManager = LinearLayoutManager(context)
+        info { "Home fragment started" }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         app = activity?.application as MainApp
@@ -43,7 +46,7 @@ class HomeFragment : Fragment(),HillFortListener {
     }
 
     fun loadHillforts(view: View,userModel: UserModel) {
-        showHillforts(app.users.findAllHillforts(userModel),view,userModel)
+        showHillforts(app.hillforts.findAllHillforts(userModel),view,userModel)
     }
 
     fun showHillforts (hillforts: List<HillFortModel>,view: View,userModel: UserModel) {

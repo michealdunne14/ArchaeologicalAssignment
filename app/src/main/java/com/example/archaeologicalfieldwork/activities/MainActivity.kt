@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
@@ -21,12 +21,13 @@ import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.toast
 
-class MainActivity : AppCompatActivity(),HillFortListener {
+class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
 
-    var user = UserModel()
+    lateinit var user : UserModel
     lateinit var app : MainApp
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -36,16 +37,15 @@ class MainActivity : AppCompatActivity(),HillFortListener {
         setContentView(R.layout.activity_main)
         app = application as MainApp
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        info { "Main Activity Started" }
 
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
 
         toolbar.title = title
         user = app.user
 
 
         setSupportActionBar(toolbar)
-
-        
         val navController = findNavController(R.id.host_fragment)
 
 
@@ -55,16 +55,12 @@ class MainActivity : AppCompatActivity(),HillFortListener {
             ),mMainDrawerLayout
         )
 
-
         setupActionBarWithNavController(navController,appBarConfiguration)
-        nav_view.setNavigationItemSelectedListener { menuItem ->
-            when(menuItem.itemId){
-                R.id.mNavLogout -> toast("message")
-            }
-            true
-        }
         nav_view.setupWithNavController(navController)
 
+        val headerView = nav_view.getHeaderView(0)
+        headerView.mNavName.text = user.name
+        headerView.mNavEmail.text = user.email
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -80,7 +76,7 @@ class MainActivity : AppCompatActivity(),HillFortListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        showHillforts(app.users.findAllHillforts(user))
+        showHillforts(app.hillforts.findAllHillforts(user))
         super.onActivityResult(requestCode, resultCode, data)
     }
 

@@ -6,7 +6,7 @@ import com.example.archaeologicalfieldwork.helper.read
 import com.example.archaeologicalfieldwork.helper.write
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
-import com.example.archaeologicalfieldwork.models.UserStore
+import com.example.archaeologicalfieldwork.models.HillfortStore
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -14,7 +14,7 @@ import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
 
-private val JSON_FILE = "users.json"
+private val JSON_FILE = "hillforts.json"
 private val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
 private val listType = object : TypeToken<ArrayList<UserModel>>() {}.type
 
@@ -22,7 +22,7 @@ fun generateRandomId(): Long{
     return Random().nextLong()
 }
 
-class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
+class HillfortJsonStore(val context: Context) : HillfortStore, AnkoLogger {
 
     var users = mutableListOf<UserModel>()
 
@@ -53,8 +53,12 @@ class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
     }
 
     override fun findUserByEmail(email: String): UserModel? {
-        val foundUser: UserModel? = users.find { hill -> hill.email == email}
-        return foundUser
+        for (user in users){
+            if (user.email == email){
+                return user
+            }
+        }
+        return null
     }
 
 
@@ -89,18 +93,18 @@ class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
         }
     }
 
-    override fun findAll(): List<UserModel> {
+    override fun findAllUsers(): List<UserModel> {
         return users
     }
 
 
-    override fun create(user: UserModel) {
+    override fun createUsers(user: UserModel) {
         user.id = generateRandomId()
         users.add(user)
         serialize()
     }
 
-    override fun update(user: UserModel) {
+    override fun updateUsers(user: UserModel) {
         val foundUsers: UserModel? = users.find { hill -> hill.id == user.id }
         if (foundUsers != null){
             foundUsers.name = user.name
@@ -110,6 +114,14 @@ class UsersJsonStore(val context: Context) : UserStore, AnkoLogger {
             foundUsers.hillforts = user.hillforts
         }
         serialize()
+    }
+
+    override fun deleteUser(user: UserModel){
+        val foundUsers: UserModel? = users.find { hill -> hill.id == user.id }
+        if (foundUsers != null){
+            users.remove(foundUsers.copy())
+            serialize()
+        }
     }
 
     private fun serialize() {

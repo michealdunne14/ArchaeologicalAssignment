@@ -19,17 +19,32 @@
             android:orientation="vertical">
 
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email" />
+
             <EditText
                 android:id="@+id/mSettingsEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_password" />
+
             <EditText
                 android:id="@+id/mSettingsPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/settings_password" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_name" />
 
             <EditText
                 android:id="@+id/mSettingsName"
@@ -97,6 +112,29 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:text="@string/total_posts" />
+
+            <TextView
+                android:id="@+id/mSettingsVisited"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/visited" />
+
+            <TextView
+                android:id="@+id/mSettingsVisitedTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/total_visted" />
+
+            <Button
+                android:id="@+id/mLogoutButton"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:background="@drawable/redbutton"
+                android:text="@string/logout"
+                android:layout_gravity="center"
+                android:textColor="@color/colorwhite" />
 
         </LinearLayout>
     </ScrollView>
