@@ -11,9 +11,5 @@
             android:id="@+id/mNavSettings"
             android:icon="@drawable/phone_settings"
             android:title="@string/menu_settings" />
-        <item
-            android:id="@+id/mNavLogout"
-            android:icon="@drawable/leave_phone"
-            android:title="@string/mainmenu_logout" />
     </group>
 </menu>

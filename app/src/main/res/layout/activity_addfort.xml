@@ -140,19 +140,25 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp" />
 
+                <CheckBox
+                    android:id="@+id/mHillFortAddDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_date" />
+
                 <CalendarView
-                    android:id="@+id/mDatePicker"
+                    android:id="@+id/mHillFortDatePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <CheckBox
-                    android:id="@+id/mVisitedCheckbox"
+                    android:id="@+id/mHillFortVisitedCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/addford_visited" />
 
                 <Button
-                    android:id="@+id/mBtnAdd"
+                    android:id="@+id/mHillFortBtnAdd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -164,7 +170,7 @@
                     android:textSize="18sp" />
 
                 <Button
-                    android:id="@+id/mBtnDelete"
+                    android:id="@+id/mHillFortBtnDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -174,7 +180,7 @@
                     android:text="@string/remove"
                     android:textColor="#FFFFFFFF"
                     android:textSize="18sp"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/mNotesRecyclerView"

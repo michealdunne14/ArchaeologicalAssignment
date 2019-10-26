@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.CalendarView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,8 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
+import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
 
 class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
@@ -36,6 +37,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
     var location = Location(52.245696, -7.139102, 15f)
     lateinit var app : MainApp
     private lateinit var mMapGoogle: GoogleMap
+    var date = String()
 
     var editinghillfort = false
 
@@ -50,29 +52,53 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
 
-        info("Add Hill Fort Started..")
+        info("Add HillFort Started")
         user = app.user
 
         if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
             mHillFortName.setText(hillfort.name)
             mHillFortDescription.setText(hillfort.description)
-            mVisitedCheckbox.isChecked = hillfort.visitCheck
+            mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
             mHillFortLocationText.text = hillfort.location.toString()
+            location = hillfort.location
+            val formatter = SimpleDateFormat("dd/MM/yyyy")
+            try {
+                val date = formatter.parse(hillfort.datevisted)
+                val dateInLong = date.time
+                mHillFortDatePicker.date = dateInLong
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
 
-//            This is where the location is not being taken in
 
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
             val adapter =
                 ImageAdapter(this, hillfort.imageStore)
             viewPager.adapter = adapter
             editinghillfort = true
-            mBtnAdd.text = getString(R.string.save_hillfort)
-            mBtnDelete.visibility = View.VISIBLE
+            mHillFortBtnAdd.text = getString(R.string.save_hillfort)
+            mHillFortBtnDelete.visibility = View.VISIBLE
+        }else{
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            val selectedDate = sdf.format(mHillFortDatePicker.date)
+            date = selectedDate
         }
 
+        val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
+        mMap.getMapAsync(this)
+
+        mHillFortDatePicker.visibility = View.GONE
+
+
+
         mMapButton.setOnClickListener {
-            startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
+            info { "Map Activity Started" }
+            if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
+                startActivityForResult(intentFor<MapsActivity>().putExtra("location", hillfort.location), LOCATION_REQUEST)
+            }else{
+                startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
+            }
         }
 
         val layoutManager = LinearLayoutManager(this)
@@ -80,31 +106,40 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         mNotesRecyclerView.adapter = NotesAdapter(hillfort.note)
 
-        val mMap = (supportFragmentManager
-            .findFragmentById(R.id.mMapFragment) as SupportMapFragment)
-        mMap.getMapAsync(this)
-
-        mBtnDelete.setOnClickListener {
-            app.users.deleteHillforts(hillfort.copy(),user)
+        mHillFortBtnDelete.setOnClickListener {
+            app.hillforts.deleteHillforts(hillfort.copy(),user)
             startActivity(Intent(baseContext,MainActivity::class.java))
         }
 
-        mBtnAdd.setOnClickListener{
+        mHillFortAddDate.setOnClickListener {
+            if (mHillFortAddDate.isChecked){
+                mHillFortDatePicker.visibility = View.VISIBLE
+            }else{
+                mHillFortDatePicker.visibility = View.GONE
+            }
+        }
+
+        mHillFortDatePicker.setOnDateChangeListener(CalendarView.OnDateChangeListener(){
+            view, year, month, dayOfMonth ->
+            date = "$dayOfMonth/$month/$year"
+        })
+
+        mHillFortBtnAdd.setOnClickListener{
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
-            hillfort.location = location
-            hillfort.visitCheck = mVisitedCheckbox.isChecked
-
-            val sdf = SimpleDateFormat("dd/MM/yyyy")
-            val selectedDate = sdf.format(Date(mDatePicker.date))
-
-            hillfort.datevisted = selectedDate
+            if (location.lat != 52.245696 && location.lng != -7.139102) {
+                hillfort.location = location
+            }
+            hillfort.visitCheck = mHillFortVisitedCheckbox.isChecked
+            if(mHillFortAddDate.isChecked) {
+                hillfort.datevisted = date
+            }
 
             if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
                 if(editinghillfort){
-                    app.users.updateHillforts(hillfort.copy(),user)
+                    app.hillforts.updateHillforts(hillfort.copy(),user)
                 }else{
-                    app.users.createHillfort(hillfort.copy(),user)
+                    app.hillforts.createHillfort(hillfort.copy(),user)
                 }
                 info { "add Button Pressed: ${hillfort}" }
                 setResult(Activity.RESULT_OK)
@@ -142,8 +177,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMapGoogle = googleMap
-
-        if(hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0){
+        mMapGoogle.clear()
+        if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
             val loc = LatLng(hillfort.location.lat, hillfort.location.lng)
             val options = MarkerOptions()
                 .title("HillForts")
@@ -151,8 +186,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
                 .position(loc)
             mMapGoogle.addMarker(options)
             mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, hillfort.location.zoom))
-        }else if (location.lat != 0.0 && location.lng != 0.0) {
-            val loc = LatLng(location.lat, location.lng)
+        }else {
+            val loc = LatLng(location.lat,location.lng)
             val options = MarkerOptions()
                 .title("HillForts")
                 .snippet("GPS : " + loc.toString())
@@ -183,8 +218,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             }
         }
         }
-        val mMap = (supportFragmentManager
-            .findFragmentById(R.id.mMapFragment) as SupportMapFragment)
+        val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
         mMap.getMapAsync(this)
     }
 }

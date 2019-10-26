@@ -11,7 +11,10 @@ import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
+import kotlinx.android.synthetic.main.activity_addfort.*
 import kotlinx.android.synthetic.main.card_list.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -58,7 +61,7 @@ class HillFortAdapter(
             itemView.mCardLocation.text = location
             itemView.mCardSendButton.setOnClickListener {
                 hillfort.note.add(itemView.mCardNote.text.toString())
-                app.users.updateHillforts(hillfort,userModel)
+                app.hillforts.updateHillforts(hillfort,userModel)
                 itemView.mCardNote.text.clear()
             }
 
@@ -77,7 +80,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    app.users.updateHillforts(hillfort,userModel)
+                    app.hillforts.updateHillforts(hillfort,userModel)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -85,7 +88,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    app.users.updateHillforts(hillfort,userModel)
+                    app.hillforts.updateHillforts(hillfort,userModel)
                 }
             }
 
