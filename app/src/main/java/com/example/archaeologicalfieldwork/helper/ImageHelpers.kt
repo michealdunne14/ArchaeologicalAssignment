@@ -19,6 +19,7 @@ fun showImagePicker(parent: Activity, id: Int) {
     parent.startActivityForResult(chooser, id)
 }
 
+//Reads image
 fun readImage(activity: Activity, resultCode: Int, data: Intent?): Bitmap? {
     var bitmap: Bitmap? = null
     if (resultCode == Activity.RESULT_OK && data != null && data.data != null) {
@@ -31,6 +32,7 @@ fun readImage(activity: Activity, resultCode: Int, data: Intent?): Bitmap? {
     return bitmap
 }
 
+//Reads Image from path
 fun readImageFromPath(context: Context, path : String) : Bitmap? {
     var bitmap : Bitmap? = null
     val uri = Uri.parse(path)

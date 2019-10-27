@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity(),AnkoLogger {
         setContentView(R.layout.activity_register)
         app = application as MainApp
 
-
+//      Register Button
         mRegisterButton.setOnClickListener {
             user.name = mRegisterName.text.toString()
             user.email = mRegisterEmail.text.toString()
@@ -38,7 +38,7 @@ class RegisterActivity : AppCompatActivity(),AnkoLogger {
                 toast("User already registered")
             }
         }
-
+//      Return Back to Start Screen
         mRegisterReturnButton.setOnClickListener {
             startActivity(Intent(this, StartActivity::class.java))
             info { "Return to Start Activity from Register" }

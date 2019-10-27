@@ -19,9 +19,11 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_login)
         app = application as MainApp
 
+//      Login button checking if user is valid
         mLoginButton.setOnClickListener {
             val users = app.hillforts.findAllUsers()
 
+//          Checkes if user is present if not prints Invalid login details
             var validName = true
             for (i in users){
                 if (i.email == mLoginEmail.text.toString() && i.password == mLoginPassword.text.toString()){
@@ -39,6 +41,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
 
         }
 
+//      Return to Start page
         mLoginReturn.setOnClickListener {
             startActivity(Intent(this, StartActivity::class.java))
             info { "Return to Start Activity from Login" }

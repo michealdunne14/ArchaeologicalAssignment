@@ -20,20 +20,13 @@ class StartActivity : AppCompatActivity(),AnkoLogger {
         setContentView(R.layout.activity_start)
 
         info { "Start Activity started" }
-
-//        app = application as MainApp
-//        user = app.user
-
-//        if (user.loggedin){
-//            startActivity(Intent(this, MainActivity::class.java))
-//        }
-
+//      Start Login Screen
         mStartLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             info { "Login activity started" }
             finish()
         }
-
+//      Start Register Screen
         mStartRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
             info { "Register Activity started" }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -27,8 +28,10 @@ class SettingsFragment : Fragment(),AnkoLogger {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
         app = activity?.application as MainApp
 
+
         info { "Settings fragment started" }
 
+//      Stats
         user = app.user
         view.mSettingsEmail.setText(user.email)
         view.mSettingsPassword.setText(user.password)
@@ -55,24 +58,27 @@ class SettingsFragment : Fragment(),AnkoLogger {
         view.mSettingsVisited.setText("Visited per user $visitCountUser")
         view.mSettingsVisitedTotal.setText("Visited total $visitCountTotal")
 
+//      Logout Button
         view.mLogoutButton.setOnClickListener {
             info { "Logout Button pressed" }
             startActivity(Intent(context, StartActivity::class.java))
+            Toast.makeText(context, "User Logged out", Toast.LENGTH_LONG ).show()
         }
-
+//      Deleting user
         view.mSettingsDelete.setOnClickListener {
             info { "User Settings Deleted" }
             app.hillforts.deleteUser(user.copy())
             startActivity(Intent(context, StartActivity::class.java))
+            Toast.makeText(context, "User Deleted", Toast.LENGTH_LONG ).show()
         }
-
+//      Updating User
         view.mSettingsUpdate.setOnClickListener {
             info { "User Settings Updated" }
             user.email = view.mSettingsEmail.text.toString()
             user.password = view.mSettingsPassword.text.toString()
             user.name = view.mSettingsName.text.toString()
             app.hillforts.updateUsers(user.copy())
-
+            Toast.makeText(context, "User Updated", Toast.LENGTH_LONG ).show()
         }
 
 
