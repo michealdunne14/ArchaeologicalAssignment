@@ -55,6 +55,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         info("Add HillFort Started")
         user = app.user
 
+//      When editing a hillfort this is checked or the the location is changed
         if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
             mHillFortName.setText(hillfort.name)
@@ -62,6 +63,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
             mHillFortLocationText.text = hillfort.location.toString()
             location = hillfort.location
+//          Formatting date to long to pass in to calender
             val formatter = SimpleDateFormat("dd/MM/yyyy")
             try {
                 val date = formatter.parse(hillfort.datevisted)
@@ -72,6 +74,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             }
 
 
+//          View Pager for multiple images
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
             val adapter =
                 ImageAdapter(this, hillfort.imageStore)
@@ -85,13 +88,14 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             date = selectedDate
         }
 
+//      Allows map fragment to be on add Fort Activty
         val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
         mMap.getMapAsync(this)
-
+//      Hides hillfort date picker. reason done here and not in xml is it does not adjust items below it leaving a huge blank.
         mHillFortDatePicker.visibility = View.GONE
 
 
-
+//      Starts Map Activity
         mMapButton.setOnClickListener {
             info { "Map Activity Started" }
             if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
@@ -100,17 +104,19 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
                 startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
             }
         }
-
+//      Notes Adapter
         val layoutManager = LinearLayoutManager(this)
 
         mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         mNotesRecyclerView.adapter = NotesAdapter(hillfort.note)
 
+//      Deletes hillfort
         mHillFortBtnDelete.setOnClickListener {
             app.hillforts.deleteHillforts(hillfort.copy(),user)
             startActivity(Intent(baseContext,MainActivity::class.java))
         }
 
+//      Checkbox for selecting date
         mHillFortAddDate.setOnClickListener {
             if (mHillFortAddDate.isChecked){
                 mHillFortDatePicker.visibility = View.VISIBLE
@@ -119,11 +125,13 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             }
         }
 
+//      sets the date of the calender when changed.
         mHillFortDatePicker.setOnDateChangeListener(CalendarView.OnDateChangeListener(){
             view, year, month, dayOfMonth ->
             date = "$dayOfMonth/$month/$year"
         })
 
+//      Adds Hillforts to JSON
         mHillFortBtnAdd.setOnClickListener{
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
@@ -149,13 +157,14 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             }
         }
 
+//      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
             hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
             val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
             val adapter = ImageAdapter(this, hillfort.imageStore)
             viewPager.adapter = adapter
         }
-
+//      Adds image to view pager
         mAddImage.setOnClickListener{
             showImagePicker(this, IMAGE_REQUEST)
         }
@@ -175,6 +184,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
+//  Map
     override fun onMapReady(googleMap: GoogleMap) {
         mMapGoogle = googleMap
         mMapGoogle.clear()
@@ -197,6 +207,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         }
     }
 
+//  When a result comes back
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){

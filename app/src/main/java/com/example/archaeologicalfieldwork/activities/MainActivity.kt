@@ -38,10 +38,11 @@ class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
         app = application as MainApp
 
         info { "Main Activity Started" }
-
+//      Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
 
         toolbar.title = title
+//      Sets signed user
         user = app.user
 
 
@@ -49,32 +50,34 @@ class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
         val navController = findNavController(R.id.host_fragment)
 
 
+//      Navigation drawer configuration
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.mNavHome , R.id.mNavSettings
             ),mMainDrawerLayout
         )
 
+//      Sets up Navigation drawer
         setupActionBarWithNavController(navController,appBarConfiguration)
         nav_view.setupWithNavController(navController)
-
         val headerView = nav_view.getHeaderView(0)
         headerView.mNavName.text = user.name
         headerView.mNavEmail.text = user.email
     }
 
+//  Toolbar Add Button
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.item_add -> startActivityForResult(intentFor<AddFortActivity>(),0)
         }
         return super.onOptionsItemSelected(item)
     }
-
+//  adds menu to toolbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.add_main_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
-
+//  Shows hillforts when result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         showHillforts(app.hillforts.findAllHillforts(user))
         super.onActivityResult(requestCode, resultCode, data)
@@ -84,11 +87,11 @@ class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
         mListRecyclerView.adapter = HillFortAdapter(hillforts, this, app, user)
         mListRecyclerView.adapter?.notifyDataSetChanged()
     }
-
+//  Editing a hillfort
     override fun onHillFortClick(hillfort: HillFortModel) {
         startActivityForResult(intentFor<AddFortActivity>().putExtra("hillfort_edit", hillfort), 0)
     }
-
+//  Navigate up to host fragment when selected.
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()

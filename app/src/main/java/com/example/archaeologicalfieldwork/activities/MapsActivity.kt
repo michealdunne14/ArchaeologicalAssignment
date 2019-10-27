@@ -26,11 +26,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+//      Gets the location from the add fort activity
         location = intent.extras?.getParcelable<Location>("location")!!
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
         toolbarMap.title = title
         setSupportActionBar(toolbarMap)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

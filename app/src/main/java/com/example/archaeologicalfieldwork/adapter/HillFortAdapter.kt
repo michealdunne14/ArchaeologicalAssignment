@@ -11,10 +11,7 @@ import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
-import kotlinx.android.synthetic.main.activity_addfort.*
 import kotlinx.android.synthetic.main.card_list.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -50,6 +47,7 @@ class HillFortAdapter(
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp,userModel: UserModel) {
+//          Setting card Information
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted
@@ -59,18 +57,19 @@ class HillFortAdapter(
             val location = "Latitude " + hillfort.location.lat +
                     "\nLongitude" + hillfort.location.lng
             itemView.mCardLocation.text = location
+//          Sends Note to card
             itemView.mCardSendButton.setOnClickListener {
                 hillfort.note.add(itemView.mCardNote.text.toString())
                 app.hillforts.updateHillforts(hillfort,userModel)
                 itemView.mCardNote.text.clear()
             }
-
+//          Visited Button
             if (visitedCheck){
                 itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
             }else{
                 itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
             }
-
+//          Check Box
             itemView.mCardCheckButton.setOnClickListener {
                 visitedCheck = !visitedCheck
                 if (visitedCheck) {
