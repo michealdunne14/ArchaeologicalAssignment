@@ -159,10 +159,14 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
 //      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
-            hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
-            val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-            val adapter = ImageAdapter(this, hillfort.imageStore)
-            viewPager.adapter = adapter
+            if(hillfort.imageStore.size == 0){
+                toast("No Images to Delete")
+            }else {
+                hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
+                val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
+                val adapter = ImageAdapter(this, hillfort.imageStore)
+                viewPager.adapter = adapter
+            }
         }
 //      Adds image to view pager
         mAddImage.setOnClickListener{
