@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity(),AnkoLogger {
                     finish()
                 }
             }else{
-                toast("User already registered")
+                toast(getString(R.string.user_registered_already))
             }
         }
 //      Return Back to Start Screen

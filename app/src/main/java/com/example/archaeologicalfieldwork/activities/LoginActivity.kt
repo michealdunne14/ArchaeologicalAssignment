@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
             }
 
             if (validName){
-                toast("Invalid Login Details")
+                toast(getString(R.string.invalid_login_details))
             }
 
         }
