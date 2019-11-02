@@ -62,14 +62,14 @@ class SettingsFragment : Fragment(),AnkoLogger {
         view.mLogoutButton.setOnClickListener {
             info { "Logout Button pressed" }
             startActivity(Intent(context, StartActivity::class.java))
-            Toast.makeText(context, "User Logged out", Toast.LENGTH_LONG ).show()
+            Toast.makeText(context, getString(R.string.LoggedOutuser), Toast.LENGTH_LONG ).show()
         }
 //      Deleting user
         view.mSettingsDelete.setOnClickListener {
             info { "User Settings Deleted" }
             app.hillforts.deleteUser(user.copy())
             startActivity(Intent(context, StartActivity::class.java))
-            Toast.makeText(context, "User Deleted", Toast.LENGTH_LONG ).show()
+            Toast.makeText(context, getString(R.string.user_deleted), Toast.LENGTH_LONG ).show()
         }
 //      Updating User
         view.mSettingsUpdate.setOnClickListener {
@@ -78,7 +78,7 @@ class SettingsFragment : Fragment(),AnkoLogger {
             user.password = view.mSettingsPassword.text.toString()
             user.name = view.mSettingsName.text.toString()
             app.hillforts.updateUsers(user.copy())
-            Toast.makeText(context, "User Updated", Toast.LENGTH_LONG ).show()
+            Toast.makeText(context, getString(R.string.user_updated), Toast.LENGTH_LONG ).show()
         }
 
 

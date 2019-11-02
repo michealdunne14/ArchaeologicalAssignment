@@ -135,9 +135,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         mHillFortBtnAdd.setOnClickListener{
             hillfort.name = mHillFortName.text.toString()
             hillfort.description = mHillFortDescription.text.toString()
-            if (location.lat != 52.245696 && location.lng != -7.139102) {
-                hillfort.location = location
-            }
+            hillfort.location = location
             hillfort.visitCheck = mHillFortVisitedCheckbox.isChecked
             if(mHillFortAddDate.isChecked) {
                 hillfort.datevisted = date
@@ -160,7 +158,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 //      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
             if(hillfort.imageStore.size == 0){
-                toast("No Images to Delete")
+                toast(getString(R.string.deleteimages))
             }else {
                 hillfort.imageStore.removeAt(mAddFortImagePager.currentItem)
                 val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)

@@ -61,4 +61,10 @@
     <string name="total_visted">Total Visted</string>
     <string name="email">Email</string>
     <string name="add_date">Add Date</string>
+    <string name="deleteimages">No Images to Delete</string>
+    <string name="LoggedOutuser">User Logged out</string>
+    <string name="user_deleted">User Deleted</string>
+    <string name="user_updated">User Updated</string>
+    <string name="user_registered_already">User already registered</string>
+    <string name="invalid_login_details">Invalid Login Details</string>
 </resources>
