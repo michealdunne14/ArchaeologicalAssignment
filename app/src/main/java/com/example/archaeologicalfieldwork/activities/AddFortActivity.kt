@@ -187,27 +187,35 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
     }
 
 //  Map
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMapGoogle = googleMap
-        mMapGoogle.clear()
-        if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
-            val loc = LatLng(hillfort.location.lat, hillfort.location.lng)
-            val options = MarkerOptions()
-                .title("HillForts")
-                .snippet("GPS : " + loc.toString())
-                .position(loc)
-            mMapGoogle.addMarker(options)
-            mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, hillfort.location.zoom))
-        }else {
-            val loc = LatLng(location.lat,location.lng)
-            val options = MarkerOptions()
-                .title("HillForts")
-                .snippet("GPS : " + loc.toString())
-                .position(loc)
-            mMapGoogle.addMarker(options)
-            mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
-        }
+override fun onMapReady(googleMap: GoogleMap) {
+    mMapGoogle = googleMap
+    mMapGoogle.clear()
+    if (location.lat != 52.245696 && location.lng != -7.139102) {
+        val loc = LatLng(location.lat, location.lng)
+        val options = MarkerOptions()
+            .title("HillForts")
+            .snippet("GPS : " + loc.toString())
+            .position(loc)
+        mMapGoogle.addMarker(options)
+        mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
+    } else if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
+        val loc = LatLng(hillfort.location.lat, hillfort.location.lng)
+        val options = MarkerOptions()
+            .title("HillForts")
+            .snippet("GPS : " + loc.toString())
+            .position(loc)
+        mMapGoogle.addMarker(options)
+        mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, hillfort.location.zoom))
+    }else {
+        val loc = LatLng(location.lat,location.lng)
+        val options = MarkerOptions()
+            .title("HillForts")
+            .snippet("GPS : " + loc.toString())
+            .position(loc)
+        mMapGoogle.addMarker(options)
+        mMapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
     }
+}
 
 //  When a result comes back
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -228,10 +236,10 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
             if (data != null) {
                 location = data.extras?.getParcelable<Location>("location")!!
                 mHillFortLocationText.text = location.toString()
+                val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
+                mMap.getMapAsync(this)
             }
         }
         }
-        val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
-        mMap.getMapAsync(this)
-    }
+}
 }
