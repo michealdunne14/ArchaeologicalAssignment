@@ -88,6 +88,7 @@ class HillfortJsonStore(val context: Context) : HillfortStore, AnkoLogger {
                 if (hillforts.id == hillfort.id) {
                     user.hillforts.remove(hillfort)
                     serialize()
+                    break
                 }
             }
         }
