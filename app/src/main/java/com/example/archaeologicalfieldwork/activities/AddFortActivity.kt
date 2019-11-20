@@ -124,7 +124,7 @@ override fun onMapReady(googleMap: GoogleMap) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data != null){
-            presenter.doActivityResult(requestCode,resultCode,data,this)
+            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort)
         }
     }
 

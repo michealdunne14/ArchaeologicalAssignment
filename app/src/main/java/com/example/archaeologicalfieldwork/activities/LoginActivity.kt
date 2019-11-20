@@ -38,7 +38,6 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
             if (validName){
                 toast(getString(R.string.invalid_login_details))
             }
-
         }
 
 //      Return to Start page
