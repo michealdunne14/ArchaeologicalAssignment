@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.archaeologicalfieldwork.HillfortMapsActivity
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
 
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(),HillFortListener,AnkoLogger {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.item_add -> startActivityForResult(intentFor<AddFortActivity>(),0)
+            R.id.item_map -> startActivity<HillfortMapsActivity>()
         }
         return super.onOptionsItemSelected(item)
     }

@@ -36,6 +36,10 @@ class HillfortJsonStore(val context: Context) : HillfortStore, AnkoLogger {
         return user.hillforts
     }
 
+    override fun findHillfort(user: UserModel, hillfortid: Long): HillFortModel? {
+        val hillfort: HillFortModel? = user.hillforts.find { hill -> hill.id == hillfortid}
+        return hillfort
+    }
 
     override fun createHillfort(hillFortModel: HillFortModel, user: UserModel) {
         hillFortModel.id = generateRandomId()

@@ -67,4 +67,9 @@
     <string name="user_updated">User Updated</string>
     <string name="user_registered_already">User already registered</string>
     <string name="invalid_login_details">Invalid Login Details</string>
+    <string name="map">Map</string>
+    <string name="title_activity_hillfort_maps">HillfortMapsActivity</string>
+    <string name="hillfort_image">Hillfort Image</string>
+    <string name="hillfort_title">Hillfort Title</string>
+    <string name="hillfort_description">hillfort_description</string>
 </resources>
