@@ -87,7 +87,7 @@ class FortPresenter(val view: AddFortActivity){
 
 //          View Pager for multiple images
         val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapter(view.context, this.hillfort.imageStore)
+        val adapter = ImageAdapter(view.context, hillfort.imageStore)
         viewPager.adapter = adapter
         editinghillfort = true
         view.mHillFortBtnAdd.text = view.getString(R.string.save_hillfort)
@@ -134,7 +134,7 @@ class FortPresenter(val view: AddFortActivity){
         hillfort.location = location
         hillfort.visitCheck = view.mHillFortVisitedCheckbox.isChecked
         if(view.mHillFortAddDate.isChecked) {
-            this.hillfort.datevisted = date
+            hillfort.datevisted = date
         }
 
         if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
@@ -152,9 +152,7 @@ class FortPresenter(val view: AddFortActivity){
     }
 
     //  When a result comes back
-    fun doActivityResult(requestCode: Int, resultCode: Int, data: Intent?,
-        addFortActivity: AddFortActivity
-    ) {
+    fun doActivityResult(requestCode: Int, resultCode: Int, data: Intent?, addFortActivity: AddFortActivity,hillfort: HillFortModel) {
         when(requestCode){
             IMAGE_REQUEST -> {
                 if (data != null){
