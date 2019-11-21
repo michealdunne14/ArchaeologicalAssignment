@@ -5,85 +5,62 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.models.Location
 
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_maps.*
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerDragListener,GoogleMap.OnMarkerClickListener {
+class MapsActivity : AppCompatActivity(),GoogleMap.OnMarkerDragListener,GoogleMap.OnMarkerClickListener {
 
-    private lateinit var mMap: GoogleMap
-    var location = Location()
+    lateinit var map: GoogleMap
+    lateinit var mapsPresenter: MapsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 //      Gets the location from the add fort activity
-        location = intent.extras?.getParcelable<Location>("location")!!
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapsPresenter = MapsPresenter(this)
+        mapFragment.getMapAsync {
+            map = it
+            map.setOnMarkerClickListener(this)
+            map.setOnMarkerDragListener(this)
+            mapsPresenter.initMap(map)
+        }
         toolbarMap.title = title
         setSupportActionBar(toolbarMap)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        googleMap.setOnMarkerClickListener(this)
-        val loc = LatLng(location.lat, location.lng)
-        mMap.setOnMarkerDragListener(this)
-        val options = MarkerOptions()
-            .title("HillForts")
-            .snippet("GPS : " + loc.toString())
-            .draggable(true)
-            .position(loc)
-        mMap.addMarker(options)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val resultIntent = Intent()
-        resultIntent.putExtra("location", location)
+        resultIntent.putExtra("location", mapsPresenter.doGetLocation())
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
         return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
-        val resultIntent = Intent()
-        resultIntent.putExtra("location", location)
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
-        super.onBackPressed()
+        mapsPresenter.doOnBackPressed()
     }
 
 
     override fun onMarkerDragEnd(marker: Marker) {
-        location.lat = marker.position.latitude
-        location.lng = marker.position.longitude
-        location.zoom = mMap.cameraPosition.zoom
+        mapsPresenter.doUpdateLocation(marker.position.latitude,marker.position.longitude,map.cameraPosition.zoom)
     }
 
-    override fun onMarkerDragStart(p0: Marker?) {
-    }
+    override fun onMarkerDragStart(p0: Marker?) {}
 
-    override fun onMarkerDrag(p0: Marker?) {
-    }
+    override fun onMarkerDrag(p0: Marker?) {}
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        location.lat = marker.position.latitude
-        location.lng = marker.position.longitude
-        marker.snippet = "GPS: lat/lng:("+ location.lat +","+ location.lng +")"
+        mapsPresenter.doUpdateMarker(marker)
         return false
     }
 
