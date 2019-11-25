@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.AddFortActivity
+import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -21,7 +21,7 @@ import org.jetbrains.anko.intentFor
 
 class HomeFragment : Fragment(),HillFortListener,AnkoLogger {
     override fun onHillFortClick(hillfort: HillFortModel) {
-        startActivityForResult(context?.intentFor<AddFortActivity>()?.putExtra("hillfort_edit", hillfort), 0)
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort), 0)
     }
 
     var user = UserModel()

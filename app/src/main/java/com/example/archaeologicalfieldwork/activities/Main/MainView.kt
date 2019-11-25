@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.Main
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,15 +9,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.example.archaeologicalfieldwork.HillfortMapsActivity
+import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsActivity
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 
-class MainActivity : AppCompatActivity(),AnkoLogger {
+class MainView : AppCompatActivity(),AnkoLogger {
 
     lateinit var mainPresenter: MainPresenter
 
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(),AnkoLogger {
 //  Toolbar Add Button
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.item_add -> startActivityForResult(intentFor<AddFortActivity>(),0)
+            R.id.item_add -> startActivityForResult(intentFor<AddFortView>(),0)
             R.id.item_map -> startActivity<HillfortMapsActivity>()
         }
         return super.onOptionsItemSelected(item)

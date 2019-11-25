@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.Main.MainView
 import com.example.archaeologicalfieldwork.main.MainApp
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger
@@ -29,7 +30,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                 if (i.email == mLoginEmail.text.toString() && i.password == mLoginPassword.text.toString()){
                     app.user = app.hillforts.findUser(i.id)!!
                     validName = false
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, MainView::class.java))
                     info { "Started Main Activity" }
                     finish()
                 }
