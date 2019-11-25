@@ -1,7 +1,9 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.EditLocation
 
 import android.app.Activity
 import android.content.Intent
+import com.example.archaeologicalfieldwork.activities.BasePresenter
+import com.example.archaeologicalfieldwork.activities.BaseView
 import com.example.archaeologicalfieldwork.models.Location
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -9,7 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsPresenter(val view: MapsActivity){
+class EditLocationPresenter(view: BaseView): BasePresenter(view){
 
     var location = Location()
 

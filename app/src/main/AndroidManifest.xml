@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HillfortMapsActivity"
+            android:name=".activities.Maps.HillfortMapsActivity"
             android:label="@string/title_activity_hillfort_maps"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
@@ -29,7 +29,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".activities.MapsActivity"
+            android:name=".activities.EditLocation.EditLocationView"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".activities.SplashActivity"
@@ -40,11 +40,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddFortActivity" />
+        <activity android:name=".activities.AddFort.AddFortView" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.StartActivity" />
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.Main.MainView" />
     </application>
 
 </manifest>

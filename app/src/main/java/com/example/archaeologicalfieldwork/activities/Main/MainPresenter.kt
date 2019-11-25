@@ -1,10 +1,11 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.Main
 
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.intentFor
 
-class MainPresenter(val view: MainActivity) : HillFortListener {
+class MainPresenter(val view: MainView) : HillFortListener {
 
     var user : UserModel
     var app : MainApp = view.application as MainApp
@@ -31,7 +32,7 @@ class MainPresenter(val view: MainActivity) : HillFortListener {
     }
 
     override fun onHillFortClick(hillfort: HillFortModel) {
-        view.startActivityForResult(view.intentFor<AddFortActivity>().putExtra("hillfort_edit", hillfort), 0)
+        view.startActivityForResult(view.intentFor<AddFortView>().putExtra("hillfort_edit", hillfort), 0)
     }
 
     fun doNavigationDrawer(appBarConfiguration: AppBarConfiguration) {

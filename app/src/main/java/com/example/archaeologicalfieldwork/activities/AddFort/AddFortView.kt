@@ -1,4 +1,4 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.AddFort
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.Main.MainView
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.google.android.gms.maps.*
@@ -19,7 +21,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.text.SimpleDateFormat
 
-class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
+class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
 
     var hillfort = HillFortModel()
     lateinit var presenter: FortPresenter
@@ -30,7 +32,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addfort)
 
-        presenter = FortPresenter(this)
+        presenter = initPresenter(FortPresenter(this)) as FortPresenter
 
         context = this
 
@@ -42,7 +44,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 //      When editing a hillfort this is checked or the the location is changed
         if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            presenter.doEditHillfort(hillfort)
+            presenter.doEditHillfort(hillfort,this)
         }else{
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val selectedDate = sdf.format(mHillFortDatePicker.date)
@@ -69,7 +71,8 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 //      Deletes hillfort
         mHillFortBtnDelete.setOnClickListener {
             presenter.doRemoveHillfort(hillfort)
-            startActivity(Intent(baseContext,MainActivity::class.java))
+            startActivity(Intent(baseContext,
+                MainView::class.java))
         }
 
 //      Checkbox for selecting date
@@ -94,7 +97,7 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
 
 //      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
-            presenter.doRemoveImage(mAddFortImagePager.currentItem)
+            presenter.doRemoveImage(mAddFortImagePager.currentItem,this)
         }
 //      Adds image to view pager
         mAddImage.setOnClickListener{
@@ -105,6 +108,13 @@ class AddFortActivity : AppCompatActivity(),AnkoLogger, OnMapReadyCallback {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.addfort_menu,menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun showHillfort(hillFortModel: HillFortModel) {
+        mHillFortName.setText(hillfort.name)
+        mHillFortDescription.setText(hillfort.description)
+        mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
+        mHillFortLocationText.text = hillfort.location.toString()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -124,7 +134,7 @@ override fun onMapReady(googleMap: GoogleMap) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data != null){
-            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort)
+            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,context)
         }
     }
 

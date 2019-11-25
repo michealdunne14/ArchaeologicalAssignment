@@ -1,10 +1,14 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.AddFort
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.BasePresenter
+import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationView
 import com.example.archaeologicalfieldwork.adapter.ImageAdapter
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -23,11 +27,11 @@ import org.jetbrains.anko.toast
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-class FortPresenter(val view: AddFortActivity){
+class FortPresenter(view: BaseView):BasePresenter(view){
     var user = UserModel()
     var hillfort = HillFortModel()
     var location = Location(52.245696, -7.139102, 15f)
-    lateinit var app : MainApp
+    override var app : MainApp = view.application as MainApp
     private lateinit var mMapGoogle: GoogleMap
 
     var editinghillfort = false
@@ -36,7 +40,6 @@ class FortPresenter(val view: AddFortActivity){
     val LOCATION_REQUEST = 2
 
     init {
-        app = view.application as MainApp
         user = app.user
     }
 
@@ -51,28 +54,25 @@ class FortPresenter(val view: AddFortActivity){
     fun doMapButton(){
         view.info { "Map Activity Started" }
         if (hillfort.location.lat != 0.0 && hillfort.location.lng != 0.0) {
-            view.startActivityForResult(view.intentFor<MapsActivity>().putExtra("location", hillfort.location), LOCATION_REQUEST)
+            view.startActivityForResult(view.intentFor<EditLocationView>().putExtra("location", hillfort.location), LOCATION_REQUEST)
         }else{
-            view.startActivityForResult(view.intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
+            view.startActivityForResult(view.intentFor<EditLocationView>().putExtra("location", location), LOCATION_REQUEST)
         }
     }
 
-    fun doRemoveImage(currentItem: Int) {
+    fun doRemoveImage(currentItem: Int,context: Context) {
         if(hillfort.imageStore.size == 0){
             view.toast(view.getString(R.string.deleteimages))
         }else {
             hillfort.imageStore.removeAt(currentItem)
             val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-            val adapter = ImageAdapter(view.context, hillfort.imageStore)
+            val adapter = ImageAdapter(context, hillfort.imageStore)
             viewPager.adapter = adapter
         }
     }
 
-    fun doEditHillfort(hillfort: HillFortModel) {
-        view.mHillFortName.setText(hillfort.name)
-        view.mHillFortDescription.setText(hillfort.description)
-        view.mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
-        view.mHillFortLocationText.text = hillfort.location.toString()
+    fun doEditHillfort(hillfort: HillFortModel,context: Context) {
+        view.showHillfort(hillfort)
         location = hillfort.location
 //          Formatting date to long to pass in to calender
         val formatter = SimpleDateFormat("dd/MM/yyyy")
@@ -87,7 +87,7 @@ class FortPresenter(val view: AddFortActivity){
 
 //          View Pager for multiple images
         val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapter(view.context, hillfort.imageStore)
+        val adapter = ImageAdapter(context, hillfort.imageStore)
         viewPager.adapter = adapter
         editinghillfort = true
         view.mHillFortBtnAdd.text = view.getString(R.string.save_hillfort)
@@ -152,7 +152,7 @@ class FortPresenter(val view: AddFortActivity){
     }
 
     //  When a result comes back
-    fun doActivityResult(requestCode: Int, resultCode: Int, data: Intent?, addFortActivity: AddFortActivity,hillfort: HillFortModel) {
+    fun doActivityResult(requestCode: Int, resultCode: Int, data: Intent?, addFortActivity: AddFortView, hillfort: HillFortModel,context: Context) {
         when(requestCode){
             IMAGE_REQUEST -> {
                 if (data != null){
@@ -160,7 +160,7 @@ class FortPresenter(val view: AddFortActivity){
                     hillfort.imageStore.add(hillfort.image)
                     val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
                     val adapter = ImageAdapter(
-                        view.context,
+                        context,
                         hillfort.imageStore
                     )
                     viewPager.adapter = adapter
