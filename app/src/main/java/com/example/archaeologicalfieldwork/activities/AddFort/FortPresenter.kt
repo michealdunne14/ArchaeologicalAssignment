@@ -159,6 +159,7 @@ class FortPresenter(view: BaseView):BasePresenter(view){
                 view.showLocation(hillfort,location)
                 val mMap = (view.supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
                 mMap.getMapAsync(addFortActivity)
+
             }
         }
         }
