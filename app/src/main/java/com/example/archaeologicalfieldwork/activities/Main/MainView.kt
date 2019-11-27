@@ -4,25 +4,31 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsView
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
+import com.example.archaeologicalfieldwork.activities.BaseView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import kotlinx.android.synthetic.main.activity_addfort.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 
-class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
+class MainView : BaseView(),AnkoLogger, HillFortListener {
 
     lateinit var mainPresenter: MainPresenter
 
@@ -35,7 +41,7 @@ class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
         info { "Main Activity Started" }
 //      Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        mainPresenter = MainPresenter(this)
+        mainPresenter = initPresenter(MainPresenter(this)) as MainPresenter
 
         toolbar.title = title
 
@@ -50,14 +56,20 @@ class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
         )
 
 //      Sets up Navigation drawer
-        mainPresenter.doNavigationDrawer(appBarConfiguration)
+        val navController = findNavController(R.id.host_fragment)
+        setupActionBarWithNavController(navController,appBarConfiguration)
+        val navigation = nav_view
+        navigation.setupWithNavController(navController)
+        val headerView = navigation.getHeaderView(0)
+        headerView.mNavName.text = mainPresenter.user.name
+        headerView.mNavEmail.text = mainPresenter.user.email
     }
 
 //  Toolbar Add Button
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.item_add -> startActivityForResult(intentFor<AddFortView>(),0)
-            R.id.item_map -> startActivity<HillfortMapsView>()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_add -> mainPresenter.doAddHillfort()
+            R.id.item_map -> mainPresenter.doShowHillfortMap()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -68,7 +80,7 @@ class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
     }
 //  Shows hillforts when result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        var hillforts = mainPresenter.getHillforts()
+        val hillforts = mainPresenter.getHillforts()
         mListRecyclerView.adapter = HillFortAdapter(hillforts, this, mainPresenter.app, mainPresenter.user)
         mListRecyclerView.adapter?.notifyDataSetChanged()
         super.onActivityResult(requestCode, resultCode, data)
@@ -81,6 +93,6 @@ class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
     }
 
     override fun onHillFortClick(hillfort: HillFortModel) {
-        startActivityForResult(intentFor<AddFortView>().putExtra("hillfort_edit", hillfort), 0)
+        mainPresenter.doEditHillfort(hillfort)
     }
 }

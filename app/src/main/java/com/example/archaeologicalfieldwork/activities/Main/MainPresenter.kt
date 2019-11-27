@@ -1,39 +1,33 @@
 package com.example.archaeologicalfieldwork.activities.Main
 
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
-import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
-import com.example.archaeologicalfieldwork.adapter.HillFortListener
+import com.example.archaeologicalfieldwork.activities.BasePresenter
+import com.example.archaeologicalfieldwork.activities.VIEW
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
-import org.jetbrains.anko.intentFor
 
-class MainPresenter(val view: MainView){
+class MainPresenter(view: MainView): BasePresenter(view){
 
     var user : UserModel
-    var app : MainApp = view.application as MainApp
+    override var app : MainApp = view.application as MainApp
 
     init {
         user = app.user
     }
 
+
     fun getHillforts(): List<HillFortModel> = app.hillforts.findAllHillforts(user)
 
-    fun doNavigationDrawer(appBarConfiguration: AppBarConfiguration) {
-        val navController = view.findNavController(R.id.host_fragment)
-        view.setupActionBarWithNavController(navController,appBarConfiguration)
-        val navigation = view.nav_view
-        navigation.setupWithNavController(navController)
-        val headerView = navigation.getHeaderView(0)
-        headerView.mNavName.text = user.name
-        headerView.mNavEmail.text = user.email
+    fun doAddHillfort(){
+        view.navigateTo(VIEW.HILLFORT)
     }
+
+    fun doEditHillfort(hillFortModel: HillFortModel){
+        view.navigateTo(VIEW.HILLFORT,0,"hillfort_edit",hillFortModel)
+    }
+
+    fun doShowHillfortMap(){
+        view.navigateTo(VIEW.MAPS)
+    }
+
 }

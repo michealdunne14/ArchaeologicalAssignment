@@ -20,14 +20,12 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hillfort_maps)
         setSupportActionBar(toolbar)
-
         toolbar.title = title
         setSupportActionBar(toolbar)
         mapView.onCreate(savedInstanceState)
 
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         mapsPresenter = initPresenter(MapsPresenter(this)) as MapsPresenter
-        mapFragment.getMapAsync {
+        mapView.getMapAsync {
             map = it
             map.setOnMarkerClickListener(this)
             mapsPresenter.initMap(map)

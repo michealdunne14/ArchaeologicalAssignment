@@ -17,7 +17,7 @@ val IMAGE_REQUEST = 1
 val LOCATION_REQUEST = 2
 
 enum class VIEW {
-    LOCATION,PLACEMARK,MAPS,LIST
+    LOCATION,HILLFORT,MAPS,LIST
 }
 
 open abstract class BaseView: AppCompatActivity(),AnkoLogger{
@@ -29,7 +29,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
             var intent = Intent(this,MainView::class.java)
             when(view){
                 VIEW.LOCATION -> intent = Intent(this,EditLocationView::class.java)
-                VIEW.PLACEMARK -> intent = Intent(this,AddFortView::class.java)
+                VIEW.HILLFORT -> intent = Intent(this,AddFortView::class.java)
                 VIEW.MAPS -> intent = Intent(this,HillfortMapsView::class.java)
                 VIEW.LIST -> intent = Intent(this,MainView::class.java)
             }
