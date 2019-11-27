@@ -1,6 +1,5 @@
 package com.example.archaeologicalfieldwork.activities.AddFort
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
@@ -60,18 +59,16 @@ class FortPresenter(view: BaseView):BasePresenter(view){
         }
     }
 
-    fun doRemoveImage(currentItem: Int,context: Context) {
+    fun doRemoveImage(currentItem: Int,hillfort: HillFortModel) {
         if(hillfort.imageStore.size == 0){
             view.toast(view.getString(R.string.deleteimages))
         }else {
             hillfort.imageStore.removeAt(currentItem)
-            val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-            val adapter = ImageAdapter(context, hillfort.imageStore)
-            viewPager.adapter = adapter
+            view.showImages()
         }
     }
 
-    fun doEditHillfort(hillfort: HillFortModel,context: Context) {
+    fun doEditHillfort(hillfort: HillFortModel) {
         view.showHillfort(hillfort)
         location = hillfort.location
 //          Formatting date to long to pass in to calender
@@ -86,12 +83,9 @@ class FortPresenter(view: BaseView):BasePresenter(view){
 
 
 //          View Pager for multiple images
-        val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapter(context, hillfort.imageStore)
-        viewPager.adapter = adapter
+        view.showImages()
         editinghillfort = true
-        view.mHillFortBtnAdd.text = view.getString(R.string.save_hillfort)
-        view.mHillFortBtnDelete.visibility = View.VISIBLE
+        view.showHillfortAdd()
     }
 
     fun doMapReady(googleMap: GoogleMap){
@@ -125,14 +119,9 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     }
 
 
-    fun doAddFort(
-        date: String,
-        hillfort: HillFortModel
-    ) {
-        hillfort.name = view.mHillFortName.text.toString()
-        hillfort.description = view.mHillFortDescription.text.toString()
+    fun doAddFort(date: String, hillfort: HillFortModel) {
+        view.showHillfort(hillfort)
         hillfort.location = location
-        hillfort.visitCheck = view.mHillFortVisitedCheckbox.isChecked
         if(view.mHillFortAddDate.isChecked) {
             hillfort.datevisted = date
         }
@@ -143,9 +132,7 @@ class FortPresenter(view: BaseView):BasePresenter(view){
             }else{
                 app.hillforts.createHillfort(hillfort.copy(),user)
             }
-            view.info { "add Button Pressed: ${hillfort}" }
-            view.setResult(Activity.RESULT_OK)
-            view.finish()
+            view.showResult(hillfort)
         } else {
             view.toast(view.getString(R.string.addfort_entertitleandimage))
         }
@@ -169,7 +156,7 @@ class FortPresenter(view: BaseView):BasePresenter(view){
             LOCATION_REQUEST -> {
             if (data != null) {
                 location = data.extras?.getParcelable<Location>("location")!!
-                view.mHillFortLocationText.text = location.toString()
+                view.showLocation(hillfort,location)
                 val mMap = (view.supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
                 mMap.getMapAsync(addFortActivity)
             }

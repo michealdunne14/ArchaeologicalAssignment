@@ -1,5 +1,6 @@
 package com.example.archaeologicalfieldwork.activities.AddFort
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +8,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CalendarView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
+import com.example.archaeologicalfieldwork.adapter.ImageAdapter
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Location
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.activity_addfort.*
 import org.jetbrains.anko.AnkoLogger
@@ -44,7 +47,7 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
 //      When editing a hillfort this is checked or the the location is changed
         if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
             hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            presenter.doEditHillfort(hillfort,this)
+            presenter.doEditHillfort(hillfort)
         }else{
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val selectedDate = sdf.format(mHillFortDatePicker.date)
@@ -97,7 +100,7 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
 
 //      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
-            presenter.doRemoveImage(mAddFortImagePager.currentItem,this)
+            presenter.doRemoveImage(mAddFortImagePager.currentItem,hillfort)
         }
 //      Adds image to view pager
         mAddImage.setOnClickListener{
@@ -111,10 +114,31 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
     }
 
     override fun showHillfort(hillFortModel: HillFortModel) {
-        mHillFortName.setText(hillfort.name)
-        mHillFortDescription.setText(hillfort.description)
-        mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
-        mHillFortLocationText.text = hillfort.location.toString()
+        mHillFortName.setText(hillFortModel.name)
+        mHillFortDescription.setText(hillFortModel.description)
+        mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
+        mHillFortLocationText.text = hillFortModel.location.toString()
+    }
+
+    override fun showImages(){
+        val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
+        val adapter = ImageAdapter(context, hillfort.imageStore)
+        viewPager.adapter = adapter
+    }
+
+    override fun showLocation(hillFortModel: HillFortModel, location: Location){
+        mHillFortLocationText.text = location.toString()
+    }
+
+    override fun showHillfortAdd(){
+        mHillFortBtnAdd.text = getString(R.string.save_hillfort)
+        mHillFortBtnDelete.visibility = View.VISIBLE
+    }
+
+    override fun showResult(hillFortModel: HillFortModel){
+        info { "add Button Pressed: ${hillfort}" }
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

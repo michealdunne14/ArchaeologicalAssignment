@@ -10,6 +10,7 @@ import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationV
 import com.example.archaeologicalfieldwork.activities.Main.MainView
 import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsActivity
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Location
 import org.jetbrains.anko.AnkoLogger
 
 val IMAGE_REQUEST = 1
@@ -69,6 +70,10 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
         }
 
         open fun showHillfort(hillFortModel: HillFortModel){}
+        open fun showResult(hillFortModel: HillFortModel){}
+        open fun showLocation(hillFortModel: HillFortModel, location: Location){}
+        open fun showImages(){}
+        open fun showHillfortAdd(){}
         open fun showHillforts(hillforts: List<HillFortModel>){}
         open fun showProgress(){}
         open fun hideProgress(){}
