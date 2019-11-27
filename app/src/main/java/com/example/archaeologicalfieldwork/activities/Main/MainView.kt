@@ -9,16 +9,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsActivity
+import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsView
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
+import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
+import com.example.archaeologicalfieldwork.adapter.HillFortListener
+import com.example.archaeologicalfieldwork.models.HillFortModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 
-class MainView : AppCompatActivity(),AnkoLogger {
+class MainView : AppCompatActivity(),AnkoLogger, HillFortListener {
 
     lateinit var mainPresenter: MainPresenter
 
@@ -53,7 +57,7 @@ class MainView : AppCompatActivity(),AnkoLogger {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.item_add -> startActivityForResult(intentFor<AddFortView>(),0)
-            R.id.item_map -> startActivity<HillfortMapsActivity>()
+            R.id.item_map -> startActivity<HillfortMapsView>()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -64,7 +68,9 @@ class MainView : AppCompatActivity(),AnkoLogger {
     }
 //  Shows hillforts when result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mainPresenter.doShowHillforts()
+        var hillforts = mainPresenter.getHillforts()
+        mListRecyclerView.adapter = HillFortAdapter(hillforts, this, mainPresenter.app, mainPresenter.user)
+        mListRecyclerView.adapter?.notifyDataSetChanged()
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -72,5 +78,9 @@ class MainView : AppCompatActivity(),AnkoLogger {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onHillFortClick(hillfort: HillFortModel) {
+        startActivityForResult(intentFor<AddFortView>().putExtra("hillfort_edit", hillfort), 0)
     }
 }

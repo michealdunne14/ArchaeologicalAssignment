@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.content_hillfort_maps.*
 
-class MapsPresenter(view: HillfortMapsActivity): BasePresenter(view) {
+class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
 
     override lateinit var app: MainApp
 

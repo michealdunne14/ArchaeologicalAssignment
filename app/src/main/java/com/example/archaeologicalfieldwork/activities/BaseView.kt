@@ -8,7 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
-import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsActivity
+import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsView
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
 import org.jetbrains.anko.AnkoLogger
@@ -30,7 +30,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
             when(view){
                 VIEW.LOCATION -> intent = Intent(this,EditLocationView::class.java)
                 VIEW.PLACEMARK -> intent = Intent(this,AddFortView::class.java)
-                VIEW.MAPS -> intent = Intent(this,HillfortMapsActivity::class.java)
+                VIEW.MAPS -> intent = Intent(this,HillfortMapsView::class.java)
                 VIEW.LIST -> intent = Intent(this,MainView::class.java)
             }
             if (key != ""){
@@ -74,7 +74,5 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
         open fun showLocation(hillFortModel: HillFortModel, location: Location){}
         open fun showImages(){}
         open fun showHillfortAdd(){}
-        open fun showHillforts(hillforts: List<HillFortModel>){}
-        open fun showProgress(){}
-        open fun hideProgress(){}
+
 }

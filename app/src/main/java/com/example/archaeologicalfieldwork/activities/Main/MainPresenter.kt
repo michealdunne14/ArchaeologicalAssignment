@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.intentFor
 
-class MainPresenter(val view: MainView) : HillFortListener {
+class MainPresenter(val view: MainView){
 
     var user : UserModel
     var app : MainApp = view.application as MainApp
@@ -25,15 +25,7 @@ class MainPresenter(val view: MainView) : HillFortListener {
         user = app.user
     }
 
-    fun doShowHillforts() {
-        var hillforts = app.hillforts.findAllHillforts(user)
-        view.mListRecyclerView.adapter = HillFortAdapter(hillforts, this, app, user)
-        view.mListRecyclerView.adapter?.notifyDataSetChanged()
-    }
-
-    override fun onHillFortClick(hillfort: HillFortModel) {
-        view.startActivityForResult(view.intentFor<AddFortView>().putExtra("hillfort_edit", hillfort), 0)
-    }
+    fun getHillforts(): List<HillFortModel> = app.hillforts.findAllHillforts(user)
 
     fun doNavigationDrawer(appBarConfiguration: AppBarConfiguration) {
         val navController = view.findNavController(R.id.host_fragment)

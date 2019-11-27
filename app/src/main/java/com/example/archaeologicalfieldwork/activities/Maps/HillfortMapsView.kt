@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.activity_hillfort_maps.*
 import kotlinx.android.synthetic.main.content_hillfort_maps.*
 
-class HillfortMapsActivity : BaseView(),GoogleMap.OnMarkerClickListener {
+class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
 
     lateinit var map: GoogleMap
     lateinit var mapsPresenter: MapsPresenter
@@ -34,7 +34,7 @@ class HillfortMapsActivity : BaseView(),GoogleMap.OnMarkerClickListener {
         }
     }
 
-//  heksefd
+
     override fun onMarkerClick(marker: Marker): Boolean {
         mapsPresenter.doMarkerClick(marker)
         return false

@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.Maps.HillfortMapsActivity"
+            android:name=".activities.Maps.HillfortMapsView"
             android:label="@string/title_activity_hillfort_maps"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
