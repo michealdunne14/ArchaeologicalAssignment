@@ -12,6 +12,7 @@ import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationV
 import com.example.archaeologicalfieldwork.activities.VIEW
 import com.example.archaeologicalfieldwork.adapter.ImageAdapter
 import com.example.archaeologicalfieldwork.helper.checkLocationPermissions
+import com.example.archaeologicalfieldwork.helper.createDefaultLocationRequest
 import com.example.archaeologicalfieldwork.helper.isPermissionGranted
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -19,6 +20,8 @@ import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -39,6 +42,7 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     var defaultLocation = Location(52.245696, -7.139102, 15f)
     override var app : MainApp = view.application as MainApp
     var map: GoogleMap? = null
+    val locationRequest = createDefaultLocationRequest()
 
     var editinghillfort = false
 
@@ -130,6 +134,21 @@ class FortPresenter(view: BaseView):BasePresenter(view){
 
     fun doSetLocation() {
         view.navigateTo(VIEW.LOCATION, LOCATION_REQUEST, "location", Location(hillfort.location.lat, hillfort.location.lng, hillfort.location.zoom))
+    }
+
+    @SuppressLint("MissingPermission")
+    fun doResartLocationUpdates() {
+        var locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                if (locationResult != null) {
+                    val l = locationResult.locations.last()
+                    locationUpdate(l.latitude, l.longitude)
+                }
+            }
+        }
+        if (!editinghillfort) {
+            locationService.requestLocationUpdates(locationRequest, locationCallback, null)
+        }
     }
 
     override fun doRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
