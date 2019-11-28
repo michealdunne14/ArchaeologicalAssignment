@@ -24,16 +24,24 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.text.SimpleDateFormat
 
-class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
+class AddFortView : BaseView(),AnkoLogger {
 
     var hillfort = HillFortModel()
     lateinit var presenter: FortPresenter
     lateinit var context: Context
     var date = String()
+    lateinit var map: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addfort)
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync {
+            map = it
+            presenter.doConfigureMap(map)
+            it.setOnMapClickListener { presenter.doSetLocation() }
+
+        }
 
         presenter = initPresenter(FortPresenter(this)) as FortPresenter
 
@@ -54,17 +62,10 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
             date = selectedDate
         }
 
-//      Allows map fragment to be on add Fort Activty
-        val mMap = (supportFragmentManager.findFragmentById(R.id.mMapFragment) as SupportMapFragment)
-        mMap.getMapAsync(this)
 //      Hides hillfort date picker. reason done here and not in xml is it does not adjust items below it leaving a huge blank.
         mHillFortDatePicker.visibility = View.GONE
 
 
-//      Starts Map Activity
-        mMapButton.setOnClickListener {
-            presenter.doMapButton()
-        }
 //      Notes Adapter
         val layoutManager = LinearLayoutManager(this)
 
@@ -73,7 +74,7 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
 
 //      Deletes hillfort
         mHillFortBtnDelete.setOnClickListener {
-            presenter.doRemoveHillfort(hillfort)
+            presenter.doDelete()
             startActivity(Intent(baseContext,
                 MainView::class.java))
         }
@@ -150,16 +151,41 @@ class AddFortView : BaseView(),AnkoLogger, OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
-//  Map
-override fun onMapReady(googleMap: GoogleMap) {
-    presenter.doMapReady(googleMap)
-}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data != null){
             presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,context)
         }
+    }
+
+    override fun onBackPressed() {
+        presenter.doCancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
 }

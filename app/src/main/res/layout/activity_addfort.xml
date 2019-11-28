@@ -96,21 +96,13 @@
                     android:textStyle="bold" />
 
 
-                <fragment
-                    android:id="@+id/mMapFragment"
-                    class="com.google.android.gms.maps.SupportMapFragment"
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="10dp" />
-
-                <Button
-                    android:id="@+id/mMapButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bluebutton"
-                    android:text="@string/addfort_location"
-                    android:textColor="@color/colorwhite"
-                    android:textSize="14sp" />
+                    android:layout_height="162dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <EditText
                     android:id="@+id/mHillFortName"
