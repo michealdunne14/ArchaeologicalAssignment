@@ -10,14 +10,13 @@ import android.view.View
 import android.widget.CalendarView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
-import com.example.archaeologicalfieldwork.adapter.ImageAdapter
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
+import com.example.archaeologicalfieldwork.models.Notes
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.activity_addfort.*
 import org.jetbrains.anko.AnkoLogger
@@ -66,12 +65,6 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortDatePicker.visibility = View.GONE
 
 
-//      Notes Adapter
-        val layoutManager = LinearLayoutManager(this)
-
-        mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        mNotesRecyclerView.adapter = NotesAdapter(hillfort.note)
-
 //      Deletes hillfort
         mHillFortBtnDelete.setOnClickListener {
             presenter.doDelete()
@@ -96,6 +89,9 @@ class AddFortView : BaseView(),AnkoLogger {
 
 //      Adds Hillforts to JSON
         mHillFortBtnAdd.setOnClickListener{
+            hillfort.description = mHillFortDescription.text.toString()
+            hillfort.name = mHillFortName.text.toString()
+//            mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
             presenter.doAddFort(date,hillfort)
         }
 
@@ -114,17 +110,10 @@ class AddFortView : BaseView(),AnkoLogger {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun showHillfort(hillFortModel: HillFortModel) {
+    override fun putHillfort(hillFortModel: HillFortModel) {
         mHillFortName.setText(hillFortModel.name)
         mHillFortDescription.setText(hillFortModel.description)
         mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
-        mHillFortLocationText.text = hillFortModel.location.toString()
-    }
-
-    override fun showImages(){
-        val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapter(context, hillfort.imageStore)
-        viewPager.adapter = adapter
     }
 
     override fun showLocation(hillFortModel: HillFortModel, location: Location){
@@ -186,6 +175,13 @@ class AddFortView : BaseView(),AnkoLogger {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
+    }
+
+
+    override fun showNotes(notes: List<Notes>) {
+        val layoutManager = LinearLayoutManager(this)
+        mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+        mNotesRecyclerView.adapter = NotesAdapter(notes)
     }
 
 }

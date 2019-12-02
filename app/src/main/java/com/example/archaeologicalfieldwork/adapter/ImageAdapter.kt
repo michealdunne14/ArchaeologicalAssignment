@@ -1,12 +1,12 @@
 package com.example.archaeologicalfieldwork.adapter
 
 import android.content.Context
-import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.archaeologicalfieldwork.helper.readImageFromPath
+import com.example.archaeologicalfieldwork.models.Images
 
 class ImageAdapter(private val mContext: Context,private val  imageList: ArrayList<String>) : PagerAdapter() {
     override fun isViewFromObject(view: View, obj: Any): Boolean {

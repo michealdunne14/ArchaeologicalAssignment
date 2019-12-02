@@ -3,42 +3,42 @@ package com.example.archaeologicalfieldwork.activities.AddFort
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.BasePresenter
-import com.example.archaeologicalfieldwork.activities.BaseView
-import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationView
-import com.example.archaeologicalfieldwork.activities.VIEW
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
+import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.adapter.ImageAdapter
+import com.example.archaeologicalfieldwork.fragment.HomeFragPresenter
 import com.example.archaeologicalfieldwork.helper.checkLocationPermissions
 import com.example.archaeologicalfieldwork.helper.isPermissionGranted
 import com.example.archaeologicalfieldwork.helper.showImagePicker
 import com.example.archaeologicalfieldwork.main.MainApp
-import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.example.archaeologicalfieldwork.models.Location
-import com.example.archaeologicalfieldwork.models.UserModel
+import com.example.archaeologicalfieldwork.models.*
+import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_addfort.*
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-class FortPresenter(view: BaseView):BasePresenter(view){
+class FortPresenter(view: BaseView):
+    BasePresenter(view){
     var user = UserModel()
     var hillfort = HillFortModel()
-    var location = Location(52.245696, -7.139102, 15f)
-    var defaultLocation = Location(52.245696, -7.139102, 15f)
+    var location = Location(0,52.245696, -7.139102, 15f)
+    var defaultLocation = Location(0,52.245696, -7.139102, 15f)
     override var app : MainApp = view.application as MainApp
     var map: GoogleMap? = null
+
+    var listofImages = ArrayList<String>()
 
     var editinghillfort = false
 
@@ -49,11 +49,11 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     val LOCATION_REQUEST = 2
 
     init {
-        user = app.user
+        user = app.hillforts.findCurrentUser()
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
             hillfort = view.intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            view.showHillfort(hillfort)
+            view.putHillfort(hillfort)
         }else{
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
@@ -66,8 +66,12 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     }
 
     fun doDelete() {
-        app.hillforts.deleteHillforts(hillfort,user)
-        view.finish()
+        doAsync {
+            app.hillforts.deleteHillforts(hillfort, user)
+            uiThread {
+                view.finish()
+            }
+        }
     }
 
     fun doSelectImage(){
@@ -75,21 +79,17 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     }
 
     fun doRemoveImage(currentItem: Int,hillfort: HillFortModel) {
-        if(hillfort.imageStore.size == 0){
-            view.toast(view.getString(R.string.deleteimages))
-        }else {
-            hillfort.imageStore.removeAt(currentItem)
-            view.showImages()
-        }
+
+//        app.hillforts.findHillfortImages(currentItem)
     }
 
     fun doEditHillfort(hillfort: HillFortModel) {
-        view.showHillfort(hillfort)
-        location = hillfort.location
+        view.putHillfort(hillfort)
+        findNotes()
 //          Formatting date to long to pass in to calender
         val formatter = SimpleDateFormat("dd/MM/yyyy")
         try {
-            val date = formatter.parse(this.hillfort.datevisted)
+            val date = formatter.parse(hillfort.datevisted)
             val dateInLong = date.time
             view.mHillFortDatePicker.date = dateInLong
         } catch (e: ParseException) {
@@ -97,24 +97,34 @@ class FortPresenter(view: BaseView):BasePresenter(view){
         }
 
 //          View Pager for multiple images
-        view.showImages()
         editinghillfort = true
         view.showHillfortAdd()
     }
 
 
     fun doAddFort(date: String, hillfort: HillFortModel) {
-        view.showHillfort(hillfort)
-        hillfort.location = location
         if(view.mHillFortAddDate.isChecked) {
             hillfort.datevisted = date
         }
 
-        if (hillfort.name.isNotEmpty() && hillfort.imageStore.isNotEmpty()){
+        if (hillfort.name.isNotEmpty() && hillfort.image.image.isNotEmpty()){
             if(editinghillfort){
-                app.hillforts.updateHillforts(hillfort.copy(),user)
+                doAsync {
+                    app.hillforts.updateHillforts(hillfort.copy(),user)
+                    uiThread {
+                        view.navigateTo(VIEW.LIST)
+                    }
+                }
             }else{
-                app.hillforts.createHillfort(hillfort.copy(),user)
+                doAsync {
+                    app.hillforts.createHillfort(hillfort.copy(),user)
+                    for (i in listofImages){
+                        createImage(i)
+                    }
+                    uiThread {
+                        view.navigateTo(VIEW.LIST)
+                    }
+                }
             }
             view.showResult(hillfort)
         } else {
@@ -122,14 +132,13 @@ class FortPresenter(view: BaseView):BasePresenter(view){
         }
     }
 
-
     fun doConfigureMap(m: GoogleMap) {
         map = m
-        locationUpdate(hillfort.location.lat, hillfort.location.lng)
+        locationUpdate(location.lat,location.lng)
     }
 
     fun doSetLocation() {
-        view.navigateTo(VIEW.LOCATION, LOCATION_REQUEST, "location", Location(hillfort.location.lat, hillfort.location.lng, hillfort.location.zoom))
+        view.navigateTo(VIEW.LOCATION, LOCATION_REQUEST, "location", Location(0,location.lat, location.lng, location.zoom))
     }
 
     override fun doRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -149,15 +158,15 @@ class FortPresenter(view: BaseView):BasePresenter(view){
     }
 
     fun locationUpdate(lat: Double, lng: Double) {
-        hillfort.location.lat = lat
-        hillfort.location.lng = lng
-        hillfort.location.zoom = 15f
+        location.lat = lat
+        location.lng = lng
+        location.zoom = 15f
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
-        val options = MarkerOptions().title(hillfort.name).position(LatLng(hillfort.location.lat, hillfort.location.lng))
+        val options = MarkerOptions().title(hillfort.name).position(LatLng(location.lat, location.lng))
         map?.addMarker(options)
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(hillfort.location.lat, hillfort.location.lng), hillfort.location.zoom))
-        view.showHillfort(hillfort)
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.lat, location.lng), location.zoom))
+        view.putHillfort(hillfort)
     }
 
     //  When a result comes back
@@ -165,22 +174,43 @@ class FortPresenter(view: BaseView):BasePresenter(view){
         when(requestCode){
             IMAGE_REQUEST -> {
                 if (data != null){
-                    hillfort.image = data.data.toString()
-                    hillfort.imageStore.add(hillfort.image)
-                    val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-                    val adapter = ImageAdapter(
-                        context,
-                        hillfort.imageStore
-                    )
-                    viewPager.adapter = adapter
+                    addImages(data.data.toString(),context)
                 }
             }
             LOCATION_REQUEST -> {
                 val location = data?.extras?.getParcelable<Location>("location")!!
-                hillfort.location.lat = location.lat
-                hillfort.location.lng = location.lng
-                hillfort.location.zoom = location.zoom
-                locationUpdate(hillfort.location.lat, hillfort.location.lng)
+                location.lat = location.lat
+                location.lng = location.lng
+                location.zoom = location.zoom
+                locationUpdate(location.lat, location.lng)
+                hillfort.location = location
+                view.showLocation(hillfort,location)
+            }
+        }
+    }
+
+
+    fun addImages(listImages: String,context: Context){
+        listofImages.add(listImages)
+        val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
+        val adapter = ImageAdapter(context, listofImages)
+        viewPager.adapter = adapter
+    }
+
+    fun createImage(listImages: String) {
+        doAsync {
+            hillfort.image.image = listImages
+            hillfort.image.imageid = generateRandomId()
+            hillfort.image.hillfortImageid = hillfort.id
+            app.hillforts.createImages(hillfort.image)
+        }
+    }
+
+    fun findNotes() {
+        doAsync {
+            val notes = app.hillforts.findNotes(hillfort)
+            uiThread {
+                view.showNotes(notes)
             }
         }
     }

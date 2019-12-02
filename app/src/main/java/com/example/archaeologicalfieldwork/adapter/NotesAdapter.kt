@@ -5,9 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.models.Notes
 import kotlinx.android.synthetic.main.note_card.view.*
 
-class NotesAdapter(private var notes: ArrayList<String>) : RecyclerView.Adapter<MainHolderNotes>() {
+class NotesAdapter(private var notes: List<Notes>) : RecyclerView.Adapter<MainHolderNotes>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolderNotes {
         return MainHolderNotes(
@@ -23,7 +24,7 @@ class NotesAdapter(private var notes: ArrayList<String>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: MainHolderNotes, position: Int) {
         val notes = notes[holder.adapterPosition]
-        holder.bind(notes)
+        holder.bind(notes.note)
     }
 
 }

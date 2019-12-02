@@ -41,8 +41,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AddFort.AddFortView" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.Register.RegisterView" />
+        <activity android:name=".activities.Login.LoginView" />
         <activity android:name=".activities.StartActivity" />
         <activity android:name=".activities.Main.MainView" />
     </application>

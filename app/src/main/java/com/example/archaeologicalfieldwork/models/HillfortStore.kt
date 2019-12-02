@@ -11,5 +11,11 @@ interface HillfortStore {
     fun createHillfort(hillFortModel: HillFortModel, user: UserModel)
     fun updateHillforts(hillfort: HillFortModel,user: UserModel)
     fun deleteHillforts(hillfort: HillFortModel,user: UserModel)
+    fun findCurrentUser():UserModel
     fun deleteUser(user: UserModel)
+    fun findNotes(hillfort: HillFortModel): List<Notes>
+    fun findImages(id: Long): List<Images>
+    fun createImages(images: Images)
+    fun createNote(notes: Notes)
+    fun findLocation(locationId: Long): Location
 }

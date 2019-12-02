@@ -4,29 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsView
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
-import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import kotlinx.android.synthetic.main.activity_addfort.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.uiThread
 
 class MainView : BaseView(),AnkoLogger, HillFortListener {
 
@@ -79,12 +74,15 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
         return super.onCreateOptionsMenu(menu)
     }
 //  Shows hillforts when result
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    doAsync {
         val hillforts = mainPresenter.getHillforts()
-        mListRecyclerView.adapter = HillFortAdapter(hillforts, this, mainPresenter.app, mainPresenter.user)
-        mListRecyclerView.adapter?.notifyDataSetChanged()
-        super.onActivityResult(requestCode, resultCode, data)
+        uiThread {
+            activityResult(hillforts)
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
+}
 
 //  Navigate up to host fragment when selected.
     override fun onSupportNavigateUp(): Boolean {
@@ -94,5 +92,10 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
 
     override fun onHillFortClick(hillfort: HillFortModel) {
         mainPresenter.doEditHillfort(hillfort)
+    }
+
+    fun activityResult(hillforts: List<HillFortModel>) {
+//        mListRecyclerView.adapter = HillFortAdapter(hillforts, this, mainPresenter.app, mainPresenter.user)
+//        mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 }
