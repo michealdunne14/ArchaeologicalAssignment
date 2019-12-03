@@ -1,22 +1,48 @@
 package com.example.archaeologicalfieldwork.models
 
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 import kotlin.collections.ArrayList
 
 @Parcelize
-data class HillFortModel(
-    var id: Long = 0,
-    var name: String = "",
-    var description: String = "",
-    var image: String = "",
-    var imageStore: ArrayList<String> = ArrayList(),
-    var location: Location = Location(),
-    var note: ArrayList<String> = ArrayList(),
-    var datevisted: String = "",
-    var visitCheck: Boolean = false) : Parcelable
+@Entity
+data class HillFortModel(@PrimaryKey(autoGenerate = true)
+                         var id: Long = 0,
+                         var name: String = "",
+                         var fbId: String = "",
+                         var description: String = "",
+                         @Embedded
+                         var notes: Notes = Notes(),
+                         @Embedded
+                         var image: Images = Images(),
+                         var datevisted: String = "",
+                         @Embedded
+                         var location: Location = Location(),
+                         var visitCheck: Boolean = false) : Parcelable
 
 @Parcelize
-data class Location(var lat: Double = 0.0,
+@Entity
+data class Location(@PrimaryKey(autoGenerate = true)
+                    var locationid: Long = 0,
+                    var lat: Double = 0.0,
                     var lng: Double = 0.0,
                     var zoom: Float = 0f) : Parcelable
+
+@Parcelize
+@Entity
+data class Images(@PrimaryKey(autoGenerate = true)
+                  var imageid: Long = 0,
+                  var hillfortImageid: Long = 0,
+                  var image: String = "") : Parcelable
+
+
+@Parcelize
+@Entity
+data class Notes(@PrimaryKey(autoGenerate = true)
+                 var noteid: Long = 0,
+                 var hillfortNotesid: Long = 0,
+                 var note: String = "") : Parcelable

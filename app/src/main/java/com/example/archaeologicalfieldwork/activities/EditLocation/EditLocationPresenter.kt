@@ -2,14 +2,15 @@ package com.example.archaeologicalfieldwork.activities.EditLocation
 
 import android.app.Activity
 import android.content.Intent
-import com.example.archaeologicalfieldwork.activities.BasePresenter
-import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.models.Location
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.*
 
 class EditLocationPresenter(view: BaseView): BasePresenter(view){
 
@@ -30,7 +31,12 @@ class EditLocationPresenter(view: BaseView): BasePresenter(view){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
     }
 
+    fun generateRandomId(): Long{
+        return Random().nextLong()
+    }
+
     fun doUpdateLocation(lat: Double, lng: Double,zoom: Float){
+        location.locationid = generateRandomId()
         location.lat = lat
         location.lng = lng
         location.zoom = zoom

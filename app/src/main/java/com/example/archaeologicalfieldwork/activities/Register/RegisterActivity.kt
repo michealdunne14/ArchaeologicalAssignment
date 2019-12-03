@@ -1,9 +1,11 @@
-package com.example.archaeologicalfieldwork.activities
+package com.example.archaeologicalfieldwork.activities.Register
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.Login.LoginView
+import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.activity_register.*
@@ -30,7 +32,7 @@ class RegisterActivity : AppCompatActivity(),AnkoLogger {
             if (usercheck == null) {
                 if (user.name.isNotEmpty() && user.email.isNotEmpty() && user.password.isNotEmpty()) {
                     app.hillforts.createUsers(user.copy())
-                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, LoginView::class.java))
                     info { "Main activity has Started" }
                     finish()
                 }

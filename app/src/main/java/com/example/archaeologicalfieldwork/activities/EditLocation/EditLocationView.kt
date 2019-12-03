@@ -2,12 +2,10 @@ package com.example.archaeologicalfieldwork.activities.EditLocation
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.BaseView
-import com.example.archaeologicalfieldwork.activities.Maps.MapsPresenter
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment

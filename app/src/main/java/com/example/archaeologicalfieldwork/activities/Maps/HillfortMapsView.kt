@@ -1,11 +1,9 @@
 package com.example.archaeologicalfieldwork.activities.Maps
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.BaseView
+import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 
 import kotlinx.android.synthetic.main.activity_hillfort_maps.*

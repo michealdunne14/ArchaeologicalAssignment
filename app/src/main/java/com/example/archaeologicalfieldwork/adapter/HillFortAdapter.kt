@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.animation.Bounce
-import com.example.archaeologicalfieldwork.main.MainApp
+import com.example.archaeologicalfieldwork.fragment.HomeFragPresenter
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Notes
 import com.example.archaeologicalfieldwork.models.UserModel
+import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
+import org.jetbrains.anko.doAsync
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -20,7 +23,7 @@ interface HillFortListener {
 class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
-    private val app: MainApp,
+    private val homeFragPresenter: HomeFragPresenter,
     private val userModel: UserModel
 )
                                   : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
@@ -40,13 +43,12 @@ class HillFortAdapter(
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,app,userModel)
+        holder.bind(hillfort,listener,homeFragPresenter,userModel)
     }
-
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(hillfort: HillFortModel,listener: HillFortListener,app: MainApp,userModel: UserModel) {
+        fun bind(hillfort: HillFortModel,listener: HillFortListener,homeFragPresenter: HomeFragPresenter,userModel: UserModel) {
 //          Setting card Information
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
@@ -59,8 +61,10 @@ class HillFortAdapter(
             itemView.mCardLocation.text = location
 //          Sends Note to card
             itemView.mCardSendButton.setOnClickListener {
-                hillfort.note.add(itemView.mCardNote.text.toString())
-                app.hillforts.updateHillforts(hillfort,userModel)
+                hillfort.notes.note = itemView.mCardNote.text.toString()
+                hillfort.notes.hillfortNotesid = hillfort.id
+                hillfort.notes.noteid = generateRandomId()
+                doCreateNote(homeFragPresenter,hillfort.notes)
                 itemView.mCardNote.text.clear()
             }
 //          Visited Button
@@ -79,7 +83,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    app.hillforts.updateHillforts(hillfort,userModel)
+                    doUpdateHillforts(hillfort,userModel,homeFragPresenter)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -87,17 +91,34 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    app.hillforts.updateHillforts(hillfort,userModel)
+                    doUpdateHillforts(hillfort,userModel,homeFragPresenter)
                 }
             }
 
-            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
-            val adapter = ImageAdapter(
-                itemView.context,
-                hillfort.imageStore
-            )
-            viewPager.adapter = adapter
+            doFindImages(hillfort,homeFragPresenter)
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
+        }
+
+        fun doUpdateHillforts(hillfort: HillFortModel,userModel: UserModel,homeFragPresenter: HomeFragPresenter){
+            doAsync {
+                homeFragPresenter.app.hillforts.updateHillforts(hillfort, userModel)
+            }
+        }
+
+        fun doFindImages(hillfort: HillFortModel, homeFragPresenter: HomeFragPresenter){
+            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
+            val adapter = ImageAdapter(itemView.context, hillfort.image)
+            viewPager.adapter = adapter
+        }
+
+
+        fun doCreateNote(
+            homeFragPresenter: HomeFragPresenter,
+            note: Notes
+        ){
+            doAsync {
+                homeFragPresenter.createNotes(note)
+            }
         }
     }
 }
