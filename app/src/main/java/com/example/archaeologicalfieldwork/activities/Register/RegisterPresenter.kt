@@ -36,6 +36,10 @@ class RegisterPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
         view.showProgress()
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
             if (task.isSuccessful) {
+                user.name = name
+                user.email = email
+                user.password = password
+                app.hillforts.createUsers(user)
                 view.navigateTo(VIEW.LOGIN)
             } else {
                 view.toast("Sign Up Failed: ${task.exception?.message}")

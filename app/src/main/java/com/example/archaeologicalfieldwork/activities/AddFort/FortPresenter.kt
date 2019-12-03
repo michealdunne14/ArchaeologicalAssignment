@@ -116,11 +116,8 @@ class FortPresenter(view: BaseView):
                 }
             }else{
                 doAsync {
-                    app.hillforts.createHillfort(hillfort.copy(),user)
+                    app.hillforts.createHillfort(hillfort.copy(),user,listofImages)
                     uiThread {
-                        for (i in listofImages){
-                            createImage(i,hillfort)
-                        }
                         view.navigateTo(VIEW.LIST)
                     }
                 }
@@ -194,18 +191,6 @@ class FortPresenter(view: BaseView):
         val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
         val adapter = ImageAdapterAddFort(context, listofImages)
         viewPager.adapter = adapter
-    }
-
-    fun createImage(
-        listImages: String,
-        hillfort: HillFortModel
-    ) {
-        doAsync {
-            hillforts.image.image = listImages
-            hillforts.image.imageid = generateRandomId()
-            hillforts.image.hillfortImageid = hillfort.id
-//            app.hillforts.createImages(hillforts.image)
-        }
     }
 
     fun findNotes() {

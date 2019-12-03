@@ -38,7 +38,10 @@ class StoreRoom(val context: Context): HillfortStore {
         return note
     }
 
-    override fun createImages(images: Images) {
+    override fun createImages(
+        images: Images,
+        fbId: String
+    ) {
         return daoImages.createImage(images)
     }
 
@@ -73,7 +76,12 @@ class StoreRoom(val context: Context): HillfortStore {
         return daoHillfort.findById(hillfortid)
     }
 
-    override fun createHillfort(hillFortModel: HillFortModel, user: UserModel) {
+
+    override fun createHillfort(
+        hillFortModel: HillFortModel,
+        user: UserModel,
+        listofImages: ArrayList<String>
+    ) {
         return daoHillfort.create(hillFortModel)
     }
 

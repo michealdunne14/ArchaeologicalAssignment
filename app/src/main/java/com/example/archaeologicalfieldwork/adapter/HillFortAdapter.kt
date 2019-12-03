@@ -15,7 +15,6 @@ import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -96,7 +95,7 @@ class HillFortAdapter(
                 }
             }
 
-            doFindImages(hillfort.id,homeFragPresenter)
+            doFindImages(hillfort,homeFragPresenter)
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
 
@@ -106,15 +105,10 @@ class HillFortAdapter(
             }
         }
 
-        fun doFindImages(id: Long,homeFragPresenter: HomeFragPresenter){
-            doAsync {
-//                val findImg = homeFragPresenter.app.hillforts.findImages(id)
-                uiThread {
-//                    val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
-//                    val adapter = ImageAdapter(itemView.context, findImg)
-//                    viewPager.adapter = adapter
-                }
-            }
+        fun doFindImages(hillfort: HillFortModel, homeFragPresenter: HomeFragPresenter){
+            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
+            val adapter = ImageAdapter(itemView.context, hillfort.image)
+            viewPager.adapter = adapter
         }
 
 
