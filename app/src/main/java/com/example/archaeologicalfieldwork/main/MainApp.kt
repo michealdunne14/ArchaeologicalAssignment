@@ -1,6 +1,7 @@
 package com.example.archaeologicalfieldwork.main
 
 import android.app.Application
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.activities.Database.StoreRoom
 import com.example.archaeologicalfieldwork.models.jsonstore.HillfortJsonStore
 import com.example.archaeologicalfieldwork.models.UserModel
@@ -15,7 +16,8 @@ class MainApp : Application(), AnkoLogger {
 
     override fun onCreate() {
         super.onCreate()
-        hillforts = StoreRoom(applicationContext)
+//        hillforts = StoreRoom(applicationContext)
+        hillforts = HillfortFireStore(applicationContext)
         info { "App has Started" }
     }
 }

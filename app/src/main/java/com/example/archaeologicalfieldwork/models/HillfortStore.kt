@@ -18,4 +18,6 @@ interface HillfortStore {
     fun createImages(images: Images)
     fun createNote(notes: Notes)
     fun findLocation(locationId: Long): Location
+    fun findAllImages(): List<Images>
+    fun clear()
 }

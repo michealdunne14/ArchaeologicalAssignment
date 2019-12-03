@@ -9,6 +9,7 @@ import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentP
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
@@ -38,5 +39,11 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
                 Toast.makeText(view.context, view.getString(R.string.user_deleted), Toast.LENGTH_LONG ).show()
             }
         }
+    }
+
+    fun doLogout() {
+        FirebaseAuth.getInstance().signOut()
+        app.hillforts.clear()
+        view.startActivity(Intent(view.context, StartActivity::class.java))
     }
 }

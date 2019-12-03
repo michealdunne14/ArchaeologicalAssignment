@@ -14,4 +14,7 @@ interface ImagesDao {
 
     @Query("select * from Images where hillfortImageid = :id")
     fun findByImage(id: Long): List<Images>
+
+    @Query("select * from Images")
+    fun findAllImages(): List<Images>
 }

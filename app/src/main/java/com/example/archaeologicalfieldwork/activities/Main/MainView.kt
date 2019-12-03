@@ -15,6 +15,7 @@ import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
@@ -26,6 +27,7 @@ import org.jetbrains.anko.uiThread
 class MainView : BaseView(),AnkoLogger, HillFortListener {
 
     lateinit var mainPresenter: MainPresenter
+    val user = FirebaseAuth.getInstance().currentUser
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -56,8 +58,7 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
         val navigation = nav_view
         navigation.setupWithNavController(navController)
         val headerView = navigation.getHeaderView(0)
-        headerView.mNavName.text = mainPresenter.user.name
-        headerView.mNavEmail.text = mainPresenter.user.email
+        headerView.mNavEmail.text = user?.email
     }
 
 //  Toolbar Add Button

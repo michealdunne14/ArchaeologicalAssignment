@@ -48,7 +48,7 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
                 findHillforts.forEach {
                     val loc = LatLng(it.location.lat, it.location.lng)
                     val options = MarkerOptions().title(it.name).position(loc)
-                    map.addMarker(options).tag = it.id
+                    map.addMarker(options).tag = it
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.location.zoom))
                 }
             }

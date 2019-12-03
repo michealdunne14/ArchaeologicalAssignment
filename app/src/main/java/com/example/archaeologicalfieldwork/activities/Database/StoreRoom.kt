@@ -81,6 +81,14 @@ class StoreRoom(val context: Context): HillfortStore {
         return daoImages.findByImage(id)
     }
 
+    override fun findAllImages():List<Images>{
+        return daoImages.findAllImages()
+    }
+
+    override fun clear() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findLocation(locationId: Long): Location {
         return daoLocation.findById(locationId)
     }

@@ -12,7 +12,7 @@ class MainPresenter(view: MainView): BasePresenter(view){
     override var app : MainApp = view.application as MainApp
 
     init {
-        user = app.hillforts.findCurrentUser()
+//        user =
     }
 
 

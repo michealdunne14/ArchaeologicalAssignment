@@ -7,9 +7,8 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.example.archaeologicalfieldwork.helper.readImageFromPath
-import com.example.archaeologicalfieldwork.models.Images
 
-class ImageAdapter(private val mContext: Context, private val imageList: List<Images>) : PagerAdapter() {
+class ImageAdapterAddFort(private val mContext: Context, private val imageList: ArrayList<String>) : PagerAdapter() {
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view === obj
     }
@@ -21,7 +20,7 @@ class ImageAdapter(private val mContext: Context, private val imageList: List<Im
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(mContext)
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        Glide.with(mContext).load(imageList[position].image).into(imageView);
+        Glide.with(mContext).load(imageList[position]).into(imageView)
         container.addView(imageView,0)
         return imageView
     }

@@ -21,75 +21,7 @@ fun generateRandomId(): Long{
     return Random().nextLong()
 }
 
-class HillfortJsonStore(val context: Context) : HillfortStore, AnkoLogger {
-    override fun findNotes(hillfort: HillFortModel): List<Notes> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findImages(id: Long): List<Images> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun createImages(images: Images) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun createNote(notes: Notes) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findLocation(locationId: Long): Location {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findCurrentUser(): UserModel {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findAllUsers(): List<UserModel> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun createUsers(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateUsers(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findUser(id: Long): UserModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findUserByEmail(email: String): UserModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findAllHillforts(user: UserModel): List<HillFortModel> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun findHillfort(user: UserModel, hillfortid: Long): HillFortModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun createHillfort(hillFortModel: HillFortModel, user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateHillforts(hillfort: HillFortModel, user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun deleteHillforts(hillfort: HillFortModel, user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun deleteUser(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+class HillfortJsonStore(val context: Context) : AnkoLogger {
     var users = mutableListOf<UserModel>()
 
 //    init {

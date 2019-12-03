@@ -12,6 +12,7 @@ import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentV
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -19,6 +20,7 @@ import org.jetbrains.anko.info
 class SettingsFragView : BaseFragmentView(),AnkoLogger {
 
     lateinit var settingsFragPresenter: SettingsFragPresenter
+    var fbAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +57,7 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
             info { "Logout Button pressed" }
             startActivity(Intent(context, StartActivity::class.java))
             Toast.makeText(context, getString(R.string.LoggedOutuser), Toast.LENGTH_LONG ).show()
+            settingsFragPresenter.doLogout()
         }
 //      Deleting user
         view.mSettingsDelete.setOnClickListener {

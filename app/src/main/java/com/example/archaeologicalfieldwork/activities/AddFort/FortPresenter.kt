@@ -8,8 +8,7 @@ import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
-import com.example.archaeologicalfieldwork.adapter.ImageAdapter
-import com.example.archaeologicalfieldwork.fragment.HomeFragPresenter
+import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.helper.checkLocationPermissions
 import com.example.archaeologicalfieldwork.helper.isPermissionGranted
 import com.example.archaeologicalfieldwork.helper.showImagePicker
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat
 class FortPresenter(view: BaseView):
     BasePresenter(view){
     var user = UserModel()
-    var hillfort = HillFortModel()
+    var hillforts = HillFortModel()
     var location = Location(0,52.245696, -7.139102, 15f)
     var defaultLocation = Location(0,52.245696, -7.139102, 15f)
     override var app : MainApp = view.application as MainApp
@@ -49,11 +48,11 @@ class FortPresenter(view: BaseView):
     val LOCATION_REQUEST = 2
 
     init {
-        user = app.hillforts.findCurrentUser()
+//        user = app.hillforts.findCurrentUser()
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
-            hillfort = view.intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            view.putHillfort(hillfort)
+            hillforts = view.intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
+            view.putHillfort(hillforts)
         }else{
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
@@ -67,7 +66,7 @@ class FortPresenter(view: BaseView):
 
     fun doDelete() {
         doAsync {
-            app.hillforts.deleteHillforts(hillfort, user)
+            app.hillforts.deleteHillforts(hillforts, user)
             uiThread {
                 view.finish()
             }
@@ -106,8 +105,8 @@ class FortPresenter(view: BaseView):
         if(view.mHillFortAddDate.isChecked) {
             hillfort.datevisted = date
         }
-
-        if (hillfort.name.isNotEmpty() && hillfort.image.image.isNotEmpty()){
+        hillfort.id = generateRandomId()
+        if (hillfort.name.isNotEmpty() && listofImages.size > 0){
             if(editinghillfort){
                 doAsync {
                     app.hillforts.updateHillforts(hillfort.copy(),user)
@@ -118,10 +117,10 @@ class FortPresenter(view: BaseView):
             }else{
                 doAsync {
                     app.hillforts.createHillfort(hillfort.copy(),user)
-                    for (i in listofImages){
-                        createImage(i)
-                    }
                     uiThread {
+                        for (i in listofImages){
+                            createImage(i,hillfort)
+                        }
                         view.navigateTo(VIEW.LIST)
                     }
                 }
@@ -163,10 +162,10 @@ class FortPresenter(view: BaseView):
         location.zoom = 15f
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
-        val options = MarkerOptions().title(hillfort.name).position(LatLng(location.lat, location.lng))
+        val options = MarkerOptions().title(hillforts.name).position(LatLng(location.lat, location.lng))
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.lat, location.lng), location.zoom))
-        view.putHillfort(hillfort)
+        view.putHillfort(hillforts)
     }
 
     //  When a result comes back
@@ -193,22 +192,25 @@ class FortPresenter(view: BaseView):
     fun addImages(listImages: String,context: Context){
         listofImages.add(listImages)
         val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapter(context, listofImages)
+        val adapter = ImageAdapterAddFort(context, listofImages)
         viewPager.adapter = adapter
     }
 
-    fun createImage(listImages: String) {
+    fun createImage(
+        listImages: String,
+        hillfort: HillFortModel
+    ) {
         doAsync {
-            hillfort.image.image = listImages
-            hillfort.image.imageid = generateRandomId()
-            hillfort.image.hillfortImageid = hillfort.id
-            app.hillforts.createImages(hillfort.image)
+            hillforts.image.image = listImages
+            hillforts.image.imageid = generateRandomId()
+            hillforts.image.hillfortImageid = hillfort.id
+//            app.hillforts.createImages(hillforts.image)
         }
     }
 
     fun findNotes() {
         doAsync {
-            val notes = app.hillforts.findNotes(hillfort)
+            val notes = app.hillforts.findNotes(hillforts)
             uiThread {
                 view.showNotes(notes)
             }

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.fragment.HomeFragPresenter
@@ -14,7 +15,7 @@ import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
-import java.util.*
+import org.jetbrains.anko.uiThread
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -95,12 +96,7 @@ class HillFortAdapter(
                 }
             }
 
-//            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
-//            val adapter = ImageAdapter(
-//                itemView.context,
-//                hillfort.image
-//            )
-//            viewPager.adapter = adapter
+            doFindImages(hillfort.id,homeFragPresenter)
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
 
@@ -109,6 +105,19 @@ class HillFortAdapter(
                 homeFragPresenter.app.hillforts.updateHillforts(hillfort, userModel)
             }
         }
+
+        fun doFindImages(id: Long,homeFragPresenter: HomeFragPresenter){
+            doAsync {
+//                val findImg = homeFragPresenter.app.hillforts.findImages(id)
+                uiThread {
+//                    val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
+//                    val adapter = ImageAdapter(itemView.context, findImg)
+//                    viewPager.adapter = adapter
+                }
+            }
+        }
+
+
         fun doCreateNote(
             homeFragPresenter: HomeFragPresenter,
             note: Notes

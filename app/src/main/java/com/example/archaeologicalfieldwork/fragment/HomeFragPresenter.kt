@@ -12,7 +12,7 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
     override var app : MainApp = view.activity?.application as MainApp
 
     init {
-        user = app.hillforts.findCurrentUser()
+//        user = app.hillforts.findCurrentUser()
     }
 
     fun findallHillforts() {

@@ -16,32 +16,32 @@ class RegisterPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun doRegister(email: String, password: String, name: String) {
-        doAsync {
-            val usercheck = app.hillforts.findUserByEmail(email)
-            uiThread {
-                    if (usercheck == null) {
-                        user.name = name
-                        user.email = email
-                        user.password = password
-                        if (user.name.isNotEmpty() && user.email.isNotEmpty() && user.password.isNotEmpty()) {
-                            doCreateUser(user)
-                            view.navigateTo(VIEW.LOGIN)
-                            info { "Main activity has Started" }
-                        }
-                    } else {
-                        view.toast(view.getString(R.string.user_registered_already))
-                    }
-                }
-        }
-//        view.showProgress()
-//        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
-//            if (task.isSuccessful) {
-//                view.navigateTo(VIEW.LIST)
-//            } else {
-//                view.toast("Sign Up Failed: ${task.exception?.message}")
-//            }
-//            view.hideProgress()
+//        doAsync {
+//            val usercheck = app.hillforts.findUserByEmail(email)
+//            uiThread {
+//                    if (usercheck == null) {
+//                        user.name = name
+//                        user.email = email
+//                        user.password = password
+//                        if (user.name.isNotEmpty() && user.email.isNotEmpty() && user.password.isNotEmpty()) {
+//                            doCreateUser(user)
+//                            view.navigateTo(VIEW.LOGIN)
+//                            info { "Main activity has Started" }
+//                        }
+//                    } else {
+//                        view.toast(view.getString(R.string.user_registered_already))
+//                    }
+//                }
 //        }
+        view.showProgress()
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
+            if (task.isSuccessful) {
+                view.navigateTo(VIEW.LOGIN)
+            } else {
+                view.toast("Sign Up Failed: ${task.exception?.message}")
+            }
+            view.hideProgress()
+        }
     }
 
 
