@@ -22,7 +22,7 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
 
 
     init {
-        user = app.hillforts.findCurrentUser()
+//        user = app.hillforts.findCurrentUser()
     }
 
 

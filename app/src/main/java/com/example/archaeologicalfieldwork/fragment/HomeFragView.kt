@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
@@ -13,6 +14,7 @@ import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

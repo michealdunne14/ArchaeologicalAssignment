@@ -17,9 +17,6 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hillfort_maps)
-        setSupportActionBar(toolbar)
-        toolbar.title = title
-        setSupportActionBar(toolbar)
         mapView.onCreate(savedInstanceState)
 
         mapsPresenter = initPresenter(MapsPresenter(this)) as MapsPresenter

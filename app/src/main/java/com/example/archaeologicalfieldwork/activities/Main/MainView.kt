@@ -10,15 +10,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager.widget.PagerAdapter
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
+import com.example.archaeologicalfieldwork.adapter.TabsPagerAdapter
+import com.example.archaeologicalfieldwork.animation.ZoomOutPageTransformer
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
+import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
@@ -28,37 +31,25 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
 
     lateinit var mainPresenter: MainPresenter
     val user = FirebaseAuth.getInstance().currentUser
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
+    lateinit var pagerAdapter: TabsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         info { "Main Activity Started" }
-//      Toolbar
+
+                // Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        mainPresenter = initPresenter(MainPresenter(this)) as MainPresenter
-
         toolbar.title = title
-
-
         setSupportActionBar(toolbar)
 
-//      Navigation drawer configuration
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.mNavHome , R.id.mNavSettings
-            ),mMainDrawerLayout
-        )
+        mainPresenter = initPresenter(MainPresenter(this)) as MainPresenter
 
-//      Sets up Navigation drawer
-        val navController = findNavController(R.id.host_fragment)
-        setupActionBarWithNavController(navController,appBarConfiguration)
-        val navigation = nav_view
-        navigation.setupWithNavController(navController)
-        val headerView = navigation.getHeaderView(0)
-        headerView.mNavEmail.text = user?.email
+        pagerAdapter = TabsPagerAdapter(supportFragmentManager)
+        view_pager.setPageTransformer(true, ZoomOutPageTransformer())
+        view_pager.adapter = pagerAdapter
+
     }
 
 //  Toolbar Add Button
@@ -84,13 +75,6 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         }
     }
 }
-
-//  Navigate up to host fragment when selected.
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
     override fun onHillFortClick(hillfort: HillFortModel) {
         mainPresenter.doEditHillfort(hillfort)
     }
