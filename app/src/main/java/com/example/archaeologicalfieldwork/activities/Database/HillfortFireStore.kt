@@ -2,6 +2,7 @@ package com.example.archaeologicalfieldwork.activities.Database
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.helper.readImageFromPath
 import com.example.archaeologicalfieldwork.models.*
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
@@ -10,23 +11,29 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
 import java.io.ByteArrayOutputStream
 import java.io.File
 
 class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val hillforts = ArrayList<HillFortModel>()
-    val users = FirebaseAuth.getInstance().currentUser
+    val hillfortswithStars = ArrayList<HillFortModel?>()
+    val images = ArrayList<Images>()
+    var userModel = UserModel()
     lateinit var userId: String
-    lateinit var db: DatabaseReference
+    var db: DatabaseReference = FirebaseDatabase.getInstance().reference
     lateinit var st: StorageReference
+    var key:String? = db.child("users").push().key
 
     override fun findAllUsers(): List<UserModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun createUsers(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        key?.let {
+            user.fbId = key as String
+            userModel = user
+            db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(user)
+        }
     }
 
     override fun updateUsers(user: UserModel) {
@@ -38,11 +45,16 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     }
 
     override fun findUserByEmail(email: String): UserModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        lateinit var user: UserModel
+        return user
     }
 
     override fun findAllHillforts(user: UserModel): List<HillFortModel> {
         return hillforts
+    }
+
+    override fun findHillfortsWithStar(user: UserModel): List<HillFortModel?> {
+        return hillfortswithStars
     }
 
     override fun findHillfort(user: UserModel, hillfortid: Long): HillFortModel? {
@@ -88,14 +100,18 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         hillforts.clear()
     }
 
+    override fun fetchHills(){
+        fetchHillforts {}
+    }
 
-    fun fetchHillforts(placemarksReady: () -> Unit) {
+
+    fun fetchHillforts(hillfortsReady: () -> Unit) {
         val valueEventListener = object : ValueEventListener {
             override fun onCancelled(dataSnapshot: DatabaseError) {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                dataSnapshot!!.children.mapNotNullTo(hillforts) { it.getValue<HillFortModel>(HillFortModel::class.java) }
-                placemarksReady()
+                dataSnapshot.children.mapNotNullTo(hillforts) { it.getValue<HillFortModel>(HillFortModel::class.java) }
+                hillfortsReady()
             }
         }
         userId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -103,6 +119,25 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         st = FirebaseStorage.getInstance().reference
         hillforts.clear()
         db.child("users").child(userId).child("hillforts").addListenerForSingleValueEvent(valueEventListener)
+
+
+        val myTopPostsQuery = db.child("users").child(userId).child("hillforts")
+        // My top posts by number of stars
+        myTopPostsQuery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (postSnapshot in dataSnapshot.children) {
+                    val starcheck = postSnapshot.child("starCheck").value
+                    if (starcheck == true){
+                        val hillfort: HillFortModel? = postSnapshot.getValue(HillFortModel::class.java)
+                        hillfortswithStars.add(hillfort)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
     }
 
     fun updateImage(hillfortImages: Images, fbId:String) {
@@ -123,15 +158,36 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
                 }.addOnSuccessListener { taskSnapshot ->
                     taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
                         hillfortImages.image = it.toString()
-                        db.child("users").child(userId).child("hillforts").child(fbId).child("image").setValue(hillfortImages)
+                        val key = db.child("users").child(userId).child("hillforts").child(fbId).child("image").push().key
+                        key?.let {
+                            db.child("users").child(userId).child("hillforts").child(fbId).child("image").child(key).setValue(hillfortImages)
+                        }
                     }
                 }
             }
         }
     }
+    val user = UserModel()
 
     override fun findCurrentUser(): UserModel {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val post = dataSnapshot.getValue(UserModel::class.java)
+                post?.let {
+                    user.name = it.name
+                    user.email = it.email
+                    user.password = it.password
+                }
+            }
+        }
+        userId = FirebaseAuth.getInstance().currentUser!!.uid
+        db = FirebaseDatabase.getInstance().reference
+        st = FirebaseStorage.getInstance().reference
+        db.child("users").child(userId).addListenerForSingleValueEvent(valueEventListener)
+        return user
     }
 
     override fun deleteUser(user: UserModel) {
@@ -146,8 +202,8 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun createImages(images: Images,fbId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun createImages(images: Images) {
+        updateImage(images,images.hillfortFbid)
     }
 
     override fun createNote(notes: Notes) {

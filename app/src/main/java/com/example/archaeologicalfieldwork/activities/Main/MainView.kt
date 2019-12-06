@@ -49,6 +49,7 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
         pagerAdapter = TabsPagerAdapter(supportFragmentManager)
         view_pager.setPageTransformer(true, ZoomOutPageTransformer())
         view_pager.adapter = pagerAdapter
+        view_pager.currentItem = 1
 
     }
 

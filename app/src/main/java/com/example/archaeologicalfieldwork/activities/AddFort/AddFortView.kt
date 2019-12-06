@@ -34,7 +34,7 @@ class AddFortView : BaseView(),AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addfort)
-        mapView.onCreate(savedInstanceState);
+        mapView.onCreate(savedInstanceState)
         mapView.getMapAsync {
             map = it
             presenter.doConfigureMap(map)
@@ -50,16 +50,6 @@ class AddFortView : BaseView(),AnkoLogger {
         setSupportActionBar(toolbarAdd)
 
         info("Add HillFort Started")
-
-//      When editing a hillfort this is checked or the the location is changed
-        if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
-            hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            presenter.doEditHillfort(hillfort)
-        }else{
-            val sdf = SimpleDateFormat("dd/MM/yyyy")
-            val selectedDate = sdf.format(mHillFortDatePicker.date)
-            date = selectedDate
-        }
 
 //      Hides hillfort date picker. reason done here and not in xml is it does not adjust items below it leaving a huge blank.
         mHillFortDatePicker.visibility = View.GONE
@@ -91,7 +81,7 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortBtnAdd.setOnClickListener{
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.name = mHillFortName.text.toString()
-//            mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
+            mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
             presenter.doAddFort(date,hillfort)
         }
 
@@ -114,6 +104,7 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortName.setText(hillFortModel.name)
         mHillFortDescription.setText(hillFortModel.description)
         mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
+        mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
     }
 
     override fun showLocation(hillFortModel: HillFortModel, location: Location){

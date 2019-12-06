@@ -8,6 +8,7 @@ import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.helper.checkLocationPermissions
 import com.example.archaeologicalfieldwork.helper.isPermissionGranted
@@ -47,8 +48,13 @@ class FortPresenter(view: BaseView):
     val IMAGE_REQUEST = 1
     val LOCATION_REQUEST = 2
 
+    var fireStore: HillfortFireStore? = null
+
     init {
-//        user = app.hillforts.findCurrentUser()
+        if (app.hillforts is HillfortFireStore) {
+            fireStore = app.hillforts as HillfortFireStore
+        }
+        user = fireStore!!.findCurrentUser()
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
             hillforts = view.intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
@@ -66,7 +72,7 @@ class FortPresenter(view: BaseView):
 
     fun doDelete() {
         doAsync {
-            app.hillforts.deleteHillforts(hillforts, user)
+            fireStore?.deleteHillforts(hillforts, user)
             uiThread {
                 view.finish()
             }
@@ -109,15 +115,22 @@ class FortPresenter(view: BaseView):
         if (hillfort.name.isNotEmpty() && listofImages.size > 0){
             if(editinghillfort){
                 doAsync {
-                    app.hillforts.updateHillforts(hillfort.copy(),user)
+                    fireStore?.updateHillforts(hillfort.copy(),user)
                     uiThread {
                         view.navigateTo(VIEW.LIST)
                     }
                 }
             }else{
+                val images = Images()
                 doAsync {
-                    app.hillforts.createHillfort(hillfort.copy(),user,listofImages)
+                    fireStore?.createHillfort(hillfort.copy(),user,listofImages)
                     uiThread {
+                        for (i in listofImages) {
+                            images.image = i
+                            images.imageid = generateRandomId()
+                            images.hillfortFbid = hillfort.fbId
+                            fireStore?.createImages(images)
+                        }
                         view.navigateTo(VIEW.LIST)
                     }
                 }
@@ -195,7 +208,7 @@ class FortPresenter(view: BaseView):
 
     fun findNotes() {
         doAsync {
-            val notes = app.hillforts.findNotes(hillforts)
+            val notes = fireStore!!.findNotes(hillforts)
             uiThread {
                 view.showNotes(notes)
             }

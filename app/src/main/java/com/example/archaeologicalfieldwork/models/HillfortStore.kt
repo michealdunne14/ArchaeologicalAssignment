@@ -7,6 +7,7 @@ interface HillfortStore {
     fun findUser(id: Long): UserModel?
     fun findUserByEmail(email: String): UserModel?
     fun findAllHillforts(user: UserModel): List<HillFortModel>
+    fun findHillfortsWithStar(user: UserModel): List<HillFortModel?>
     fun findHillfort(user: UserModel, hillfortid: Long) : HillFortModel?
     fun createHillfort(hillFortModel: HillFortModel, user: UserModel, listofImages: ArrayList<String>)
     fun updateHillforts(hillfort: HillFortModel,user: UserModel)
@@ -15,8 +16,9 @@ interface HillfortStore {
     fun deleteUser(user: UserModel)
     fun findNotes(hillfort: HillFortModel): List<Notes>
     fun findImages(id: Long): List<Images>
-    fun createImages(images: Images, fbId: String)
+    fun createImages(images: Images)
     fun createNote(notes: Notes)
+    fun fetchHills()
     fun findLocation(locationId: Long): Location
     fun findAllImages(): List<Images>
     fun clear()

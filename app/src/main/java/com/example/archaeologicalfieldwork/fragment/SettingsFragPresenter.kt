@@ -8,6 +8,7 @@ import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
+import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.AnkoLogger
@@ -22,12 +23,17 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
 
 
     init {
-//        user = app.hillforts.findCurrentUser()
+        doAsync {
+            user = app.hillforts.findCurrentUser()
+            uiThread {
+                doShowUser()
+            }
+        }
     }
 
 
     fun doShowUser(){
-        view.doSetDetails(user.email,user.password,user.name)
+            view.doSetDetails(user.email, user.password, user.name)
     }
 
     fun doDeleteUser(){

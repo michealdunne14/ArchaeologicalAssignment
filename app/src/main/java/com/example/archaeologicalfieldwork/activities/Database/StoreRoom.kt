@@ -38,10 +38,11 @@ class StoreRoom(val context: Context): HillfortStore {
         return note
     }
 
-    override fun createImages(
-        images: Images,
-        fbId: String
-    ) {
+    override fun fetchHills() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun createImages(images: Images) {
         return daoImages.createImage(images)
     }
 
@@ -58,13 +59,17 @@ class StoreRoom(val context: Context): HillfortStore {
         return user
     }
 
-    override fun findUserByEmail(email: String): UserModel? {
+    override fun findUserByEmail(email: String):UserModel?{
         user = daoUsers.findByEmail(email)
         return user
     }
 
     override fun findAllHillforts(user: UserModel): List<HillFortModel> {
         return daoHillfort.findAll()
+    }
+
+    override fun findHillfortsWithStar(user: UserModel): List<HillFortModel> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun findNotes(hillfort: HillFortModel):List<Notes>{

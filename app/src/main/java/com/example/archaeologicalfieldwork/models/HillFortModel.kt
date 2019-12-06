@@ -22,7 +22,8 @@ data class HillFortModel(@PrimaryKey(autoGenerate = true)
                          var datevisted: String = "",
                          @Embedded
                          var location: Location = Location(),
-                         var visitCheck: Boolean = false) : Parcelable
+                         var visitCheck: Boolean = false,
+                         var starCheck: Boolean = false) : Parcelable
 
 @Parcelize
 @Entity
@@ -37,6 +38,7 @@ data class Location(@PrimaryKey(autoGenerate = true)
 data class Images(@PrimaryKey(autoGenerate = true)
                   var imageid: Long = 0,
                   var hillfortImageid: Long = 0,
+                  var hillfortFbid: String = "",
                   var image: String = "") : Parcelable
 
 
