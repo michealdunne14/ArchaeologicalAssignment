@@ -17,6 +17,8 @@ data class HillFortModel(@PrimaryKey(autoGenerate = true)
                          var description: String = "",
                          @Embedded
                          var notes: Notes = Notes(),
+                         @Embedded
+                         var image: Images = Images(),
                          var datevisted: String = "",
                          @Embedded
                          var location: Location = Location(),

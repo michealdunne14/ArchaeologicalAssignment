@@ -7,16 +7,16 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
+import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
 import com.example.archaeologicalfieldwork.animation.Bounce
+import com.example.archaeologicalfieldwork.fragment.HomeFragPresenter
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.Notes
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -48,20 +48,9 @@ class HillFortAdapter(
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val stringList: ArrayList<String> = ArrayList()
-        fun bind(
-            hillfort: HillFortModel,
-            listener: HillFortListener,
-            baseFragmentPresenter: BaseFragmentPresenter,
-            userModel: UserModel
-        ) {
+
+        fun bind(hillfort: HillFortModel,listener: HillFortListener,baseFragmentPresenter: BaseFragmentPresenter,userModel: UserModel) {
 //          Setting card Information
-            doAsync {
-                val images = baseFragmentPresenter.app.hillforts.findImages(hillfort.fbId)
-                uiThread {
-                    doFindImages(images,hillfort.fbId)
-                }
-            }
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted
@@ -80,7 +69,6 @@ class HillFortAdapter(
                 doCreateNote(baseFragmentPresenter,hillfort.notes)
                 itemView.mCardNote.text.clear()
             }
-
 //          Visited Button
             if (visitedCheck){
                 itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
@@ -113,6 +101,7 @@ class HillFortAdapter(
                     hillfort.visitCheck = false
                     doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
                 }
+                doFetchHillforts(baseFragmentPresenter)
             }
 
             itemView.mCardStarButton.setOnClickListener{
@@ -134,7 +123,10 @@ class HillFortAdapter(
                     hillfort.starCheck = false
                     doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
                 }
+                doFetchHillforts(baseFragmentPresenter)
             }
+
+            doFindImages(hillfort,baseFragmentPresenter)
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
 
@@ -144,21 +136,18 @@ class HillFortAdapter(
             }
         }
 
-        fun doFindImages(
-            imagesList: List<Images>,
-            fbId: String
-        ) {
-            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
-            for (i in imagesList){
-                if (i.hillfortFbid == fbId) {
-                    stringList.add(i.image)
-                }
-            }
-            if (stringList.isNotEmpty()) {
-                val adapter = ImageAdapter(itemView.context, stringList)
-                viewPager.adapter = adapter
+        fun doFetchHillforts(baseFragmentPresenter: BaseFragmentPresenter){
+            doAsync {
+                baseFragmentPresenter.app.hillforts.fetchHills()
             }
         }
+
+        fun doFindImages(hillfort: HillFortModel, baseFragmentPresenter: BaseFragmentPresenter){
+            val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
+            val adapter = ImageAdapter(itemView.context, hillfort.image)
+            viewPager.adapter = adapter
+        }
+
 
         fun doCreateNote(
             baseFragmentPresenter: BaseFragmentPresenter,

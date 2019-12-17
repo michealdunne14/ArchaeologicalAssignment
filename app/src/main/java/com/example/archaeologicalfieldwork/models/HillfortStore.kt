@@ -15,7 +15,8 @@ interface HillfortStore {
     fun findCurrentUser():UserModel
     fun deleteUser(user: UserModel)
     fun findNotes(hillfort: HillFortModel): List<Notes>
-    fun findImages(fbId: String): List<Images>
+    fun findImages(id: Long): List<Images>
+    fun createImages(images: Images)
     fun createNote(notes: Notes)
     fun fetchHills()
     fun findLocation(locationId: Long): Location

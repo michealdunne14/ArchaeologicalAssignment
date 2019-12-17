@@ -39,21 +39,18 @@ class LoginPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
 //                }
 //            }
 //        }
-
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
-                if (task.isSuccessful) {
-                    if (fireStore != null) {
-                        fireStore!!.fetchHillforts {
-                            view.hideProgress()
-                            view.navigateTo(VIEW.LIST)
-                        }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
+            if (task.isSuccessful) {
+                if (fireStore != null) {
+                    fireStore!!.fetchHillforts {
+                        view.hideProgress()
                         view.navigateTo(VIEW.LIST)
-                    } else {
-                        view.toast("Sign Up Failed: ${task.exception?.message}")
                     }
-                    view.hideProgress()
+                    view.navigateTo(VIEW.LIST)
+                } else {
+                    view.toast("Sign Up Failed: ${task.exception?.message}")
                 }
+                view.hideProgress()
             }
         }
     }

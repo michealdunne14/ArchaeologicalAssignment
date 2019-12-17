@@ -1,6 +1,9 @@
 package com.example.archaeologicalfieldwork.fragment
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +16,6 @@ import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentV
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.info
@@ -33,15 +35,15 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
         favouriteFragPresenter = initPresenter(FavouriteFragPresenter(this)) as FavouriteFragPresenter
         val view = inflater.inflate(R.layout.fragment_favourite, container, false)
 
-//        view.mFavouriteListView.dispat
-//        view.mFavouriteListView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+
+        view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         favouriteFragPresenter.findallHillforts()
         return view
     }
 
     override fun showHillforts(hillfort: List<HillFortModel>, user: UserModel) {
-//        view?.mFavouriteListView?.adapter = HillFortAdapter(hillfort, this,favouriteFragPresenter,user)
-//        view?.mFavouriteListView?.adapter?.notifyDataSetChanged()
+        view?.mListRecyclerView?.adapter = HillFortAdapter(hillfort, this,favouriteFragPresenter,user)
+        view?.mListRecyclerView?.adapter?.notifyDataSetChanged()
     }
 
     override fun onHillFortClick(hillfort: HillFortModel) {

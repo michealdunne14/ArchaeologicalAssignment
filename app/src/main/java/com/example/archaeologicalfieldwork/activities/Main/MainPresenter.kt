@@ -5,7 +5,6 @@ import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
-import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 
 class MainPresenter(view: MainView): BasePresenter(view){
@@ -23,8 +22,6 @@ class MainPresenter(view: MainView): BasePresenter(view){
 
 
     fun getHillforts(): List<HillFortModel> = fireStore!!.findAllHillforts(user)
-
-    fun getImages(fbId: String): List<Images> = fireStore!!.findImages(fbId)
 
     fun doAddHillfort(){
         view.navigateTo(VIEW.HILLFORT)
