@@ -47,7 +47,10 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
         mFavouriteListView.adapter?.notifyDataSetChanged()
     }
 
-    override fun onHillFortClick(hillfort: HillFortModel) {
+    override fun onHillFortClick(
+        hillfort: HillFortModel,
+        images: ArrayList<Images>
+    ) {
         startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort), 0)
     }
 

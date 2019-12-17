@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
 
 interface HillFortListener {
-    fun onHillFortClick(hillfort: HillFortModel)
+    fun onHillFortClick(
+        hillfort: HillFortModel,
+        images: ArrayList<Images>
+    )
 }
 
 class HillFortAdapter(
@@ -140,7 +143,7 @@ class HillFortAdapter(
                     doUpdateHillforts(hillfort, fireStore)
                 }
             }
-            itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
+            itemView.setOnClickListener { listener.onHillFortClick(hillfort,images) }
         }
 
         fun doUpdateHillforts(

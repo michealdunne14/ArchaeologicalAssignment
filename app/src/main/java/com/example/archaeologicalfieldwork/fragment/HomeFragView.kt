@@ -24,8 +24,17 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
     lateinit var homeFragPresenter: HomeFragPresenter
 
-    override fun onHillFortClick(hillfort: HillFortModel) {
-        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort), 0)
+    override fun onHillFortClick(
+        hillfort: HillFortModel,
+        images: ArrayList<Images>
+    ) {
+        val stringList = ArrayList<String>()
+        for (i in images){
+            if (i.hillfortFbid == hillfort.fbId) {
+                stringList.add(i.image)
+            }
+        }
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
     }
 
 

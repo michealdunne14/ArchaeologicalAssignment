@@ -1,31 +1,19 @@
 package com.example.archaeologicalfieldwork.activities.Main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
-import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.adapter.TabsPagerAdapter
 import com.example.archaeologicalfieldwork.animation.ZoomOutPageTransformer
-import com.example.archaeologicalfieldwork.fragment.FavouriteFragView
 import com.example.archaeologicalfieldwork.fragment.HomeFragView
-import com.example.archaeologicalfieldwork.fragment.SettingsFragView
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Images
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.*
 
@@ -69,7 +57,10 @@ class MainView : BaseView(),AnkoLogger, HillFortListener,BottomNavigationView.On
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onHillFortClick(hillfort: HillFortModel) {
+    override fun onHillFortClick(
+        hillfort: HillFortModel,
+        images: ArrayList<Images>
+    ) {
         mainPresenter.doEditHillfort(hillfort)
     }
 

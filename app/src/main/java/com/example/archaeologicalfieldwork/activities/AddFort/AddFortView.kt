@@ -10,9 +10,11 @@ import android.view.View
 import android.widget.CalendarView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
+import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
@@ -27,7 +29,6 @@ class AddFortView : BaseView(),AnkoLogger {
 
     var hillfort = HillFortModel()
     lateinit var presenter: FortPresenter
-    lateinit var context: Context
     var date = String()
     lateinit var map: GoogleMap
 
@@ -43,8 +44,6 @@ class AddFortView : BaseView(),AnkoLogger {
         }
 
         presenter = initPresenter(FortPresenter(this)) as FortPresenter
-
-        context = this
 
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
@@ -107,6 +106,12 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
     }
 
+    override fun addImages(listofImages: ArrayList<String>){
+        val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
+        val adapter = ImageAdapterAddFort(this, listofImages)
+        viewPager.adapter = adapter
+    }
+
     override fun showLocation(hillFortModel: HillFortModel, location: Location){
         mHillFortLocationText.text = location.toString()
     }
@@ -135,7 +140,7 @@ class AddFortView : BaseView(),AnkoLogger {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data != null){
-            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,context)
+            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,this)
         }
     }
 

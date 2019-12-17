@@ -84,12 +84,11 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     }
 
     override fun updateHillforts(hillfort: HillFortModel) {
-        var foundHillfort: HillFortModel? = hillforts.find { p -> p.fbId == hillfort.fbId }
+        val foundHillfort: HillFortModel? = hillforts.find { p -> p.fbId == hillfort.fbId }
         if (foundHillfort != null) {
-            foundHillfort.name = foundHillfort.name
-            foundHillfort.description = foundHillfort.description
-            foundHillfort.location = foundHillfort.location
-//            updateImage(getImages(),foundHillfort.fbId)
+            foundHillfort.name = hillfort.name
+            foundHillfort.description = hillfort.description
+            foundHillfort.location = hillfort.location
         }
         db.child("users").child(userId).child("hillforts").child(foundHillfort!!.fbId).setValue(foundHillfort)
     }
@@ -123,19 +122,23 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.mapNotNullTo(hillforts) { it.getValue<HillFortModel>(HillFortModel::class.java) }
-                for (postSnapshot in dataSnapshot.children) {
-                    for (images in postSnapshot.child("image").children) {
-                        val eachImage: Images? = images.getValue(Images::class.java)
-                        arrayListOfImages.add(eachImage!!)
-                    }
-                }
+            }
+        }
+
+        val imageEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.mapNotNullTo(arrayListOfImages) { it.getValue<Images>(Images::class.java) }
                 hillfortsReady()
             }
         }
+
         userId = FirebaseAuth.getInstance().currentUser!!.uid
         db = FirebaseDatabase.getInstance().reference
         st = FirebaseStorage.getInstance().reference
         hillforts.clear()
+        db.child("users").child(userId).child("image").addListenerForSingleValueEvent(imageEventListener)
         db.child("users").child(userId).child("hillforts").addListenerForSingleValueEvent(valueEventListener)
 
     }
@@ -163,9 +166,9 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
                             images.hillfortFbid = fbId
                             images.hillfortImageid = generateRandomId()
                             arrayListOfImages.add(images)
-                            val key = db.child("users").child(userId).child("hillforts").child(fbId).child("image").push().key
+                            val key = db.child("users").child(userId).child("image").push().key
                             key?.let {
-                                db.child("users").child(userId).child("hillforts").child(fbId).child("image").child(key).setValue(images)
+                                db.child("users").child(userId).child("image").child(key).setValue(images)
                             }
                         }
                     }

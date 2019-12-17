@@ -3,13 +3,11 @@ package com.example.archaeologicalfieldwork.activities.AddFort
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
-import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.helper.checkLocationPermissions
 import com.example.archaeologicalfieldwork.helper.isPermissionGranted
 import com.example.archaeologicalfieldwork.helper.showImagePicker
@@ -44,7 +42,6 @@ class FortPresenter(view: BaseView):
 
     var locationService: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view)
 
-
     val IMAGE_REQUEST = 1
     val LOCATION_REQUEST = 2
 
@@ -57,8 +54,10 @@ class FortPresenter(view: BaseView):
         user = fireStore!!.findCurrentUser()
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
-            hillforts = view.intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
+            hillforts = view.intent.extras?.getParcelable("hillfort_edit")!!
+            listofImages = view.intent.extras?.getStringArrayList("images") as ArrayList<String>
             view.putHillfort(hillforts)
+            view.addImages(listofImages)
         }else{
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
@@ -90,6 +89,7 @@ class FortPresenter(view: BaseView):
 
     fun doEditHillfort(hillfort: HillFortModel) {
         view.putHillfort(hillfort)
+        view.addImages(listofImages)
         findNotes()
 //          Formatting date to long to pass in to calender
         val formatter = SimpleDateFormat("dd/MM/yyyy")
@@ -115,13 +115,14 @@ class FortPresenter(view: BaseView):
         if (hillfort.name.isNotEmpty() && listofImages.size > 0){
             if(editinghillfort){
                 doAsync {
+                    hillfort.fbId = hillforts.fbId
                     fireStore?.updateHillforts(hillfort.copy())
+                    fireStore?.updateImage(listofImages,hillfort.fbId)
                     uiThread {
                         view.navigateTo(VIEW.LIST)
                     }
                 }
             }else{
-                val images = Images()
                 doAsync {
                     fireStore?.createHillfort(hillfort.copy(),user,listofImages)
                     uiThread {
@@ -177,7 +178,8 @@ class FortPresenter(view: BaseView):
         when(requestCode){
             IMAGE_REQUEST -> {
                 if (data != null){
-                    addImages(data.data.toString(),context)
+                    listofImages.add(data.data.toString())
+                    view.addImages(listofImages)
                 }
             }
             LOCATION_REQUEST -> {
@@ -192,13 +194,6 @@ class FortPresenter(view: BaseView):
         }
     }
 
-
-    fun addImages(listImages: String,context: Context){
-        listofImages.add(listImages)
-        val viewPager = view.findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapterAddFort(context, listofImages)
-        viewPager.adapter = adapter
-    }
 
     fun findNotes() {
         doAsync {
