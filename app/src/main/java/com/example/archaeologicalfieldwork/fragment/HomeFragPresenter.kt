@@ -3,6 +3,7 @@ package com.example.archaeologicalfieldwork.fragment
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
+import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.Notes
 import com.example.archaeologicalfieldwork.models.UserModel
 import org.jetbrains.anko.doAsync
@@ -19,6 +20,8 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
         }
         user = app.hillforts.findCurrentUser()
     }
+
+    fun getImages(fbId: String): List<Images> = fireStore!!.findImages(fbId)
 
     fun findallHillforts() {
         doAsync {

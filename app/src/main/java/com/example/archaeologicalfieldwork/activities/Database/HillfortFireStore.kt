@@ -2,7 +2,6 @@ package com.example.archaeologicalfieldwork.activities.Database
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.helper.readImageFromPath
 import com.example.archaeologicalfieldwork.models.*
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
@@ -17,7 +16,7 @@ import java.io.File
 class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val hillforts = ArrayList<HillFortModel>()
     val hillfortswithStars = ArrayList<HillFortModel?>()
-    val images = ArrayList<Images>()
+    val arrayListOfImages = ArrayList<Images>()
     var userModel = UserModel()
     lateinit var userId: String
     var db: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -70,12 +69,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         val key = db.child("users").child(userId).child("hillforts").push().key
         key?.let {
             hillFortModel.fbId = key
-            for (i in listofImages){
-                hillFortModel.image.image = i
-                hillFortModel.image.imageid = generateRandomId()
-                hillFortModel.image.hillfortImageid = hillFortModel.id
-                updateImage(hillFortModel.image,key)
-            }
+            updateImage(listofImages,key)
             hillforts.add(hillFortModel)
         }
         db.child("users").child(userId).child("hillforts").child(key!!).setValue(hillFortModel)
@@ -140,27 +134,33 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         })
     }
 
-    fun updateImage(hillfortImages: Images, fbId:String) {
-        if (hillfortImages.image != "") {
-            val fileName = File(hillfortImages.image)
-            val imageName = fileName.getName()
+    fun updateImage(hillfortImages: ArrayList<String>, fbId:String) {
 
-            var imageRef = st.child(userId + '/' + imageName)
-            val baos = ByteArrayOutputStream()
-            val bitmap = readImageFromPath(context, hillfortImages.image)
+        for (image in hillfortImages) {
+            var images = Images()
+            if (image != "") {
+                val fileName = File(image)
+                val imageName = fileName.getName()
 
-            bitmap?.let {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                val data = baos.toByteArray()
-                val uploadTask = imageRef.putBytes(data)
-                uploadTask.addOnFailureListener {
-                    println(it.message)
-                }.addOnSuccessListener { taskSnapshot ->
-                    taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
-                        hillfortImages.image = it.toString()
-                        val key = db.child("users").child(userId).child("hillforts").child(fbId).child("image").push().key
-                        key?.let {
-                            db.child("users").child(userId).child("hillforts").child(fbId).child("image").child(key).setValue(hillfortImages)
+                var imageRef = st.child(userId + '/' + imageName)
+                val baos = ByteArrayOutputStream()
+                val bitmap = readImageFromPath(context, image)
+
+                bitmap?.let {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    val data = baos.toByteArray()
+                    val uploadTask = imageRef.putBytes(data)
+                    uploadTask.addOnFailureListener {
+                        println(it.message)
+                    }.addOnSuccessListener { taskSnapshot ->
+                        taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
+                            images.image = it.toString()
+                            images.hillfortFbid = fbId
+                            images.hillfortImageid = generateRandomId()
+                            val key = db.child("users").child(userId).child("hillforts").child(fbId).child("image").push().key
+                            key?.let {
+                                db.child("users").child(userId).child("hillforts").child(fbId).child("image").child(key).setValue(images)
+                            }
                         }
                     }
                 }
@@ -198,12 +198,26 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findImages(id: Long): List<Images> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun findImages(fbId: String): List<Images> {
+        val myTopPostsQuery = db.child("users").child(userId).child("hillforts").child(fbId).child("image")
+        // My top posts by number of stars
+        myTopPostsQuery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (postSnapshot in dataSnapshot.children) {
+                    val eachImage: Images? = postSnapshot.getValue(Images::class.java)
+                    arrayListOfImages.add(eachImage!!)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+        return arrayListOfImages
     }
 
-    override fun createImages(images: Images) {
-        updateImage(images,images.hillfortFbid)
+    fun createImages(images: ArrayList<String>, fbId: String) {
+        updateImage(images,fbId)
     }
 
     override fun createNote(notes: Notes) {

@@ -125,12 +125,6 @@ class FortPresenter(view: BaseView):
                 doAsync {
                     fireStore?.createHillfort(hillfort.copy(),user,listofImages)
                     uiThread {
-                        for (i in listofImages) {
-                            images.image = i
-                            images.imageid = generateRandomId()
-                            images.hillfortFbid = hillfort.fbId
-                            fireStore?.createImages(images)
-                        }
                         view.navigateTo(VIEW.LIST)
                     }
                 }
