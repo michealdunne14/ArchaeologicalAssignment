@@ -16,7 +16,6 @@ import com.example.archaeologicalfieldwork.models.UserModel
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 interface HillFortListener {
     fun onHillFortClick(hillfort: HillFortModel)
@@ -26,7 +25,8 @@ class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
     private val baseFragmentPresenter: BaseFragmentPresenter,
-    private val userModel: UserModel
+    private val userModel: UserModel,
+    private val images: ArrayList<Images>
 ) : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
 
@@ -44,7 +44,7 @@ class HillFortAdapter(
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,baseFragmentPresenter,userModel)
+        holder.bind(hillfort,listener,baseFragmentPresenter,userModel,images)
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -53,15 +53,11 @@ class HillFortAdapter(
             hillfort: HillFortModel,
             listener: HillFortListener,
             baseFragmentPresenter: BaseFragmentPresenter,
-            userModel: UserModel
+            userModel: UserModel,
+            images: ArrayList<Images>
         ) {
 //          Setting card Information
-            doAsync {
-                val images = baseFragmentPresenter.app.hillforts.findImages(hillfort.fbId)
-                uiThread {
-                    doFindImages(images,hillfort.fbId)
-                }
-            }
+            doFindImages(images,hillfort.fbId)
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted

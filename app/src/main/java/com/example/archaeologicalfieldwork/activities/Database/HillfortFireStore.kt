@@ -10,6 +10,8 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -56,8 +58,8 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         return hillfortswithStars
     }
 
-    override fun findHillfort(user: UserModel, hillfortid: Long): HillFortModel? {
-        val foundHillfort: HillFortModel? = hillforts.find { p -> p.id == hillfortid }
+    override fun findHillfort(marker: String): HillFortModel? {
+        val foundHillfort: HillFortModel? = hillforts.find { p -> p.name == marker }
         return foundHillfort
     }
 
@@ -105,6 +107,12 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.mapNotNullTo(hillforts) { it.getValue<HillFortModel>(HillFortModel::class.java) }
+                for (postSnapshot in dataSnapshot.children) {
+                    for (images in postSnapshot.child("image").children) {
+                        val eachImage: Images? = images.getValue(Images::class.java)
+                        arrayListOfImages.add(eachImage!!)
+                    }
+                }
                 hillfortsReady()
             }
         }
@@ -198,26 +206,9 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findImages(fbId: String): List<Images> {
-        val myTopPostsQuery = db.child("users").child(userId).child("hillforts").child(fbId).child("image")
-        // My top posts by number of stars
-        myTopPostsQuery.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (postSnapshot in dataSnapshot.children) {
-                    val eachImage: Images? = postSnapshot.getValue(Images::class.java)
-                    arrayListOfImages.add(eachImage!!)
-                }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-        })
+    override fun getImages(): ArrayList<Images>{
         return arrayListOfImages
-    }
-
-    fun createImages(images: ArrayList<String>, fbId: String) {
-        updateImage(images,fbId)
     }
 
     override fun createNote(notes: Notes) {

@@ -44,8 +44,12 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         return view
     }
 
-    override fun showHillforts(hillfort: List<HillFortModel>, user: UserModel) {
-        view?.mListRecyclerView?.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user)
+    override fun showHillforts(
+        hillfort: List<HillFortModel>,
+        user: UserModel,
+        images: ArrayList<Images>
+    ) {
+        view?.mListRecyclerView?.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
         view?.mListRecyclerView?.adapter?.notifyDataSetChanged()
     }
 

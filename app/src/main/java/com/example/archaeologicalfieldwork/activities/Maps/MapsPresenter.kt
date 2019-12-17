@@ -4,13 +4,12 @@ import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.content_hillfort_maps.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -37,12 +36,20 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
         }
     }
 
-    fun doMarkerClick(marker: Marker) {
+    fun getImages(): List<Images> = fireStore!!.getImages()
+
+    fun doMarkerClick(marker: String) {
         doAsync {
-            val hillFortModel: HillFortModel = fireStore!!.findHillfort(currentUser, marker.tag.toString().toLong())!!
+            val hillFortModel: HillFortModel = fireStore!!.findHillfort(marker)!!
             uiThread {
-                view.currentDescription.text = hillFortModel.description
-                view.currentTitle.text = hillFortModel.name
+                val images = getImages()
+                val searchedImages = ArrayList<Images>()
+                for (i in images){
+                    if (i.hillfortFbid == hillFortModel.fbId){
+                        searchedImages.add(i)
+                    }
+                }
+                view.setMarkerDetails(searchedImages,hillFortModel)
             }
         }
     }

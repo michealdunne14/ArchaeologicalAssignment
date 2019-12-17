@@ -21,11 +21,6 @@ class MainPresenter(view: MainView): BasePresenter(view){
         }
     }
 
-
-    fun getHillforts(): List<HillFortModel> = fireStore!!.findAllHillforts(user)
-
-    fun getImages(fbId: String): List<Images> = fireStore!!.findImages(fbId)
-
     fun doAddHillfort(){
         view.navigateTo(VIEW.HILLFORT)
     }

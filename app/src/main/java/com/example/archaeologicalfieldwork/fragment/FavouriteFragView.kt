@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentView
-import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
-import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 
@@ -39,7 +36,11 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
         return view
     }
 
-    override fun showHillforts(hillfort: List<HillFortModel>, user: UserModel) {
+    override fun showHillforts(
+        hillfort: List<HillFortModel>,
+        user: UserModel,
+        images: ArrayList<Images>
+    ) {
 //        view?.mFavouriteListView?.adapter = HillFortAdapter(hillfort, this,favouriteFragPresenter,user)
 //        view?.mFavouriteListView?.adapter?.notifyDataSetChanged()
     }
