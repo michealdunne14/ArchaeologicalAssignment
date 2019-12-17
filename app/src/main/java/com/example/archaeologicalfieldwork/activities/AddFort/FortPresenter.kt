@@ -116,6 +116,7 @@ class FortPresenter(view: BaseView):
             if(editinghillfort){
                 doAsync {
                     hillfort.fbId = hillforts.fbId
+                    hillfort.location = location
                     fireStore?.updateHillforts(hillfort.copy())
                     fireStore?.updateImage(listofImages,hillfort.fbId)
                     uiThread {
@@ -124,6 +125,7 @@ class FortPresenter(view: BaseView):
                 }
             }else{
                 doAsync {
+                    hillfort.location = location
                     fireStore?.createHillfort(hillfort.copy(),user,listofImages)
                     uiThread {
                         view.navigateTo(VIEW.LIST)
@@ -138,7 +140,6 @@ class FortPresenter(view: BaseView):
 
     fun doConfigureMap(m: GoogleMap) {
         map = m
-        locationUpdate(location.lat,location.lng)
     }
 
     fun doSetLocation() {
@@ -158,6 +159,7 @@ class FortPresenter(view: BaseView):
     fun doSetCurrentLocation() {
         locationService.lastLocation.addOnSuccessListener {
             locationUpdate(it.latitude, it.longitude)
+            view.showLocation(hillforts,location)
         }
     }
 
@@ -165,6 +167,7 @@ class FortPresenter(view: BaseView):
         location.lat = lat
         location.lng = lng
         location.zoom = 15f
+        hillforts.location = location
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
         val options = MarkerOptions().title(hillforts.name).position(LatLng(location.lat, location.lng))

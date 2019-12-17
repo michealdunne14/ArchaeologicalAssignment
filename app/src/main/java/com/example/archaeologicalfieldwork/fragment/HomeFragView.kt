@@ -16,9 +16,7 @@ import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.*
 
 class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
@@ -51,6 +49,14 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
         view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         homeFragPresenter.findallHillforts()
+        view.mFloatingCancelButton.visibility == View.VISIBLE
+
+        view.mFloatingCancelButton.setOnClickListener {
+            view.mFloatingCancelButton.visibility == View.VISIBLE
+            homeFragPresenter.clearHillforts()
+            homeFragPresenter.findallHillforts()
+        }
+
         return view
     }
 

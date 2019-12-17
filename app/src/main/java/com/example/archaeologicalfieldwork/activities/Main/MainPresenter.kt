@@ -21,6 +21,10 @@ class MainPresenter(view: MainView): BasePresenter(view){
         }
     }
 
+    fun doSearchForHillforts(name: String) {
+        fireStore?.findHillforts(name)
+    }
+
     fun doAddHillfort(){
         view.navigateTo(VIEW.HILLFORT)
     }

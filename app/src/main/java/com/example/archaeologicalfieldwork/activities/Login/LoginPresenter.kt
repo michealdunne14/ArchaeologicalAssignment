@@ -48,7 +48,6 @@ class LoginPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
                             view.hideProgress()
                             view.navigateTo(VIEW.LIST)
                         }
-                        view.navigateTo(VIEW.LIST)
                     } else {
                         view.toast("Sign Up Failed: ${task.exception?.message}")
                     }

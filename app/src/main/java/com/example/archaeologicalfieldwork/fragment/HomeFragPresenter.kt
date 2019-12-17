@@ -1,5 +1,6 @@
 package com.example.archaeologicalfieldwork.fragment
 
+import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
@@ -19,12 +20,24 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
         user = app.hillforts.findCurrentUser()
     }
 
+    fun clearHillforts(){
+        fireStore?.clearSearchResult()
+    }
+
     fun findallHillforts() {
         doAsync {
+            val searchedHillforts = fireStore?.findSearchedHillforts()
             val hillfort = fireStore!!.findAllHillforts(user)
             uiThread {
-                val images = fireStore!!.getImages()
-                view.showHillforts(hillfort,user,images)
+                if (searchedHillforts != null) {
+                    if (searchedHillforts.isNotEmpty()) {
+                        val images = fireStore!!.getImages()
+                        view.showHillforts(searchedHillforts, user, images)
+                    } else {
+                        val images = fireStore!!.getImages()
+                        view.showHillforts(hillfort, user, images)
+                    }
+                }
             }
         }
     }

@@ -72,4 +72,6 @@
     <string name="hillfort_image">Hillfort Image</string>
     <string name="hillfort_title">Hillfort Title</string>
     <string name="hillfort_description">hillfort_description</string>
+    <string name="menu_search">Search</string>
+    <string name="search_by_name">Search by Name</string>
 </resources>

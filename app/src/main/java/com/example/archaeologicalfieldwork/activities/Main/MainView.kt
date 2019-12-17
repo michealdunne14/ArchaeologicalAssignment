@@ -1,8 +1,12 @@
 package com.example.archaeologicalfieldwork.activities.Main
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
@@ -14,6 +18,8 @@ import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.*
 
@@ -40,7 +46,6 @@ class MainView : BaseView(),AnkoLogger, HillFortListener,BottomNavigationView.On
         view_pager.setPageTransformer(true, ZoomOutPageTransformer())
         view_pager.adapter = pagerAdapter
         view_pager.currentItem = 1
-
     }
 
     //  Toolbar Add Button
@@ -52,8 +57,24 @@ class MainView : BaseView(),AnkoLogger, HillFortListener,BottomNavigationView.On
         return super.onOptionsItemSelected(item)
     }
     //  adds menu to toolbar
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.add_main_menu,menu)
+        val searchItem: MenuItem? = menu.findItem(R.id.action_search)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView: SearchView? = searchItem?.actionView as SearchView
+        searchView?.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                mainPresenter.doSearchForHillforts(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
+
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return super.onCreateOptionsMenu(menu)
     }
 

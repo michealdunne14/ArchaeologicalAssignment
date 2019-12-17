@@ -17,6 +17,7 @@ import java.io.File
 
 class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val hillforts = ArrayList<HillFortModel>()
+    val searchedHillforts = ArrayList<HillFortModel>()
     val hillfortswithStars = ArrayList<HillFortModel>()
     val arrayListOfImages = ArrayList<Images>()
     var userModel = UserModel()
@@ -54,11 +55,27 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         return hillforts
     }
 
-    override fun findHillfortsWithStar(user: UserModel): List<HillFortModel> {
+    override fun findSearchedHillforts(): List<HillFortModel>{
+        return searchedHillforts
+    }
+
+    override fun clearSearchResult(){
+        searchedHillforts.clear()
+    }
+
+    override fun findHillfortsWithStar(): List<HillFortModel> {
         hillfortswithStars.clear()
-        for (i in hillforts){
-            if (i.starCheck){
-                hillfortswithStars.add(i)
+        if(searchedHillforts.size != 0){
+            for (i in searchedHillforts) {
+                if (i.starCheck) {
+                    hillfortswithStars.add(i)
+                }
+            }
+        }else {
+            for (i in hillforts) {
+                if (i.starCheck) {
+                    hillfortswithStars.add(i)
+                }
             }
         }
         return hillfortswithStars
@@ -141,6 +158,24 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         db.child("users").child(userId).child("image").addListenerForSingleValueEvent(imageEventListener)
         db.child("users").child(userId).child("hillforts").addListenerForSingleValueEvent(valueEventListener)
 
+    }
+
+
+    fun findHillforts(name: String){
+        searchedHillforts.clear()
+        val reference = FirebaseDatabase.getInstance().reference
+        val query = reference.child("users").child(userId).child("hillforts")
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    if(it.child("name").toString().contains(name)){
+                        searchedHillforts.add(it.getValue<HillFortModel>(HillFortModel::class.java)!!)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
     }
 
     fun updateImage(hillfortImages: ArrayList<String>, fbId:String) {
