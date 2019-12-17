@@ -12,7 +12,9 @@ import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentV
 import com.example.archaeologicalfieldwork.adapter.HillFortAdapter
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -22,8 +24,17 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
     lateinit var homeFragPresenter: HomeFragPresenter
 
-    override fun onHillFortClick(hillfort: HillFortModel) {
-        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort), 0)
+    override fun onHillFortClick(
+        hillfort: HillFortModel,
+        images: ArrayList<Images>
+    ) {
+        val stringList = ArrayList<String>()
+        for (i in images){
+            if (i.hillfortFbid == hillfort.fbId) {
+                stringList.add(i.image)
+            }
+        }
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
     }
 
 
@@ -43,9 +54,13 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         return view
     }
 
-    override fun showHillforts(hillfort: List<HillFortModel>, user: UserModel) {
-        view?.mListRecyclerView?.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user)
-        view?.mListRecyclerView?.adapter?.notifyDataSetChanged()
+    override fun showHillforts(
+        hillfort: List<HillFortModel>,
+        user: UserModel,
+        images: ArrayList<Images>
+    ) {
+        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
+        mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
 }

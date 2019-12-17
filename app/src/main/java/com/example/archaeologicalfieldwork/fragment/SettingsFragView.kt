@@ -77,19 +77,12 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
         return view
     }
 
-
-    override fun onStart() {
-        settingsFragPresenter.doShowUser()
-        super.onStart()
-
-    }
-
     override fun doSetDetails(email: String,password: String,name: String){
         //Stats
         view!!.mSettingsEmail.setText(email)
         view!!.mSettingsPassword.setText(password)
         view!!.mSettingsName.setText(name)
-//        view.mSettingsPosts.setText("Current User Posts " + user.hillforts.size)
+//        view!!.mSettingsPosts.setText("Current User Posts " + user.hillforts.size)
 //        view!!.mSettingsUsersTotal.setText("Users " + app.hillforts.findAllUsers().size)
     }
 }

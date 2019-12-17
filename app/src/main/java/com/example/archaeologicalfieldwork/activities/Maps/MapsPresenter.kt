@@ -1,15 +1,15 @@
 package com.example.archaeologicalfieldwork.activities.Maps
 
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BasePresenter
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.content_hillfort_maps.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -17,23 +17,39 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
 
     override var app: MainApp = view.application as MainApp
     lateinit var currentUser: UserModel
+    var fireStore: HillfortFireStore? = null
+
+
+    init {
+        if (app.hillforts is HillfortFireStore) {
+            fireStore = app.hillforts as HillfortFireStore
+        }
+    }
 
     fun initMap(map: GoogleMap) {
         map.uiSettings.isZoomControlsEnabled = true
         doAsync {
-            currentUser = app.hillforts.findCurrentUser()
+            currentUser = fireStore!!.findCurrentUser()
             uiThread {
                 findHillforts(currentUser,map)
             }
         }
     }
 
-    fun doMarkerClick(marker: Marker) {
+    fun getImages(): List<Images> = fireStore!!.getImages()
+
+    fun doMarkerClick(marker: String) {
         doAsync {
-            val hillFortModel: HillFortModel = app.hillforts.findHillfort(currentUser, marker.tag.toString().toLong())!!
+            val hillFortModel: HillFortModel = fireStore!!.findHillfort(marker)!!
             uiThread {
-                view.currentDescription.text = hillFortModel.description
-                view.currentTitle.text = hillFortModel.name
+                val images = getImages()
+                val searchedImages = ArrayList<Images>()
+                for (i in images){
+                    if (i.hillfortFbid == hillFortModel.fbId){
+                        searchedImages.add(i)
+                    }
+                }
+                view.setMarkerDetails(searchedImages,hillFortModel)
             }
         }
     }
@@ -43,7 +59,7 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
         map: GoogleMap
     ) {
         doAsync {
-            val findHillforts = app.hillforts.findAllHillforts(currentUser)
+            val findHillforts = fireStore!!.findAllHillforts(currentUser)
             uiThread {
                 findHillforts.forEach {
                     val loc = LatLng(it.location.lat, it.location.lng)

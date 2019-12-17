@@ -14,5 +14,9 @@
         android:id="@+id/mNavHome"
         android:name="com.example.archaeologicalfieldwork.fragment.HomeFragView"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/ActionShowSettings"
+            app:destination="@id/mNavSettings" />
+    </fragment>
 </navigation>

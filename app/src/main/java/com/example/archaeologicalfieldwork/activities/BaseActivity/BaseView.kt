@@ -16,7 +16,6 @@ import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.Location
 import com.example.archaeologicalfieldwork.models.Notes
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.AnkoLogger
 
 val IMAGE_REQUEST = 1
@@ -83,6 +82,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
     }
 
     open fun putHillfort(hillFortModel: HillFortModel){}
+    open fun addImages(listofImages: ArrayList<String>) {}
     open fun showResult(hillFortModel: HillFortModel){}
     open fun showLocation(hillFortModel: HillFortModel, location: Location){}
     open fun showImages(images: List<Images>){}
@@ -90,5 +90,6 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
     open fun showProgress(){}
     open fun hideProgress(){}
     open fun showNotes(notes: List<Notes>) {}
+    open fun setMarkerDetails(images: List<Images>,hillFortModel: HillFortModel) {}
     open fun registerSignIn(){}
 }

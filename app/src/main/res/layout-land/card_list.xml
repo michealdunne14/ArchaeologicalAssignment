@@ -13,7 +13,7 @@
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/mCardImageList"
-            android:layout_width="411dp"
+            android:layout_width="match_parent"
             android:layout_height="230dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
@@ -62,54 +62,44 @@
 
         <EditText
             android:id="@+id/mCardNote"
-            android:layout_width="312dp"
-            android:layout_height="55dp"
+            android:layout_width="632dp"
+            android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginTop="112dp"
             android:ems="10"
             android:hint="Note"
             android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mDate" />
+            app:layout_constraintTop_toBottomOf="@+id/mCardImageList" />
 
         <ImageButton
             android:id="@+id/mCardCheckButton"
-            android:layout_width="55dp"
-            android:layout_height="52dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:background="@null"
-            app:layout_constraintEnd_toStartOf="@+id/mCardStarButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mCardNote"
             app:srcCompat="@mipmap/check_icon_clear" />
 
         <ImageButton
             android:id="@+id/mCardSendButton"
-            android:layout_width="97dp"
-            android:layout_height="wrap_content"
+            android:layout_width="88dp"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="116dp"
+            android:layout_marginTop="112dp"
             android:layout_toEndOf="@+id/mCardNote"
             android:layout_toRightOf="@+id/mCardNote"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mCardNote"
             app:layout_constraintTop_toBottomOf="@+id/mCardImageList"
             app:srcCompat="@android:drawable/ic_menu_send" />
-
-        <ImageButton
-            android:id="@+id/mCardStarButton"
-            android:layout_width="60dp"
-            android:layout_height="55dp"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/mCardCheckButton"
-            app:layout_constraintTop_toBottomOf="@+id/mCardNote"
-            app:srcCompat="@mipmap/star_nofill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

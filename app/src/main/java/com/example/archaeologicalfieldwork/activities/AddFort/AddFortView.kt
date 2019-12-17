@@ -10,9 +10,11 @@ import android.view.View
 import android.widget.CalendarView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
+import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
@@ -27,14 +29,13 @@ class AddFortView : BaseView(),AnkoLogger {
 
     var hillfort = HillFortModel()
     lateinit var presenter: FortPresenter
-    lateinit var context: Context
     var date = String()
     lateinit var map: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addfort)
-        mapView.onCreate(savedInstanceState);
+        mapView.onCreate(savedInstanceState)
         mapView.getMapAsync {
             map = it
             presenter.doConfigureMap(map)
@@ -44,22 +45,10 @@ class AddFortView : BaseView(),AnkoLogger {
 
         presenter = initPresenter(FortPresenter(this)) as FortPresenter
 
-        context = this
-
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
 
         info("Add HillFort Started")
-
-//      When editing a hillfort this is checked or the the location is changed
-        if(intent.hasExtra("hillfort_edit") || intent.hasExtra("location")){
-            hillfort = intent.extras?.getParcelable<HillFortModel>("hillfort_edit")!!
-            presenter.doEditHillfort(hillfort)
-        }else{
-            val sdf = SimpleDateFormat("dd/MM/yyyy")
-            val selectedDate = sdf.format(mHillFortDatePicker.date)
-            date = selectedDate
-        }
 
 //      Hides hillfort date picker. reason done here and not in xml is it does not adjust items below it leaving a huge blank.
         mHillFortDatePicker.visibility = View.GONE
@@ -91,7 +80,7 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortBtnAdd.setOnClickListener{
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.name = mHillFortName.text.toString()
-//            mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
+            mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
             presenter.doAddFort(date,hillfort)
         }
 
@@ -114,6 +103,13 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortName.setText(hillFortModel.name)
         mHillFortDescription.setText(hillFortModel.description)
         mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
+        mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
+    }
+
+    override fun addImages(listofImages: ArrayList<String>){
+        val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
+        val adapter = ImageAdapterAddFort(this, listofImages)
+        viewPager.adapter = adapter
     }
 
     override fun showLocation(hillFortModel: HillFortModel, location: Location){
@@ -144,7 +140,7 @@ class AddFortView : BaseView(),AnkoLogger {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data != null){
-            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,context)
+            presenter.doActivityResult(requestCode,resultCode,data,this,hillfort,this)
         }
     }
 
