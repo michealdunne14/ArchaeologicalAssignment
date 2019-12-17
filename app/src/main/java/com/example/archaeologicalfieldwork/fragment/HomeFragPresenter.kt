@@ -22,8 +22,8 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
     fun findallHillforts() {
         doAsync {
             val hillfort = fireStore!!.findAllHillforts(user)
-            val images = fireStore!!.getImages()
             uiThread {
+                val images = fireStore!!.getImages()
                 view.showHillforts(hillfort,user,images)
             }
         }

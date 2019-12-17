@@ -17,7 +17,7 @@ import java.io.File
 
 class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val hillforts = ArrayList<HillFortModel>()
-    val hillfortswithStars = ArrayList<HillFortModel?>()
+    val hillfortswithStars = ArrayList<HillFortModel>()
     val arrayListOfImages = ArrayList<Images>()
     var userModel = UserModel()
     lateinit var userId: String
@@ -54,7 +54,13 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         return hillforts
     }
 
-    override fun findHillfortsWithStar(user: UserModel): List<HillFortModel?> {
+    override fun findHillfortsWithStar(user: UserModel): List<HillFortModel> {
+        hillfortswithStars.clear()
+        for (i in hillforts){
+            if (i.starCheck){
+                hillfortswithStars.add(i)
+            }
+        }
         return hillfortswithStars
     }
 
@@ -77,15 +83,25 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         db.child("users").child(userId).child("hillforts").child(key!!).setValue(hillFortModel)
     }
 
-    override fun updateHillforts(hillfort: HillFortModel, user: UserModel) {
+    override fun updateHillforts(hillfort: HillFortModel) {
         var foundHillfort: HillFortModel? = hillforts.find { p -> p.fbId == hillfort.fbId }
         if (foundHillfort != null) {
             foundHillfort.name = foundHillfort.name
             foundHillfort.description = foundHillfort.description
             foundHillfort.location = foundHillfort.location
+//            updateImage(getImages(),foundHillfort.fbId)
         }
         db.child("users").child(userId).child("hillforts").child(foundHillfort!!.fbId).setValue(foundHillfort)
     }
+
+    fun starHillfort(hillfort: HillFortModel){
+        db.child("users").child(userId).child("hillforts").child(hillfort.fbId).child("starCheck").setValue(hillfort.starCheck)
+    }
+
+    fun likeHillfort(hillfort: HillFortModel){
+        db.child("users").child(userId).child("hillforts").child(hillfort.fbId).child("starCheck").setValue(hillfort.starCheck)
+    }
+
 
     override fun deleteHillforts(hillfort: HillFortModel, user: UserModel) {
         db.child("users").child(userId).child("placemarks").child(hillfort.fbId).removeValue()
@@ -122,28 +138,9 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         hillforts.clear()
         db.child("users").child(userId).child("hillforts").addListenerForSingleValueEvent(valueEventListener)
 
-
-        val myTopPostsQuery = db.child("users").child(userId).child("hillforts")
-        // My top posts by number of stars
-        myTopPostsQuery.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (postSnapshot in dataSnapshot.children) {
-                    val starcheck = postSnapshot.child("starCheck").value
-                    if (starcheck == true){
-                        val hillfort: HillFortModel? = postSnapshot.getValue(HillFortModel::class.java)
-                        hillfortswithStars.add(hillfort)
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-        })
     }
 
     fun updateImage(hillfortImages: ArrayList<String>, fbId:String) {
-
         for (image in hillfortImages) {
             var images = Images()
             if (image != "") {
@@ -165,6 +162,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
                             images.image = it.toString()
                             images.hillfortFbid = fbId
                             images.hillfortImageid = generateRandomId()
+                            arrayListOfImages.add(images)
                             val key = db.child("users").child(userId).child("hillforts").child(fbId).child("image").push().key
                             key?.let {
                                 db.child("users").child(userId).child("hillforts").child(fbId).child("image").child(key).setValue(images)

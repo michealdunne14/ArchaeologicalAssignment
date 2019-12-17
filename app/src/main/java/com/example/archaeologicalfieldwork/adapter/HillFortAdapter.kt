@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
@@ -40,6 +41,7 @@ class HillFortAdapter(
         )
     }
 
+
     override fun getItemCount(): Int = hillforts.size
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
@@ -48,6 +50,10 @@ class HillFortAdapter(
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+        var fireStore: HillfortFireStore? = null
+
+
         val stringList: ArrayList<String> = ArrayList()
         fun bind(
             hillfort: HillFortModel,
@@ -56,6 +62,9 @@ class HillFortAdapter(
             userModel: UserModel,
             images: ArrayList<Images>
         ) {
+            if (baseFragmentPresenter.app.hillforts is HillfortFireStore) {
+                fireStore = baseFragmentPresenter.app.hillforts as HillfortFireStore
+            }
 //          Setting card Information
             doFindImages(images,hillfort.fbId)
             itemView.mCardName.text = hillfort.name
@@ -99,7 +108,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
+                    doUpdateHillforts(hillfort, fireStore)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -107,7 +116,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
+                    doUpdateHillforts(hillfort, fireStore)
                 }
             }
 
@@ -120,7 +129,7 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_fill)
                     hillfort.starCheck = true
-                    doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
+                    doUpdateHillforts(hillfort, fireStore)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -128,15 +137,18 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_nofill)
                     hillfort.starCheck = false
-                    doUpdateHillforts(hillfort,userModel,baseFragmentPresenter)
+                    doUpdateHillforts(hillfort, fireStore)
                 }
             }
             itemView.setOnClickListener { listener.onHillFortClick(hillfort) }
         }
 
-        fun doUpdateHillforts(hillfort: HillFortModel,userModel: UserModel,baseFragmentPresenter: BaseFragmentPresenter){
+        fun doUpdateHillforts(
+            hillfort: HillFortModel,
+            fireStore: HillfortFireStore?
+        ){
             doAsync {
-                baseFragmentPresenter.app.hillforts.updateHillforts(hillfort, userModel)
+                fireStore?.starHillfort(hillfort)
             }
         }
 

@@ -14,6 +14,7 @@ import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -49,8 +50,8 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         user: UserModel,
         images: ArrayList<Images>
     ) {
-        view?.mListRecyclerView?.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
-        view?.mListRecyclerView?.adapter?.notifyDataSetChanged()
+        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
+        mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
 }

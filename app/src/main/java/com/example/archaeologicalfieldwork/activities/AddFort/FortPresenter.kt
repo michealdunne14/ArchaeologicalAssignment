@@ -115,7 +115,7 @@ class FortPresenter(view: BaseView):
         if (hillfort.name.isNotEmpty() && listofImages.size > 0){
             if(editinghillfort){
                 doAsync {
-                    fireStore?.updateHillforts(hillfort.copy(),user)
+                    fireStore?.updateHillforts(hillfort.copy())
                     uiThread {
                         view.navigateTo(VIEW.LIST)
                     }

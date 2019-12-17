@@ -27,10 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_layout.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.info
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 class MainView : BaseView(),AnkoLogger, HillFortListener,BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -71,19 +68,7 @@ class MainView : BaseView(),AnkoLogger, HillFortListener,BottomNavigationView.On
         menuInflater.inflate(R.menu.add_main_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
-    ////  Shows hillforts when result
-//override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//    doAsync {
-//        val hillforts = mainPresenter.getHillforts()
-//        uiThread {
-//            activityResult(hillforts)
-//            for(i in hillforts) {
-//                mainPresenter.getImages(i.fbId)
-//            }
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
-//}
+
     override fun onHillFortClick(hillfort: HillFortModel) {
         mainPresenter.doEditHillfort(hillfort)
     }

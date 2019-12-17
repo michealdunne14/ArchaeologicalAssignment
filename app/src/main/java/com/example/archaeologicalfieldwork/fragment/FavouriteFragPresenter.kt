@@ -22,9 +22,10 @@ class FavouriteFragPresenter(view: FavouriteFragView): BaseFragmentPresenter(vie
 
     fun findallHillforts() {
         doAsync {
-            val hillfort = fireStore?.findHillfortsWithStar(user)
+            val hillfort = fireStore!!.findHillfortsWithStar(user)
+            val images = fireStore!!.getImages()
             uiThread {
-                //                view.showHillforts(hillfort as List<HillFortModel>,user)
+                view.showHillforts(hillfort,user,images)
             }
         }
     }

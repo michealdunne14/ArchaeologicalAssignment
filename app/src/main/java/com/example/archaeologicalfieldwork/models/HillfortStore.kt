@@ -11,7 +11,7 @@ interface HillfortStore {
     fun findHillfortsWithStar(user: UserModel): List<HillFortModel?>
     fun findHillfort(marker: String) : HillFortModel?
     fun createHillfort(hillFortModel: HillFortModel, user: UserModel, listofImages: ArrayList<String>)
-    fun updateHillforts(hillfort: HillFortModel,user: UserModel)
+    fun updateHillforts(hillfort: HillFortModel)
     fun deleteHillforts(hillfort: HillFortModel,user: UserModel)
     fun findCurrentUser():UserModel
     fun deleteUser(user: UserModel)
