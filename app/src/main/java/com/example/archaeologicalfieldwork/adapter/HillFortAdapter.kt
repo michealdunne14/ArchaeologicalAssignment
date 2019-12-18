@@ -73,6 +73,7 @@ class HillFortAdapter(
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted
+            itemView.mRating.text = hillfort.rating
 
             var visitedCheck = hillfort.visitCheck
             var starCheck = hillfort.starCheck

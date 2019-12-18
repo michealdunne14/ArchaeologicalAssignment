@@ -31,9 +31,11 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
             uiThread {
                 if (searchedHillforts != null) {
                     if (searchedHillforts.isNotEmpty()) {
+                        view.showFloatingAction()
                         val images = fireStore!!.getImages()
                         view.showHillforts(searchedHillforts, user, images)
                     } else {
+                        view.hideFloatingAction()
                         val images = fireStore!!.getImages()
                         view.showHillforts(hillfort, user, images)
                     }

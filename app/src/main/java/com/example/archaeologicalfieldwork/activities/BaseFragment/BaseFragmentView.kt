@@ -21,4 +21,6 @@ open abstract class BaseFragmentView: Fragment(), AnkoLogger {
         images: ArrayList<Images>
     ) {}
     open fun doSetDetails(email: String,password: String,name: String) {}
+    open fun showFloatingAction(){}
+    open fun hideFloatingAction(){}
 }

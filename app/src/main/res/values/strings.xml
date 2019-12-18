@@ -39,7 +39,6 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="addford_visited">Visited</string>
     <string name="settings_password">Password</string>
@@ -74,4 +73,5 @@
     <string name="hillfort_description">hillfort_description</string>
     <string name="menu_search">Search</string>
     <string name="search_by_name">Search by Name</string>
+    <string name="rating">Rating</string>
 </resources>

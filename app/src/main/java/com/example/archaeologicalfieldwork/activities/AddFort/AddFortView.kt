@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CalendarView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -80,6 +81,7 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortBtnAdd.setOnClickListener{
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.name = mHillFortName.text.toString()
+            hillfort.rating = " " + mRatingBar.rating + " Stars"
             mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
             presenter.doAddFort(date,hillfort)
         }

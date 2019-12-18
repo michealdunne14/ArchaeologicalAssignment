@@ -1,5 +1,6 @@
 package com.example.archaeologicalfieldwork.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.*
@@ -49,15 +51,23 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
         view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
         homeFragPresenter.findallHillforts()
-        view.mFloatingCancelButton.visibility == View.VISIBLE
 
         view.mFloatingCancelButton.setOnClickListener {
-            view.mFloatingCancelButton.visibility == View.VISIBLE
             homeFragPresenter.clearHillforts()
             homeFragPresenter.findallHillforts()
         }
 
         return view
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun showFloatingAction() {
+        mFloatingCancelButton.visibility = View.VISIBLE
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun hideFloatingAction() {
+        mFloatingCancelButton.visibility = View.GONE
     }
 
     override fun showHillforts(

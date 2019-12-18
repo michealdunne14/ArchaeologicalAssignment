@@ -14,6 +14,7 @@ data class HillFortModel(@PrimaryKey(autoGenerate = true)
                          var id: Long = 0,
                          var name: String = "",
                          var fbId: String = "",
+                         var rating: String = "",
                          var description: String = "",
                          @Embedded
                          var notes: Notes = Notes(),
