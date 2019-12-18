@@ -18,5 +18,12 @@
         <action
             android:id="@+id/ActionShowSettings"
             app:destination="@id/mNavSettings" />
+        <action
+            android:id="@+id/action_mNavHome_to_favouriteFragView"
+            app:destination="@id/mNavFavourites" />
     </fragment>
+    <fragment
+        android:id="@+id/mNavFavourites"
+        android:name="com.example.archaeologicalfieldwork.fragment.FavouriteFragView"
+        android:label="FavouriteFragView" />
 </navigation>
