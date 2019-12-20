@@ -2,7 +2,7 @@ package com.example.archaeologicalfieldwork.models
 
 interface HillfortStore {
     fun findAllUsers(): List<UserModel>
-    fun createUsers(user: UserModel)
+    fun createUsers(userModel: UserModel)
     fun updateUsers(user: UserModel)
     fun getImages(): ArrayList<Images>
     fun sharingHillfort(email: String, hillfort: HillFortModel)
@@ -20,10 +20,9 @@ interface HillfortStore {
     fun currentUser():UserModel
     fun getSharedHillforts(): List<HillFortModel>
     fun deleteUser(user: UserModel)
-    fun findNotes(hillfort: HillFortModel): List<Notes>
-    fun createNote(notes: Notes)
     fun fetchHills()
     fun findLocation(locationId: Long): Location
     fun findAllImages(): List<Images>
+    fun createNote(note: String, fbId: String)
     fun clear()
 }

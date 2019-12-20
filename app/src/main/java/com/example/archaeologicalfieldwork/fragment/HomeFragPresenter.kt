@@ -23,6 +23,12 @@ class HomeFragPresenter(view: HomeFragView): BaseFragmentPresenter(view) {
         fireStore?.clearSearchResult()
     }
 
+    fun findNotes(fbId: String) {
+        val clearnotes = fireStore!!.getArrayListofNotes()
+        clearnotes.clear()
+        fireStore!!.findNotes(fbId)
+    }
+
     fun findallHillforts() {
         doAsync {
             val searchedHillforts = fireStore?.findSearchedHillforts()

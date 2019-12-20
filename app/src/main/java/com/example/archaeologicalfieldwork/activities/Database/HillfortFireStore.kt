@@ -22,6 +22,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val sharedHillforts = ArrayList<Share>()
     val arrayListOfImages = ArrayList<Images>()
     val searchedUsers = ArrayList<UserModel>()
+    val notes = ArrayList<Notes>()
     var user:UserModel = UserModel()
     private lateinit var userId: String
     var db: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -39,6 +40,37 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(userModel)
         }
     }
+
+    override fun createNote(note: String, fbId: String){
+        val notes = Notes()
+        val key:String? = db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).push().key
+        key?.let {
+            notes.hillfortNotesid = fbId
+            notes.note = note
+            db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).child("notes").child(key).setValue(notes)
+        }
+    }
+
+    fun findNotes(fbId: String){
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    val noteModel = it.getValue<Notes>(Notes::class.java)!!
+                    if (noteModel.hillfortNotesid == fbId) {
+                        notes.add(noteModel)
+                    }
+                }
+            }
+        }
+        db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).child("notes").addValueEventListener(valueEventListener)
+    }
+
+    fun getArrayListofNotes(): ArrayList<Notes>{
+        return notes
+    }
+
 
     override fun updateUsers(user: UserModel) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -229,7 +261,6 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         st = FirebaseStorage.getInstance().reference
         db.child("users").child(userId).child("image").addValueEventListener(imageEventListener)
         db.child("users").child(userId).child("hillforts").addValueEventListener(valueEventListener)
-
     }
 
 
@@ -314,17 +345,9 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findNotes(hillfort: HillFortModel): List<Notes> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     override fun getImages(): ArrayList<Images>{
         return arrayListOfImages
-    }
-
-    override fun createNote(notes: Notes) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun findLocation(locationId: Long): Location {

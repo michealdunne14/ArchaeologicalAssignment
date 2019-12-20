@@ -16,8 +16,6 @@ data class HillFortModel(@PrimaryKey(autoGenerate = true)
                          var fbId: String = "",
                          var rating: String = "",
                          var description: String = "",
-                         @Embedded
-                         var notes: Notes = Notes(),
                          var datevisted: String = "",
                          @Embedded
                          var location: Location = Location(),
@@ -45,7 +43,7 @@ data class Images(@PrimaryKey(autoGenerate = true)
 @Entity
 data class Notes(@PrimaryKey(autoGenerate = true)
                  var noteid: Long = 0,
-                 var hillfortNotesid: Long = 0,
+                 var hillfortNotesid: String = "",
                  var note: String = "") : Parcelable
 
 @Parcelize

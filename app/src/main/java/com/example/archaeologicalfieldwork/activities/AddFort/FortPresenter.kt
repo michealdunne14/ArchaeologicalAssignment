@@ -37,6 +37,7 @@ class FortPresenter(view: BaseView):
     var map: GoogleMap? = null
 
     var listofImages = ArrayList<String>()
+    var listofNotes= ArrayList<Notes>()
 
     var editinghillfort = false
 
@@ -56,6 +57,8 @@ class FortPresenter(view: BaseView):
             editinghillfort = true
             hillforts = view.intent.extras?.getParcelable("hillfort_edit")!!
             listofImages = view.intent.extras?.getStringArrayList("images") as ArrayList<String>
+            listofNotes = fireStore!!.getArrayListofNotes()
+            view.showNotes(listofNotes)
             view.putHillfort(hillforts)
             view.addImages(listofImages)
         }else{
@@ -90,7 +93,6 @@ class FortPresenter(view: BaseView):
     fun doEditHillfort(hillfort: HillFortModel) {
         view.putHillfort(hillfort)
         view.addImages(listofImages)
-        findNotes()
 //          Formatting date to long to pass in to calender
         val formatter = SimpleDateFormat("dd/MM/yyyy")
         try {
@@ -193,16 +195,6 @@ class FortPresenter(view: BaseView):
                 locationUpdate(location.lat, location.lng)
                 hillfort.location = location
                 view.showLocation(hillfort,location)
-            }
-        }
-    }
-
-
-    fun findNotes() {
-        doAsync {
-            val notes = fireStore!!.findNotes(hillforts)
-            uiThread {
-                view.showNotes(notes)
             }
         }
     }

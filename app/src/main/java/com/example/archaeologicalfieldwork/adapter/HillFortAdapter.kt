@@ -14,9 +14,6 @@ import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
-import com.example.archaeologicalfieldwork.models.Notes
-import com.example.archaeologicalfieldwork.models.UserModel
-import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
 
@@ -82,10 +79,8 @@ class HillFortAdapter(
             itemView.mCardLocation.text = location
 //          Sends Note to card
             itemView.mCardSendButton.setOnClickListener {
-                hillfort.notes.note = itemView.mCardNote.text.toString()
-                hillfort.notes.hillfortNotesid = hillfort.id
-                hillfort.notes.noteid = generateRandomId()
-                doCreateNote(baseFragmentPresenter,hillfort.notes)
+                val note = itemView.mCardNote.text.toString()
+                doCreateNote(baseFragmentPresenter,note,hillfort)
                 itemView.mCardNote.text.clear()
             }
 
@@ -198,10 +193,11 @@ class HillFortAdapter(
 
         fun doCreateNote(
             baseFragmentPresenter: BaseFragmentPresenter,
-            note: Notes
+            note: String,
+            hillfort: HillFortModel
         ){
             doAsync {
-                baseFragmentPresenter.app.hillforts.createNote(note)
+                baseFragmentPresenter.app.hillforts.createNote(note,hillfort.fbId)
             }
         }
     }

@@ -1,13 +1,10 @@
 package com.example.archaeologicalfieldwork.fragment
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
@@ -18,7 +15,6 @@ import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.*
@@ -37,6 +33,7 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
                 stringList.add(i.image)
             }
         }
+        homeFragPresenter.findNotes(hillfort.fbId)
         startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
     }
 
