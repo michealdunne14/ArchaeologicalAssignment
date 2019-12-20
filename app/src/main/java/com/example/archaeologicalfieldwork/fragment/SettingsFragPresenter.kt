@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.HillFortModel
@@ -20,13 +21,19 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
 
     override var app : MainApp = view.activity?.application as MainApp
     var user = UserModel()
+    var fireStore: HillfortFireStore? = null
 
 
     init {
-        doAsync {
-            user = app.hillforts.findCurrentUser()
-            uiThread {
-                doShowUser()
+        if (app.hillforts is HillfortFireStore) {
+            fireStore = app.hillforts as HillfortFireStore
+            if (user.email == "") {
+                doAsync {
+                    user = app.hillforts.currentUser()
+                    uiThread {
+                        doShowUser()
+                    }
+                }
             }
         }
     }

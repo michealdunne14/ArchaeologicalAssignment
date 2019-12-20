@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.navigation.Navigation
+import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
@@ -30,7 +31,6 @@ class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
     private val baseFragmentPresenter: BaseFragmentPresenter,
-    private val userModel: UserModel,
     private val images: ArrayList<Images>
 ) : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
@@ -50,20 +50,18 @@ class HillFortAdapter(
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,baseFragmentPresenter,userModel,images)
+        holder.bind(hillfort,listener,baseFragmentPresenter,images)
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         var fireStore: HillfortFireStore? = null
 
-
         val stringList: ArrayList<String> = ArrayList()
         fun bind(
             hillfort: HillFortModel,
             listener: HillFortListener,
             baseFragmentPresenter: BaseFragmentPresenter,
-            userModel: UserModel,
             images: ArrayList<Images>
         ) {
             if (baseFragmentPresenter.app.hillforts is HillfortFireStore) {
@@ -123,6 +121,31 @@ class HillFortAdapter(
                     hillfort.visitCheck = false
                     doUpdateHillforts(hillfort, fireStore)
                 }
+            }
+
+            itemView.mShareHillfort.setOnClickListener {
+                val alertbox = androidx.appcompat.app.AlertDialog.Builder(it.context)
+                val alertLayout = LinearLayout(it.context)
+                alertLayout.orientation = LinearLayout.VERTICAL
+                val emailText = EditText(it.context)
+                alertLayout.addView(emailText)
+
+                alertbox.setTitle("Share")
+                alertbox.setMessage("Enter Email you would like to share this hillfort")
+                alertbox.setView(alertLayout)
+                alertbox.setNegativeButton(
+                    "CANCEL"
+                ) { arg0, arg1 -> }
+
+                alertbox.setPositiveButton(
+                    "Submit"
+                ) { arg0, arg1 ->
+                    val email = emailText.text.toString()
+                    doAsync {
+                        fireStore?.sharingHillfort(email.trim(),hillfort)
+                    }
+                }
+                alertbox.show()
             }
 
             itemView.mCardStarButton.setOnClickListener{

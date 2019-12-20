@@ -44,6 +44,9 @@ class LoginPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
                 if (task.isSuccessful) {
                     if (fireStore != null) {
+                        doAsync {
+                            fireStore!!.findCurrentUser()
+                        }
                         fireStore!!.fetchHillforts {
                             view.hideProgress()
                             view.navigateTo(VIEW.LIST)

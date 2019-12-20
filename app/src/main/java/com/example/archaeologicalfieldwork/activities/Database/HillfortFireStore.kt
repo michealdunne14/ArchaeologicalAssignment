@@ -10,8 +10,6 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -19,22 +17,26 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     val hillforts = ArrayList<HillFortModel>()
     val searchedHillforts = ArrayList<HillFortModel>()
     val hillfortswithStars = ArrayList<HillFortModel>()
+    val hillfortsShared = ArrayList<HillFortModel>()
+    val imagesShared = ArrayList<Images>()
+    val sharedHillforts = ArrayList<Share>()
     val arrayListOfImages = ArrayList<Images>()
-    var userModel = UserModel()
-    lateinit var userId: String
+    val searchedUsers = ArrayList<UserModel>()
+    var user:UserModel = UserModel()
+    private lateinit var userId: String
     var db: DatabaseReference = FirebaseDatabase.getInstance().reference
     lateinit var st: StorageReference
-    var key:String? = db.child("users").push().key
 
     override fun findAllUsers(): List<UserModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun createUsers(user: UserModel) {
+    override fun createUsers(userModel: UserModel) {
+        val key:String? = db.child("users").push().key
         key?.let {
-            user.fbId = key as String
-            userModel = user
-            db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(user)
+            userModel.fbId = key
+            user = userModel
+            db.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(userModel)
         }
     }
 
@@ -42,8 +44,77 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findUser(id: Long): UserModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun findSharedHillforts(user: UserModel) {
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    val share = it.getValue<Share>(Share::class.java)!!
+                    sharedHillforts.add(share)
+                }
+            }
+        }
+
+        val eventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (postSnapShot in dataSnapshot.children){
+                    for (share in sharedHillforts) {
+                        if (postSnapShot.child("fbId").value == share.sharedUser){
+                            val hillModel = postSnapShot.child("hillforts").child(share.sharedHillfort).getValue(HillFortModel::class.java)!!
+                            hillfortsShared.add(hillModel)
+                            val sharedImages = postSnapShot.child("image").children
+                            for (images in sharedImages){
+                                if (images.child("hillfortFbid").value == share.sharedHillfort){
+                                    imagesShared.add(images.getValue(Images::class.java)!!)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        userId = FirebaseAuth.getInstance().currentUser!!.uid
+        db = FirebaseDatabase.getInstance().reference
+        st = FirebaseStorage.getInstance().reference
+        db.child("sharedHillforts").child(user.fbId).addValueEventListener(valueEventListener)
+        db.child("users").addValueEventListener(eventListener)
+    }
+
+
+    override fun getSharedHillforts(): List<HillFortModel>{
+        return hillfortsShared
+    }
+
+    override fun getSharedImages(): ArrayList<Images>{
+        return imagesShared
+    }
+
+    override fun sharingHillfort(email: String, hillfort: HillFortModel) {
+        var userModel = UserModel()
+        val share = Share()
+        searchedUsers.clear()
+        val reference = FirebaseDatabase.getInstance().reference
+        val query = reference.child("users")
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (i in dataSnapshot.children) {
+                    if (i.child("email").toString().contains(email)) {
+                        userModel = i.getValue<UserModel>(UserModel::class.java)!!
+                        share.sharedUser = user.fbId
+                        share.sharedHillfort = hillfort.fbId
+                        val key = db.child("sharedHillforts").child(userModel.fbId).push().key
+                        db.child("sharedHillforts").child(userModel.fbId).child(key!!).setValue(share)
+                        break
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
     }
 
     override fun findUserByEmail(email: String): UserModel? {
@@ -51,7 +122,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         return user
     }
 
-    override fun findAllHillforts(user: UserModel): List<HillFortModel> {
+    override fun findAllHillforts(): List<HillFortModel> {
         return hillforts
     }
 
@@ -138,6 +209,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             override fun onCancelled(dataSnapshot: DatabaseError) {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                hillforts.clear()
                 dataSnapshot.children.mapNotNullTo(hillforts) { it.getValue<HillFortModel>(HillFortModel::class.java) }
             }
         }
@@ -146,6 +218,7 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             override fun onCancelled(dataSnapshot: DatabaseError) {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                arrayListOfImages.clear()
                 dataSnapshot.children.mapNotNullTo(arrayListOfImages) { it.getValue<Images>(Images::class.java) }
                 hillfortsReady()
             }
@@ -154,9 +227,8 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         userId = FirebaseAuth.getInstance().currentUser!!.uid
         db = FirebaseDatabase.getInstance().reference
         st = FirebaseStorage.getInstance().reference
-        hillforts.clear()
-        db.child("users").child(userId).child("image").addListenerForSingleValueEvent(imageEventListener)
-        db.child("users").child(userId).child("hillforts").addListenerForSingleValueEvent(valueEventListener)
+        db.child("users").child(userId).child("image").addValueEventListener(imageEventListener)
+        db.child("users").child(userId).child("hillforts").addValueEventListener(valueEventListener)
 
     }
 
@@ -211,9 +283,13 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             }
         }
     }
-    val user = UserModel()
 
-    override fun findCurrentUser(): UserModel {
+    override fun currentUser():UserModel {
+        return user
+    }
+
+    override fun findCurrentUser() {
+        user = UserModel()
         val valueEventListener = object : ValueEventListener {
             override fun onCancelled(dataSnapshot: DatabaseError) {
             }
@@ -224,14 +300,14 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
                     user.name = it.name
                     user.email = it.email
                     user.password = it.password
+                    user.fbId = it.fbId
+                    findSharedHillforts(user)
                 }
             }
         }
-        userId = FirebaseAuth.getInstance().currentUser!!.uid
         db = FirebaseDatabase.getInstance().reference
         st = FirebaseStorage.getInstance().reference
         db.child("users").child(userId).addListenerForSingleValueEvent(valueEventListener)
-        return user
     }
 
     override fun deleteUser(user: UserModel) {

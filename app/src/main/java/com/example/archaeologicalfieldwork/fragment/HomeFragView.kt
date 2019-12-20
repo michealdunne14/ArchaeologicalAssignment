@@ -1,10 +1,13 @@
 package com.example.archaeologicalfieldwork.fragment
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archaeologicalfieldwork.R
@@ -75,7 +78,7 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         user: UserModel,
         images: ArrayList<Images>
     ) {
-        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
+        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,images)
         mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 

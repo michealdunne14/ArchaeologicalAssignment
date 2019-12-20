@@ -58,7 +58,6 @@
     <string name="logout">Logout</string>
     <string name="visited">Visited</string>
     <string name="total_visted">Total Visted</string>
-    <string name="email">Email</string>
     <string name="add_date">Add Date</string>
     <string name="deleteimages">No Images to Delete</string>
     <string name="LoggedOutuser">User Logged out</string>
@@ -74,4 +73,8 @@
     <string name="menu_search">Search</string>
     <string name="search_by_name">Search by Name</string>
     <string name="rating">Rating</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="email">Email</string>
 </resources>

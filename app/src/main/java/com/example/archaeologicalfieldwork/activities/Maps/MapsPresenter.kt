@@ -23,17 +23,13 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
     init {
         if (app.hillforts is HillfortFireStore) {
             fireStore = app.hillforts as HillfortFireStore
+            currentUser = fireStore!!.currentUser()
         }
     }
 
     fun initMap(map: GoogleMap) {
         map.uiSettings.isZoomControlsEnabled = true
-        doAsync {
-            currentUser = fireStore!!.findCurrentUser()
-            uiThread {
-                findHillforts(currentUser,map)
-            }
-        }
+        findHillforts(map)
     }
 
     fun getImages(): List<Images> = fireStore!!.getImages()
@@ -54,12 +50,9 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
         }
     }
 
-    fun findHillforts(
-        currentUser: UserModel,
-        map: GoogleMap
-    ) {
+    fun findHillforts(map: GoogleMap) {
         doAsync {
-            val findHillforts = fireStore!!.findAllHillforts(currentUser)
+            val findHillforts = fireStore!!.findAllHillforts()
             uiThread {
                 findHillforts.forEach {
                     val loc = LatLng(it.location.lat, it.location.lng)

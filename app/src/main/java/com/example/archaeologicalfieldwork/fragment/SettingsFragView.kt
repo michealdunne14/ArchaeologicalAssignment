@@ -1,12 +1,16 @@
 package com.example.archaeologicalfieldwork.fragment
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentView
 import com.example.archaeologicalfieldwork.activities.StartActivity
@@ -63,6 +67,11 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
         view.mSettingsDelete.setOnClickListener {
             settingsFragPresenter.doDeleteUser()
         }
+
+        view.testingButton.setOnClickListener {
+
+        }
+
 //      Updating User
         view.mSettingsUpdate.setOnClickListener {
             info { "User Settings Updated" }

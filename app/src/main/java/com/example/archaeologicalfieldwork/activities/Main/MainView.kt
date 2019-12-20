@@ -18,14 +18,10 @@ import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.HillFortListener
 import com.example.archaeologicalfieldwork.adapter.TabsPagerAdapter
 import com.example.archaeologicalfieldwork.animation.ZoomOutPageTransformer
-import com.example.archaeologicalfieldwork.fragment.FavouriteFragView
-import com.example.archaeologicalfieldwork.fragment.HomeFragView
-import com.example.archaeologicalfieldwork.fragment.SettingsFragView
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_layout.*
 import org.jetbrains.anko.*
 
@@ -106,6 +102,9 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
                     2 -> {
                         navigationView.selectedItemId = R.id.mNavFavourites
                     }
+                    3 -> {
+                        navigationView.selectedItemId = R.id.mNavShare
+                    }
                     else -> navigationView.selectedItemId = R.id.mNavHome
                 }
             }
@@ -164,6 +163,10 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
             }
             R.id.mNavFavourites -> {
                 view_pager.currentItem = 2
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.mNavShare -> {
+                view_pager.currentItem = 3
                 return@OnNavigationItemSelectedListener true
             }
         }

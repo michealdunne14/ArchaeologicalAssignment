@@ -50,8 +50,8 @@ class FortPresenter(view: BaseView):
     init {
         if (app.hillforts is HillfortFireStore) {
             fireStore = app.hillforts as HillfortFireStore
+            user = fireStore!!.currentUser()
         }
-        user = fireStore!!.findCurrentUser()
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
             hillforts = view.intent.extras?.getParcelable("hillfort_edit")!!

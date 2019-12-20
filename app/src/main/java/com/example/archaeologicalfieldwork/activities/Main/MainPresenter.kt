@@ -18,6 +18,7 @@ class MainPresenter(view: MainView): BasePresenter(view){
     init {
         if (app.hillforts is HillfortFireStore) {
             fireStore = app.hillforts as HillfortFireStore
+            user = app.hillforts.currentUser()
         }
     }
 

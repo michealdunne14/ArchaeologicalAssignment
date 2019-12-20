@@ -5,9 +5,9 @@ interface HillfortStore {
     fun createUsers(user: UserModel)
     fun updateUsers(user: UserModel)
     fun getImages(): ArrayList<Images>
-    fun findUser(id: Long): UserModel?
+    fun sharingHillfort(email: String, hillfort: HillFortModel)
     fun findUserByEmail(email: String): UserModel?
-    fun findAllHillforts(user: UserModel): List<HillFortModel>
+    fun findAllHillforts(): List<HillFortModel>
     fun findHillfortsWithStar(): List<HillFortModel?>
     fun findHillfort(marker: String) : HillFortModel?
     fun createHillfort(hillFortModel: HillFortModel, user: UserModel, listofImages: ArrayList<String>)
@@ -15,7 +15,10 @@ interface HillfortStore {
     fun findSearchedHillforts():List<HillFortModel>
     fun clearSearchResult()
     fun deleteHillforts(hillfort: HillFortModel,user: UserModel)
-    fun findCurrentUser():UserModel
+    fun findCurrentUser()
+    fun getSharedImages(): ArrayList<Images>
+    fun currentUser():UserModel
+    fun getSharedHillforts(): List<HillFortModel>
     fun deleteUser(user: UserModel)
     fun findNotes(hillfort: HillFortModel): List<Notes>
     fun createNote(notes: Notes)

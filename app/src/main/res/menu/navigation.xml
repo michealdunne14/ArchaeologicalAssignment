@@ -16,4 +16,9 @@
         android:icon="@drawable/starfill"
         android:title="Favourites" />
 
+    <item
+        android:id="@+id/mNavShare"
+        android:icon="?attr/actionModeShareDrawable"
+        android:title="Share" />
+
 </menu>

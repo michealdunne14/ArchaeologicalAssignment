@@ -47,3 +47,9 @@ data class Notes(@PrimaryKey(autoGenerate = true)
                  var noteid: Long = 0,
                  var hillfortNotesid: Long = 0,
                  var note: String = "") : Parcelable
+
+@Parcelize
+@Entity
+data class Share(@PrimaryKey(autoGenerate = true)
+                 var sharedUser: String = "",
+                 var sharedHillfort: String = "") : Parcelable
