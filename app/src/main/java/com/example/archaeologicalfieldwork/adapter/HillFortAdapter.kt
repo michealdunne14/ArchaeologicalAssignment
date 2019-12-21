@@ -1,5 +1,9 @@
 package com.example.archaeologicalfieldwork.adapter
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +18,7 @@ import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
+import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
 
@@ -28,7 +33,8 @@ class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
     private val baseFragmentPresenter: BaseFragmentPresenter,
-    private val images: ArrayList<Images>
+    private val images: ArrayList<Images>,
+    private val user: UserModel
 ) : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
 
@@ -47,7 +53,7 @@ class HillFortAdapter(
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,baseFragmentPresenter,images)
+        holder.bind(hillfort,listener,baseFragmentPresenter,images,user)
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -59,7 +65,8 @@ class HillFortAdapter(
             hillfort: HillFortModel,
             listener: HillFortListener,
             baseFragmentPresenter: BaseFragmentPresenter,
-            images: ArrayList<Images>
+            images: ArrayList<Images>,
+            user: UserModel
         ) {
             if (baseFragmentPresenter.app.hillforts is HillfortFireStore) {
                 fireStore = baseFragmentPresenter.app.hillforts as HillfortFireStore
@@ -106,7 +113,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    doUpdateHillforts(hillfort, fireStore)
+                    doLikeUpdateHillforts(hillfort, fireStore)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -114,33 +121,37 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    doUpdateHillforts(hillfort, fireStore)
+                    doLikeUpdateHillforts(hillfort, fireStore)
                 }
             }
 
             itemView.mShareHillfort.setOnClickListener {
-                val alertbox = androidx.appcompat.app.AlertDialog.Builder(it.context)
-                val alertLayout = LinearLayout(it.context)
-                alertLayout.orientation = LinearLayout.VERTICAL
-                val emailText = EditText(it.context)
-                alertLayout.addView(emailText)
-
-                alertbox.setTitle("Share")
-                alertbox.setMessage("Enter Email you would like to share this hillfort")
-                alertbox.setView(alertLayout)
-                alertbox.setNegativeButton(
-                    "CANCEL"
-                ) { arg0, arg1 -> }
-
-                alertbox.setPositiveButton(
-                    "Submit"
-                ) { arg0, arg1 ->
-                    val email = emailText.text.toString()
-                    doAsync {
-                        fireStore?.sharingHillfort(email.trim(),hillfort)
+                val emailIntent = Intent(Intent.ACTION_SEND)
+                emailIntent.data = Uri.parse("mailto:")
+                emailIntent.type = "text/plain"
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, user.email)
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hillfort " + hillfort.name)
+                var arrayList = ArrayList<String>()
+                for (i in images){
+                    if (hillfort.fbId == i.hillfortFbid) {
+                        arrayList.add(i.image + " \n")
                     }
                 }
-                alertbox.show()
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hillfort Name " + hillfort.name +" \n" +
+                        "Hillfort Description " + hillfort.description +" \n" +
+                        "Hillfort " + hillfort.location +" \n" +
+                        "Hillfort date Visited " + hillfort.datevisted +" \n" +
+                        "Hillfort Rating " + hillfort.rating +" \n" +
+                        "Hillfort Star " + hillfort.starCheck +" \n" +
+                        "Hillfort Visit Check " + hillfort.visitCheck +" \n" +
+                        "Hillfort Visit Check " + arrayList +" \n")
+
+                try {
+                    itemView.context.startActivity(Intent.createChooser(emailIntent, "Send mail..."))
+                    Log.i("Finished sending email.", "")
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
             }
 
             itemView.mCardStarButton.setOnClickListener{
@@ -152,7 +163,7 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_fill)
                     hillfort.starCheck = true
-                    doUpdateHillforts(hillfort, fireStore)
+                    doStarUpdateHillforts(hillfort, fireStore)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -160,18 +171,27 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_nofill)
                     hillfort.starCheck = false
-                    doUpdateHillforts(hillfort, fireStore)
+                    doStarUpdateHillforts(hillfort, fireStore)
                 }
             }
             itemView.setOnClickListener { listener.onHillFortClick(hillfort,images) }
         }
 
-        fun doUpdateHillforts(
+        fun doStarUpdateHillforts(
             hillfort: HillFortModel,
             fireStore: HillfortFireStore?
         ){
             doAsync {
                 fireStore?.starHillfort(hillfort)
+            }
+        }
+
+        fun doLikeUpdateHillforts(
+            hillfort: HillFortModel,
+            fireStore: HillfortFireStore?
+        ){
+            doAsync {
+                fireStore?.likeHillfort(hillfort)
             }
         }
 

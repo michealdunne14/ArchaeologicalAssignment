@@ -102,9 +102,6 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
                     2 -> {
                         navigationView.selectedItemId = R.id.mNavFavourites
                     }
-                    3 -> {
-                        navigationView.selectedItemId = R.id.mNavShare
-                    }
                     else -> navigationView.selectedItemId = R.id.mNavHome
                 }
             }
@@ -163,10 +160,6 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
             }
             R.id.mNavFavourites -> {
                 view_pager.currentItem = 2
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.mNavShare -> {
-                view_pager.currentItem = 3
                 return@OnNavigationItemSelectedListener true
             }
         }

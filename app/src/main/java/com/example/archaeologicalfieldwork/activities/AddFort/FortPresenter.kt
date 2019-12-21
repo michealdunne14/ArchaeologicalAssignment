@@ -58,9 +58,13 @@ class FortPresenter(view: BaseView):
             hillforts = view.intent.extras?.getParcelable("hillfort_edit")!!
             listofImages = view.intent.extras?.getStringArrayList("images") as ArrayList<String>
             listofNotes = fireStore!!.getArrayListofNotes()
+            location = hillforts.location
+            view.showLocation(location)
             view.showNotes(listofNotes)
             view.putHillfort(hillforts)
             view.addImages(listofImages)
+            locationUpdate(location.lat,location.lng)
+            view.showHillfortAdd()
         }else{
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
@@ -105,7 +109,6 @@ class FortPresenter(view: BaseView):
 
 //          View Pager for multiple images
         editinghillfort = true
-        view.showHillfortAdd()
     }
 
 
@@ -161,7 +164,7 @@ class FortPresenter(view: BaseView):
     fun doSetCurrentLocation() {
         locationService.lastLocation.addOnSuccessListener {
             locationUpdate(it.latitude, it.longitude)
-            view.showLocation(hillforts,location)
+            view.showLocation(location)
         }
     }
 
@@ -194,7 +197,7 @@ class FortPresenter(view: BaseView):
                 location.zoom = location.zoom
                 locationUpdate(location.lat, location.lng)
                 hillfort.location = location
-                view.showLocation(hillfort,location)
+                view.showLocation(location)
             }
         }
     }

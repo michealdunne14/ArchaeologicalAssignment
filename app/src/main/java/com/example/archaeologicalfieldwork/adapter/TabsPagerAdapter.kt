@@ -22,15 +22,12 @@ class TabsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             2 -> {
                 return FavouriteFragView()
             }
-            3 -> {
-                return SharedHillfortsView()
-            }
             else -> return HomeFragView()
         }
     }
 
     override fun getCount(): Int {
-        return 4
+        return 3
     }
 
 
@@ -39,7 +36,6 @@ class TabsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             0 -> return "Home"
             1 -> return "Settings"
             2 -> return "Favourite"
-            3 -> return "Share"
             else -> return null
         }
     }

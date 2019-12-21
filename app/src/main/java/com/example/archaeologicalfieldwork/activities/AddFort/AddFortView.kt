@@ -105,7 +105,8 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortName.setText(hillFortModel.name)
         mHillFortDescription.setText(hillFortModel.description)
         mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
-        mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
+
+//        mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
     }
 
     override fun addImages(listofImages: ArrayList<String>){
@@ -114,7 +115,7 @@ class AddFortView : BaseView(),AnkoLogger {
         viewPager.adapter = adapter
     }
 
-    override fun showLocation(hillFortModel: HillFortModel, location: Location){
+    override fun showLocation(location: Location){
         mHillFortLocationText.text = location.toString()
     }
 

@@ -75,7 +75,7 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         user: UserModel,
         images: ArrayList<Images>
     ) {
-        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,images)
+        mListRecyclerView.adapter = HillFortAdapter(hillfort, this, homeFragPresenter, images, user)
         mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 

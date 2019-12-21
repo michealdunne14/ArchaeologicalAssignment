@@ -44,7 +44,13 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
         user: UserModel,
         images: ArrayList<Images>
     ) {
-        mFavouriteListView.adapter = HillFortAdapter(hillfort, this,favouriteFragPresenter,images)
+        mFavouriteListView.adapter = HillFortAdapter(
+            hillfort,
+            this,
+            favouriteFragPresenter,
+            images,
+            user
+        )
         mFavouriteListView.adapter?.notifyDataSetChanged()
     }
 

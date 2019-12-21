@@ -5,9 +5,12 @@ import android.graphics.Bitmap
 import com.example.archaeologicalfieldwork.helper.readImageFromPath
 import com.example.archaeologicalfieldwork.models.*
 import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ListResult
 import com.google.firebase.storage.StorageReference
 import org.jetbrains.anko.AnkoLogger
 import java.io.ByteArrayOutputStream
@@ -218,21 +221,54 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     }
 
     fun likeHillfort(hillfort: HillFortModel){
-        db.child("users").child(userId).child("hillforts").child(hillfort.fbId).child("starCheck").setValue(hillfort.starCheck)
+        db.child("users").child(userId).child("hillforts").child(hillfort.fbId).child("visitCheck").setValue(hillfort.visitCheck)
     }
 
 
     override fun deleteHillforts(hillfort: HillFortModel, user: UserModel) {
-        db.child("users").child(userId).child("placemarks").child(hillfort.fbId).removeValue()
+        db.child("users").child(userId).child("hillforts").child(hillfort.fbId).removeValue()
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    if (it.child("hillfortFbid").value.toString() == hillfort.fbId){
+                        val imagekey = it.key
+                        // Create a storage reference from our app
+                        st = FirebaseStorage.getInstance().reference
+
+                        val desertRef = st.child(userId)
+                        val arrayList = ArrayList<String>()
+                        desertRef.listAll().addOnSuccessListener(OnSuccessListener<ListResult> { result ->
+                                for (fileRef in result.items) {
+                                    arrayList.add(fileRef.name)
+                                }
+                            }).addOnFailureListener(OnFailureListener {
+                                // Handle any errors
+                            })
+
+                        for (fileRef in arrayList) {
+                            if (it.child("image").value.toString().contains(fileRef)) {
+                                desertRef.child(fileRef).delete().addOnSuccessListener {
+                                    db.child("users").child(userId).child("image").child(imagekey!!).removeValue()
+                                }.addOnFailureListener {
+                                    // Uh-oh, an error occurred!
+                                }
+                                db.child("users").child(userId).child("image").child(imagekey!!).removeValue()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        db.child("users").child(userId).child("image").addValueEventListener(valueEventListener)
         hillforts.remove(hillfort)
     }
 
     override fun clear() {
         hillforts.clear()
-    }
-
-    override fun fetchHills(){
-        fetchHillforts {}
     }
 
 
@@ -332,7 +368,6 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
                     user.email = it.email
                     user.password = it.password
                     user.fbId = it.fbId
-                    findSharedHillforts(user)
                 }
             }
         }

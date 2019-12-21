@@ -20,7 +20,6 @@ interface HillfortStore {
     fun currentUser():UserModel
     fun getSharedHillforts(): List<HillFortModel>
     fun deleteUser(user: UserModel)
-    fun fetchHills()
     fun findLocation(locationId: Long): Location
     fun findAllImages(): List<Images>
     fun createNote(note: String, fbId: String)
