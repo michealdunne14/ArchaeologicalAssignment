@@ -3,11 +3,9 @@ package com.example.archaeologicalfieldwork.activities.Maps
 import android.content.Context
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.ImageAdapter
-import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.google.android.gms.maps.GoogleMap

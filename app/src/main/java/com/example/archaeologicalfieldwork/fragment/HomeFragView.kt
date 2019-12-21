@@ -27,14 +27,8 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         hillfort: HillFortModel,
         images: ArrayList<Images>
     ) {
-        val stringList = ArrayList<String>()
-        for (i in images){
-            if (i.hillfortFbid == hillfort.fbId) {
-                stringList.add(i.image)
-            }
-        }
         homeFragPresenter.findNotes(hillfort.fbId)
-        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",images), 0)
     }
 
 

@@ -212,6 +212,10 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             foundHillfort.name = hillfort.name
             foundHillfort.description = hillfort.description
             foundHillfort.location = hillfort.location
+            foundHillfort.datevisted = hillfort.datevisted
+            foundHillfort.visitCheck =hillfort.visitCheck
+            foundHillfort.starCheck = hillfort.starCheck
+            foundHillfort.rating = hillfort.rating
         }
         db.child("users").child(userId).child("hillforts").child(foundHillfort!!.fbId).setValue(foundHillfort)
     }
@@ -315,6 +319,30 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
 
             override fun onCancelled(databaseError: DatabaseError) {}
         })
+    }
+
+    fun deleteImage(
+        hillfortImages: ArrayList<Images>,
+        currentItem: Int,
+        stringList: ArrayList<String>
+    ){
+        val image = hillfortImages[currentItem]
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (it in dataSnapshot.children) {
+                    if (image.hillfortImageid.toString() == it.child("hillfortImageid").value.toString()) {
+                        db.child("users").child(userId).child("image").child(it.key!!).removeValue()
+                        hillfortImages.removeAt(currentItem)
+                        stringList.removeAt(currentItem)
+                        break
+                    }
+                }
+            }
+        }
+        db.child("users").child(userId).child("image").addValueEventListener(valueEventListener)
     }
 
     fun updateImage(hillfortImages: ArrayList<String>, fbId:String) {

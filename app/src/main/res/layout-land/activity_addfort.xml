@@ -149,6 +149,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/addford_visited" />
 
+                <CheckBox
+                    android:id="@+id/mHillFortStarCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favourite" />
+
+                <RatingBar
+                    android:id="@+id/mRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:numStars="5"
+                    android:stepSize="0.1"
+                    android:rating="2.5"/>
+
                 <Button
                     android:id="@+id/mHillFortBtnAdd"
                     android:layout_width="match_parent"

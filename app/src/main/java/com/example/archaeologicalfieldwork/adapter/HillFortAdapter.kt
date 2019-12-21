@@ -1,5 +1,6 @@
 package com.example.archaeologicalfieldwork.adapter
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -61,6 +62,7 @@ class HillFortAdapter(
         var fireStore: HillfortFireStore? = null
 
         val stringList: ArrayList<String> = ArrayList()
+        @SuppressLint("SetTextI18n")
         fun bind(
             hillfort: HillFortModel,
             listener: HillFortListener,
@@ -76,7 +78,7 @@ class HillFortAdapter(
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted
-            itemView.mRating.text = hillfort.rating
+            itemView.mRating.text = " " + hillfort.rating + " Stars"
 
             var visitedCheck = hillfort.visitCheck
             var starCheck = hillfort.starCheck

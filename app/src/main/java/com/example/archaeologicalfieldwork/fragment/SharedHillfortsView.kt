@@ -52,7 +52,7 @@ class SharedHillfortsView : BaseFragmentView(), HillFortListener {
                 stringList.add(i.image)
             }
         }
-        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort), 0)
 
     }
 

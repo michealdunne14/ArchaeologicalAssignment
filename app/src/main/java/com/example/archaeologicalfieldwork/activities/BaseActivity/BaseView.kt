@@ -86,7 +86,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
     open fun showResult(hillFortModel: HillFortModel){}
     open fun showLocation(location: Location){}
     open fun showImages(images: List<Images>){}
-    open fun showHillfortAdd(){}
+    open fun showHillfortUpdate(){}
     open fun showProgress(){}
     open fun hideProgress(){}
     open fun showNotes(notes: List<Notes>) {}
