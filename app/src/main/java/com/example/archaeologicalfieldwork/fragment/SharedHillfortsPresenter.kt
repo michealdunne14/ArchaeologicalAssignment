@@ -20,7 +20,7 @@ class SharedHillfortsPresenter(view: SharedHillfortsView): BaseFragmentPresenter
             user = fireStore!!.currentUser()
         }
     }
-
+//  Shared Hillforts
     fun findSharedHillforts() {
         doAsync {
             val hillfort = fireStore!!.getSharedHillforts()

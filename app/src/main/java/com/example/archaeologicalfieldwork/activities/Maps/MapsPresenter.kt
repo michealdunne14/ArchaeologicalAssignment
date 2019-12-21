@@ -31,7 +31,7 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
         map.uiSettings.isZoomControlsEnabled = true
         findHillforts(map)
     }
-
+//  Get Hillfort Images
     fun getImages(): List<Images> = fireStore!!.getImages()
 
     fun doMarkerClick(marker: String) {

@@ -68,10 +68,6 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
             settingsFragPresenter.doDeleteUser()
         }
 
-        view.testingButton.setOnClickListener {
-
-        }
-
 //      Updating User
         view.mSettingsUpdate.setOnClickListener {
             info { "User Settings Updated" }

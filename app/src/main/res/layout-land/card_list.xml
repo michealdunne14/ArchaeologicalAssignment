@@ -89,6 +89,25 @@
             app:srcCompat="@mipmap/check_icon_clear" />
 
         <ImageButton
+            android:id="@+id/mCardStarButton"
+            android:layout_width="60dp"
+            android:layout_height="55dp"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/mCardCheckButton"
+            app:layout_constraintTop_toBottomOf="@+id/mCardNote"
+            app:srcCompat="@mipmap/star_nofill" />
+
+        <TextView
+            android:id="@+id/mRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mCardImageList" />
+
+        <ImageButton
             android:id="@+id/mCardSendButton"
             android:layout_width="88dp"
             android:layout_height="50dp"
@@ -100,6 +119,15 @@
             app:layout_constraintStart_toEndOf="@+id/mCardNote"
             app:layout_constraintTop_toBottomOf="@+id/mCardImageList"
             app:srcCompat="@android:drawable/ic_menu_send" />
+
+        <ImageButton
+            android:id="@+id/mShareHillfort"
+            android:layout_width="60dp"
+            android:layout_height="55dp"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/mCardStarButton"
+            app:srcCompat="?attr/actionModeShareDrawable" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

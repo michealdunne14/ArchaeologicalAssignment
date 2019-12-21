@@ -76,6 +76,7 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
 //            }
 //        });
 //    }
+//     Set up of bottom naviagation bar
         navigationView.selectedItemId = R.id.mNavHome
         pagerAdapter = TabsPagerAdapter(supportFragmentManager)
         view_pager.setPageTransformer(true, ZoomOutPageTransformer())
@@ -147,7 +148,7 @@ class MainView : BaseView(),AnkoLogger, HillFortListener {
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return super.onCreateOptionsMenu(menu)
     }
-
+//  Navigating to the correct selected Item
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.mNavSettings -> {

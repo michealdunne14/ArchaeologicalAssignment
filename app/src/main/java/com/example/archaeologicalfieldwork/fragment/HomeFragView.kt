@@ -21,12 +21,9 @@ import org.jetbrains.anko.*
 
 class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
-    lateinit var homeFragPresenter: HomeFragPresenter
+    private lateinit var homeFragPresenter: HomeFragPresenter
 
-    override fun onHillFortClick(
-        hillfort: HillFortModel,
-        images: ArrayList<Images>
-    ) {
+    override fun onHillFortClick(hillfort: HillFortModel, images: ArrayList<Images>) {
         homeFragPresenter.findNotes(hillfort.fbId)
         startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",images), 0)
     }
@@ -44,10 +41,11 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
 
         view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+//      Find Hillforts
         homeFragPresenter.findallHillforts()
-
+//      Clear search result and
         view.mFloatingCancelButton.setOnClickListener {
-            homeFragPresenter.clearHillforts()
+            homeFragPresenter.clearSearchHillforts()
             homeFragPresenter.findallHillforts()
         }
 
@@ -64,6 +62,7 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
         mFloatingCancelButton.visibility = View.GONE
     }
 
+//  Show Hillforts
     override fun showHillforts(
         hillfort: List<HillFortModel>,
         user: UserModel,

@@ -100,7 +100,7 @@ class FortPresenter(view: BaseView):
 //  Add or save Hillfort Details
     fun doAddFort(hillfort: HillFortModel) {
         hillfort.id = generateRandomId()
-        if (hillfort.name.isNotEmpty() && listofImages.size > 0){
+        if (hillfort.name.isNotEmpty() && stringList.size > 0){
             if(editinghillfort){
                 doAsync {
                     hillfort.fbId = hillforts.fbId

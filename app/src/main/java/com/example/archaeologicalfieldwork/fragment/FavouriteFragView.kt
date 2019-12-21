@@ -23,7 +23,7 @@ import org.jetbrains.anko.intentFor
 
 class FavouriteFragView : BaseFragmentView(), HillFortListener {
 
-    lateinit var favouriteFragPresenter: FavouriteFragPresenter
+    private lateinit var favouriteFragPresenter: FavouriteFragPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,25 +35,14 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
         val view = inflater.inflate(R.layout.fragment_favourite, container, false)
 
         view.mFavouriteListView.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        favouriteFragPresenter.findallHillforts()
         return view
     }
-
-    override fun showHillforts(
-        hillfort: List<HillFortModel>,
-        user: UserModel,
-        images: ArrayList<Images>
-    ) {
-        mFavouriteListView.adapter = HillFortAdapter(
-            hillfort,
-            this,
-            favouriteFragPresenter,
-            images,
-            user
-        )
+//  Show hillforts
+    override fun showHillforts(hillfort: List<HillFortModel>, user: UserModel, images: ArrayList<Images>) {
+        mFavouriteListView.adapter = HillFortAdapter(hillfort, this, favouriteFragPresenter, images, user)
         mFavouriteListView.adapter?.notifyDataSetChanged()
     }
-
+//  Hillfort clicked
     override fun onHillFortClick(
         hillfort: HillFortModel,
         images: ArrayList<Images>
@@ -65,6 +54,12 @@ class FavouriteFragView : BaseFragmentView(), HillFortListener {
             }
         }
         startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        if (isVisibleToUser) {
+            favouriteFragPresenter.findallHillforts()
+        }
     }
 
 }

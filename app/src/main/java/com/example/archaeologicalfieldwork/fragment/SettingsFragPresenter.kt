@@ -38,9 +38,9 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
         }
     }
 
-
-    fun doShowUser(){
-            view.doSetDetails(user.email, user.password, user.name)
+//  Show User detail
+    private fun doShowUser(){
+        view.doSetDetails(user.email, user.password, user.name)
     }
 
     fun doDeleteUser(){

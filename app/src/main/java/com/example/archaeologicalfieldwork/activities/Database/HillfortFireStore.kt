@@ -384,7 +384,6 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     }
 
     override fun findCurrentUser() {
-        user = UserModel()
         val valueEventListener = object : ValueEventListener {
             override fun onCancelled(dataSnapshot: DatabaseError) {
             }

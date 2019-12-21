@@ -48,11 +48,4 @@ class RegisterPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
         }
     }
 
-
-    fun doCreateUser(userModel: UserModel){
-        doAsync {
-            app.hillforts.createUsers(userModel.copy())
-        }
-    }
-
 }

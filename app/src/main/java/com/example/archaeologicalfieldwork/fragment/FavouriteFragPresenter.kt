@@ -19,7 +19,7 @@ class FavouriteFragPresenter(view: FavouriteFragView): BaseFragmentPresenter(vie
             user = fireStore!!.currentUser()
         }
     }
-
+//  Find all hillforts with favourite stars
     fun findallHillforts() {
         doAsync {
             val hillfort = fireStore!!.findHillfortsWithStar()
