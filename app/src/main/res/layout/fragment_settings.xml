@@ -113,20 +113,6 @@
                 android:textSize="20sp"
                 android:text="@string/total_posts" />
 
-            <TextView
-                android:id="@+id/mSettingsVisited"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/visited" />
-
-            <TextView
-                android:id="@+id/mSettingsVisitedTotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/total_visted" />
-
             <Button
                 android:id="@+id/mLogoutButton"
                 android:layout_width="220dp"

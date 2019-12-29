@@ -23,5 +23,8 @@ interface HillfortStore {
     fun findLocation(locationId: Long): Location
     fun findAllImages(): List<Images>
     fun createNote(note: String, fbId: String)
+    fun totalUsers():Long
+    fun totalHillforts(): Long
+    fun userHillforts(): Int
     fun clear()
 }

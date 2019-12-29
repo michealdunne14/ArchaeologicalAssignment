@@ -1,15 +1,10 @@
 package com.example.archaeologicalfieldwork.fragment
 
 import android.content.Intent
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import com.example.archaeologicalfieldwork.R
-import com.example.archaeologicalfieldwork.activities.BaseActivity.VIEW
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentPresenter
 import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.main.MainApp
-import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.AnkoLogger
@@ -29,7 +24,7 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
             fireStore = app.hillforts as HillfortFireStore
             if (user.email == "") {
                 doAsync {
-                    user = app.hillforts.currentUser()
+                    user = fireStore!!.currentUser()
                     uiThread {
                         doShowUser()
                     }
@@ -43,20 +38,37 @@ class SettingsFragPresenter(view: SettingsFragView): BaseFragmentPresenter(view)
         view.doSetDetails(user.email, user.password, user.name)
     }
 
+    fun doSettingsUsers(): Long {
+        return fireStore!!.totalUsers()
+    }
+
+    fun doSettingsHillforts(): Long {
+        val users = fireStore!!.totalHillforts()
+        return users
+    }
+
+    fun doUserHillforts():Int {
+        return fireStore!!.userHillforts()
+    }
+
     fun doDeleteUser(){
         view.info { "User Settings Deleted" }
         doAsync {
-        app.hillforts.deleteUser(user.copy())
+            fireStore!!.deleteUser(user.copy())
             uiThread {
-                view.startActivity(Intent(view.context, StartActivity::class.java))
-                Toast.makeText(view.context, view.getString(R.string.user_deleted), Toast.LENGTH_LONG ).show()
+                doLogout()
             }
         }
     }
 
+    fun doUpdateUsers(userModel: UserModel) {
+        userModel.fbId = user.fbId
+        fireStore!!.updateUsers(userModel)
+    }
+
     fun doLogout() {
         FirebaseAuth.getInstance().signOut()
-        app.hillforts.clear()
+        fireStore!!.clear()
         view.startActivity(Intent(view.context, StartActivity::class.java))
     }
 }

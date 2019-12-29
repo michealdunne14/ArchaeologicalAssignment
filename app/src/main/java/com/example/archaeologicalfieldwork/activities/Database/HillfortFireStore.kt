@@ -30,6 +30,8 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     private lateinit var userId: String
     var db: DatabaseReference = FirebaseDatabase.getInstance().reference
     lateinit var st: StorageReference
+    var totalUsers: Long = 0
+    var totalHillforts: Long = 0
 
     override fun findAllUsers(): List<UserModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -76,7 +78,11 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
 
 
     override fun updateUsers(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(currentUser().fbId == user.fbId) {
+            db.child("users").child(userId).child("email").setValue(user.email)
+            db.child("users").child(userId).child("password").setValue(user.password)
+            db.child("users").child(userId).child("name").setValue(user.name)
+        }
     }
 
     fun findSharedHillforts(user: UserModel) {
@@ -296,11 +302,23 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
             }
         }
 
+        val statsValueEventListener = object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError) {
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                totalUsers = dataSnapshot.childrenCount
+                for(count in dataSnapshot.children){
+                    totalHillforts += count.child("hillforts").childrenCount
+                }
+            }
+        }
+
         userId = FirebaseAuth.getInstance().currentUser!!.uid
         db = FirebaseDatabase.getInstance().reference
         st = FirebaseStorage.getInstance().reference
         db.child("users").child(userId).child("image").addValueEventListener(imageEventListener)
         db.child("users").child(userId).child("hillforts").addValueEventListener(valueEventListener)
+        db.child("users").addListenerForSingleValueEvent(statsValueEventListener)
     }
 
 
@@ -383,6 +401,19 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
         return user
     }
 
+    override fun totalUsers():Long {
+        return totalUsers
+    }
+
+    override fun totalHillforts():Long {
+        return totalHillforts
+    }
+
+    override fun userHillforts(): Int {
+        return hillforts.size
+    }
+
+
     override fun findCurrentUser() {
         val valueEventListener = object : ValueEventListener {
             override fun onCancelled(dataSnapshot: DatabaseError) {
@@ -404,7 +435,8 @@ class HillfortFireStore(val context: Context):HillfortStore,AnkoLogger {
     }
 
     override fun deleteUser(user: UserModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        db.child("users").child(userId).removeValue()
+        FirebaseAuth.getInstance().currentUser?.delete()
     }
 
 

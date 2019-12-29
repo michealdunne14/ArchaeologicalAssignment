@@ -1,22 +1,18 @@
 package com.example.archaeologicalfieldwork.fragment
 
-import android.content.DialogInterface
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseFragment.BaseFragmentView
 import com.example.archaeologicalfieldwork.activities.StartActivity
-import com.example.archaeologicalfieldwork.main.MainApp
 import com.example.archaeologicalfieldwork.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -71,10 +67,11 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
 //      Updating User
         view.mSettingsUpdate.setOnClickListener {
             info { "User Settings Updated" }
-//            user.email = view.mSettingsEmail.text.toString()
-//            user.password = view.mSettingsPassword.text.toString()
-//            user.name = view.mSettingsName.text.toString()
-//            app.hillforts.updateUsers(user.copy())
+            val user = UserModel()
+            user.email = view.mSettingsEmail.text.toString()
+            user.password = view.mSettingsPassword.text.toString()
+            user.name = view.mSettingsName.text.toString()
+            settingsFragPresenter.doUpdateUsers(user.copy())
             Toast.makeText(context, getString(R.string.user_updated), Toast.LENGTH_LONG ).show()
         }
 
@@ -82,12 +79,18 @@ class SettingsFragView : BaseFragmentView(),AnkoLogger {
         return view
     }
 
-    override fun doSetDetails(email: String,password: String,name: String){
+    override fun doSetDetails(email: String, password: String, name: String){
         //Stats
         view!!.mSettingsEmail.setText(email)
         view!!.mSettingsPassword.setText(password)
         view!!.mSettingsName.setText(name)
-//        view!!.mSettingsPosts.setText("Current User Posts " + user.hillforts.size)
-//        view!!.mSettingsUsersTotal.setText("Users " + app.hillforts.findAllUsers().size)
+        val totalusers = settingsFragPresenter.doSettingsUsers()
+        val totalHillforts = settingsFragPresenter.doSettingsHillforts()
+        val userHillforts = settingsFragPresenter.doUserHillforts()
+        view!!.mSettingsUsersTotal.text = "Total Users $totalusers"
+        view!!.mSettingsPostsTotal.text = "Total Posts $totalHillforts"
+        view!!.mSettingsPosts.text = "User Posts $userHillforts"
+//        view!!.mSettingsPosts.setText("Current User Posts " + settingsFragPresenter.doSettingsPost())
+        settingsFragPresenter.doSettingsUsers()
     }
 }
