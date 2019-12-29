@@ -10,6 +10,7 @@ import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationV
 import com.example.archaeologicalfieldwork.activities.Login.LoginView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
 import com.example.archaeologicalfieldwork.activities.Maps.HillfortMapsView
+import com.example.archaeologicalfieldwork.activities.Register.RegisterView
 import com.example.archaeologicalfieldwork.activities.StartActivity
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
@@ -22,13 +23,13 @@ val IMAGE_REQUEST = 1
 val LOCATION_REQUEST = 2
 
 enum class VIEW {
-    LOCATION,HILLFORT,MAPS,LIST,LOGIN,START
+    LOCATION,HILLFORT,MAPS,LIST,LOGIN,START,REGISTER
 }
 
 open abstract class BaseView: AppCompatActivity(),AnkoLogger{
 
     var basePresenter: BasePresenter? = null
-
+//  Do on start up
     fun init(toolbar: Toolbar, upEnabled: Boolean) {
         toolbar.title = title
         setSupportActionBar(toolbar)
@@ -38,7 +39,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
             toolbar.title = "${title}: ${user.email}"
         }
     }
-
+//  Easily navigate threw the application
     fun navigateTo(view: VIEW, code:Int = 0, key:String = "", value: Parcelable? = null){
         var intent = Intent(this,MainView::class.java)
         when(view){
@@ -47,6 +48,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
             VIEW.MAPS -> intent = Intent(this,HillfortMapsView::class.java)
             VIEW.LIST -> intent = Intent(this,MainView::class.java)
             VIEW.LOGIN -> intent = Intent(this,LoginView::class.java)
+            VIEW.REGISTER -> intent = Intent(this,RegisterView::class.java)
             VIEW.START -> intent = Intent(this,
                 StartActivity::class.java)
         }
@@ -55,7 +57,7 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
         }
         startActivityForResult(intent,code)
     }
-
+//  Set Presenter
     fun initPresenter(presenter: BasePresenter): BasePresenter {
         basePresenter = presenter
         return presenter
@@ -84,12 +86,10 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
     open fun putHillfort(hillFortModel: HillFortModel){}
     open fun addImages(listofImages: ArrayList<String>) {}
     open fun showResult(hillFortModel: HillFortModel){}
-    open fun showLocation(hillFortModel: HillFortModel, location: Location){}
-    open fun showImages(images: List<Images>){}
-    open fun showHillfortAdd(){}
+    open fun showLocation(location: Location){}
+    open fun showHillfortUpdate(){}
     open fun showProgress(){}
     open fun hideProgress(){}
     open fun showNotes(notes: List<Notes>) {}
     open fun setMarkerDetails(images: List<Images>,hillFortModel: HillFortModel) {}
-    open fun registerSignIn(){}
 }

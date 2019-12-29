@@ -3,11 +3,9 @@ package com.example.archaeologicalfieldwork.activities.Maps
 import android.content.Context
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.adapter.ImageAdapter
-import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
 import com.google.android.gms.maps.GoogleMap
@@ -26,7 +24,7 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
         setContentView(R.layout.activity_hillfort_maps)
         mapView.onCreate(savedInstanceState)
         context = mapView.context
-
+//      Sets up the map
         mapsPresenter = initPresenter(MapsPresenter(this)) as MapsPresenter
         mapView.getMapAsync {
             map = it
@@ -34,7 +32,7 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
             mapsPresenter.initMap(map)
         }
     }
-
+//  Set the marker details
     override fun setMarkerDetails(images: List<Images>,hillFortModel: HillFortModel) {
         val imageArrayList = ArrayList<String>()
         for (i in images){
@@ -47,7 +45,7 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
         currentTitle.text = hillFortModel.name
     }
 
-
+//  Show details of the marker clicked
     override fun onMarkerClick(marker: Marker): Boolean {
         mapsPresenter.doMarkerClick(marker.title)
         return false

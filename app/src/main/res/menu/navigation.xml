@@ -2,18 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_settings"
+        android:id="@+id/mNavSettings"
         android:icon="@drawable/phone_settings"
         android:title="Settings" />
 
     <item
-        android:id="@+id/navigation_main"
+        android:id="@+id/mNavHome"
         android:icon="@drawable/nav_home"
         android:title="Main" />
 
     <item
-        android:id="@+id/navigation_favourites"
+        android:id="@+id/mNavFavourites"
         android:icon="@drawable/starfill"
         android:title="Favourites" />
+
+<!--    <item-->
+<!--        android:id="@+id/mNavShare"-->
+<!--        android:icon="?attr/actionModeShareDrawable"-->
+<!--        android:title="Share" />-->
 
 </menu>

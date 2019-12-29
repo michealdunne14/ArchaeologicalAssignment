@@ -8,7 +8,8 @@ import com.example.archaeologicalfieldwork.models.UserModel
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class FavouriteFragPresenter(view: FavouriteFragView): BaseFragmentPresenter(view) {
+class SharedHillfortsPresenter(view: SharedHillfortsView): BaseFragmentPresenter(view){
+
     var user = UserModel()
     override var app : MainApp = view.activity?.application as MainApp
     var fireStore: HillfortFireStore? = null
@@ -19,15 +20,14 @@ class FavouriteFragPresenter(view: FavouriteFragView): BaseFragmentPresenter(vie
             user = fireStore!!.currentUser()
         }
     }
-//  Find all hillforts with favourite stars
-    fun findallHillforts() {
+//  Shared Hillforts
+    fun findSharedHillforts() {
         doAsync {
-            val hillfort = fireStore!!.findHillfortsWithStar()
-            val images = fireStore!!.getImages()
+            val hillfort = fireStore!!.getSharedHillforts()
+            val images = fireStore!!.getSharedImages()
             uiThread {
                 view.showHillforts(hillfort,user,images)
             }
         }
     }
-
 }

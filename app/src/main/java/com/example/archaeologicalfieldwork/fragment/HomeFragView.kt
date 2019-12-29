@@ -1,5 +1,6 @@
 package com.example.archaeologicalfieldwork.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,25 +17,15 @@ import com.example.archaeologicalfieldwork.models.Images
 import com.example.archaeologicalfieldwork.models.UserModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.*
 
 class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
-    lateinit var homeFragPresenter: HomeFragPresenter
+    private lateinit var homeFragPresenter: HomeFragPresenter
 
-    override fun onHillFortClick(
-        hillfort: HillFortModel,
-        images: ArrayList<Images>
-    ) {
-        val stringList = ArrayList<String>()
-        for (i in images){
-            if (i.hillfortFbid == hillfort.fbId) {
-                stringList.add(i.image)
-            }
-        }
-        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",stringList), 0)
+    override fun onHillFortClick(hillfort: HillFortModel, images: ArrayList<Images>) {
+        homeFragPresenter.findNotes(hillfort.fbId)
+        startActivityForResult(context?.intentFor<AddFortView>()?.putExtra("hillfort_edit", hillfort)?.putExtra("images",images), 0)
     }
 
 
@@ -50,16 +41,34 @@ class HomeFragView : BaseFragmentView(),HillFortListener,AnkoLogger {
 
 
         view.mListRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+//      Find Hillforts
         homeFragPresenter.findallHillforts()
+//      Clear search result and
+        view.mFloatingCancelButton.setOnClickListener {
+            homeFragPresenter.clearSearchHillforts()
+            homeFragPresenter.findallHillforts()
+        }
+
         return view
     }
 
+    @SuppressLint("RestrictedApi")
+    override fun showFloatingAction() {
+        mFloatingCancelButton.visibility = View.VISIBLE
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun hideFloatingAction() {
+        mFloatingCancelButton.visibility = View.GONE
+    }
+
+//  Show Hillforts
     override fun showHillforts(
         hillfort: List<HillFortModel>,
         user: UserModel,
         images: ArrayList<Images>
     ) {
-        mListRecyclerView.adapter = HillFortAdapter(hillfort, this,homeFragPresenter,user,images)
+        mListRecyclerView.adapter = HillFortAdapter(hillfort, this, homeFragPresenter, images, user)
         mListRecyclerView.adapter?.notifyDataSetChanged()
     }
 

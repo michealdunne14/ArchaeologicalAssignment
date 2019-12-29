@@ -10,15 +10,15 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 class LoginView : BaseView(), AnkoLogger {
-    lateinit var presenter: LoginPresenter
 
+    lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+//      Set up presenter
         presenter = initPresenter(LoginPresenter(this)) as LoginPresenter
-
+//      Hide Progress bar
         progressBar.visibility = View.GONE
 //      Login button checking if user is valid
         mLoginButton.setOnClickListener {

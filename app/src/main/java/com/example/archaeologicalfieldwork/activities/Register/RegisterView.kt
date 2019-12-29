@@ -30,11 +30,6 @@ class RegisterView : BaseView(),AnkoLogger {
             info { "Return to Start Activity from Register" }
             finish()
         }
-
-        fun registerSignIn(){
-            startActivity(Intent(this, MainView::class.java))
-            finish()
-        }
     }
 
 }

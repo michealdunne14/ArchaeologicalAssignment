@@ -1,8 +1,10 @@
 package com.example.archaeologicalfieldwork.activities.BaseFragment
 
 import android.content.Intent
-import com.example.archaeologicalfieldwork.fragment.HomeFragView
+import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.main.MainApp
+import com.example.archaeologicalfieldwork.models.HillFortModel
+import com.example.archaeologicalfieldwork.models.Images
 
 open class BaseFragmentPresenter(var view: BaseFragmentView) {
     open var app: MainApp = view.activity?.application as MainApp
@@ -17,4 +19,8 @@ open class BaseFragmentPresenter(var view: BaseFragmentView) {
     open fun onDestrop(){
 
     }
+
+    open fun doCreateNote(fireStore: HillfortFireStore?, note: String, hillfort: HillFortModel){}
+    open fun doLikeUpdateHillforts(hillfort: HillFortModel){}
+    open fun doStarUpdateHillforts(hillfort: HillFortModel){}
 }

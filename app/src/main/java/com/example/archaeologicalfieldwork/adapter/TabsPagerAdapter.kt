@@ -8,6 +8,7 @@ import com.example.archaeologicalfieldwork.activities.Main.MainView
 import com.example.archaeologicalfieldwork.fragment.FavouriteFragView
 import com.example.archaeologicalfieldwork.fragment.HomeFragView
 import com.example.archaeologicalfieldwork.fragment.SettingsFragView
+import com.example.archaeologicalfieldwork.fragment.SharedHillfortsView
 
 class TabsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {

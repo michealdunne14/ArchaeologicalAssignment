@@ -1,5 +1,10 @@
 package com.example.archaeologicalfieldwork.adapter
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +17,7 @@ import com.example.archaeologicalfieldwork.activities.Database.HillfortFireStore
 import com.example.archaeologicalfieldwork.animation.Bounce
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Images
-import com.example.archaeologicalfieldwork.models.Notes
 import com.example.archaeologicalfieldwork.models.UserModel
-import com.example.archaeologicalfieldwork.models.jsonstore.generateRandomId
 import kotlinx.android.synthetic.main.card_list.view.*
 import org.jetbrains.anko.doAsync
 
@@ -29,8 +32,8 @@ class HillFortAdapter(
     private var hillforts: List<HillFortModel>,
     private val listener: HillFortListener,
     private val baseFragmentPresenter: BaseFragmentPresenter,
-    private val userModel: UserModel,
-    private val images: ArrayList<Images>
+    private val images: ArrayList<Images>,
+    private val user: UserModel
 ) : RecyclerView.Adapter<HillFortAdapter.MainHolder>() {
 
 
@@ -44,26 +47,26 @@ class HillFortAdapter(
         )
     }
 
-
+//  Item Count
     override fun getItemCount(): Int = hillforts.size
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val hillfort = hillforts[holder.adapterPosition]
-        holder.bind(hillfort,listener,baseFragmentPresenter,userModel,images)
+        holder.bind(hillfort,listener,baseFragmentPresenter,images,user)
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-
+//      Set up fireStore
         var fireStore: HillfortFireStore? = null
 
-
         val stringList: ArrayList<String> = ArrayList()
+        @SuppressLint("SetTextI18n")
         fun bind(
             hillfort: HillFortModel,
             listener: HillFortListener,
             baseFragmentPresenter: BaseFragmentPresenter,
-            userModel: UserModel,
-            images: ArrayList<Images>
+            images: ArrayList<Images>,
+            user: UserModel
         ) {
             if (baseFragmentPresenter.app.hillforts is HillfortFireStore) {
                 fireStore = baseFragmentPresenter.app.hillforts as HillfortFireStore
@@ -73,6 +76,7 @@ class HillFortAdapter(
             itemView.mCardName.text = hillfort.name
             itemView.mCardDescription.text = hillfort.description
             itemView.mDate.text = hillfort.datevisted
+            itemView.mRating.text = " " + hillfort.rating + " Stars"
 
             var visitedCheck = hillfort.visitCheck
             var starCheck = hillfort.starCheck
@@ -82,10 +86,8 @@ class HillFortAdapter(
             itemView.mCardLocation.text = location
 //          Sends Note to card
             itemView.mCardSendButton.setOnClickListener {
-                hillfort.notes.note = itemView.mCardNote.text.toString()
-                hillfort.notes.hillfortNotesid = hillfort.id
-                hillfort.notes.noteid = generateRandomId()
-                doCreateNote(baseFragmentPresenter,hillfort.notes)
+                val note = itemView.mCardNote.text.toString()
+                baseFragmentPresenter.doCreateNote(fireStore,note,hillfort)
                 itemView.mCardNote.text.clear()
             }
 
@@ -111,7 +113,7 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon)
                     hillfort.visitCheck = true
-                    doUpdateHillforts(hillfort, fireStore)
+                    baseFragmentPresenter.doLikeUpdateHillforts(hillfort)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -119,10 +121,39 @@ class HillFortAdapter(
                     itemView.mCardCheckButton.startAnimation(myAnim)
                     itemView.mCardCheckButton.setImageResource(R.mipmap.check_icon_clear)
                     hillfort.visitCheck = false
-                    doUpdateHillforts(hillfort, fireStore)
+                    baseFragmentPresenter.doLikeUpdateHillforts(hillfort)
                 }
             }
+//          Share button
+            itemView.mShareHillfort.setOnClickListener {
+                val emailIntent = Intent(Intent.ACTION_SEND)
+                emailIntent.data = Uri.parse("mailto:")
+                emailIntent.type = "text/plain"
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, user.email)
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hillfort " + hillfort.name)
+                val arrayList = ArrayList<String>()
+                for (i in images){
+                    if (hillfort.fbId == i.hillfortFbid) {
+                        arrayList.add(i.image + " \n")
+                    }
+                }
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hillfort Name " + hillfort.name +" \n" +
+                        "Hillfort Description " + hillfort.description +" \n" +
+                        "Hillfort " + hillfort.location +" \n" +
+                        "Hillfort date Visited " + hillfort.datevisted +" \n" +
+                        "Hillfort Rating " + hillfort.rating +" \n" +
+                        "Hillfort Star " + hillfort.starCheck +" \n" +
+                        "Hillfort Visit Check " + hillfort.visitCheck +" \n" +
+                        "Hillfort Visit Check " + arrayList +" \n")
 
+                try {
+                    itemView.context.startActivity(Intent.createChooser(emailIntent, "Send mail..."))
+                    Log.i("Finished sending email.", "")
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+//          Star fill
             itemView.mCardStarButton.setOnClickListener{
                 starCheck = !starCheck
                 if (starCheck) {
@@ -132,7 +163,7 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_fill)
                     hillfort.starCheck = true
-                    doUpdateHillforts(hillfort, fireStore)
+                    baseFragmentPresenter.doStarUpdateHillforts(hillfort)
                 }else{
                     val myAnim = AnimationUtils.loadAnimation(itemView.context, R.anim.bounce)
                     val interpolator = Bounce(0.2, 20.0)
@@ -140,25 +171,13 @@ class HillFortAdapter(
                     itemView.mCardStarButton.startAnimation(myAnim)
                     itemView.mCardStarButton.setImageResource(R.mipmap.star_nofill)
                     hillfort.starCheck = false
-                    doUpdateHillforts(hillfort, fireStore)
+                    baseFragmentPresenter.doStarUpdateHillforts(hillfort)
                 }
             }
             itemView.setOnClickListener { listener.onHillFortClick(hillfort,images) }
         }
-
-        fun doUpdateHillforts(
-            hillfort: HillFortModel,
-            fireStore: HillfortFireStore?
-        ){
-            doAsync {
-                fireStore?.starHillfort(hillfort)
-            }
-        }
-
-        fun doFindImages(
-            imagesList: List<Images>,
-            fbId: String
-        ) {
+//      Finds images and adds strings to image adapter
+        fun doFindImages(imagesList: List<Images>, fbId: String) {
             val viewPager = itemView.findViewById<ViewPager>(R.id.mCardImageList)
             for (i in imagesList){
                 if (i.hillfortFbid == fbId) {
@@ -168,15 +187,6 @@ class HillFortAdapter(
             if (stringList.isNotEmpty()) {
                 val adapter = ImageAdapter(itemView.context, stringList)
                 viewPager.adapter = adapter
-            }
-        }
-
-        fun doCreateNote(
-            baseFragmentPresenter: BaseFragmentPresenter,
-            note: Notes
-        ){
-            doAsync {
-                baseFragmentPresenter.app.hillforts.createNote(note)
             }
         }
     }

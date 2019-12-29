@@ -20,8 +20,8 @@ class EditLocationView : BaseView(),GoogleMap.OnMarkerDragListener,GoogleMap.OnM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-//      Gets the location from the add fort activity
 
+//      Gets the location from the add fort activity
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         editLocationPresenter = initPresenter(EditLocationPresenter(this)) as EditLocationPresenter
         mapFragment.getMapAsync {
@@ -30,12 +30,14 @@ class EditLocationView : BaseView(),GoogleMap.OnMarkerDragListener,GoogleMap.OnM
             map.setOnMarkerDragListener(this)
             editLocationPresenter.initMap(map)
         }
+//      Sets up toolbar
         toolbarMap.title = title
         setSupportActionBar(toolbarMap)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
+    //Set the location in text
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val resultIntent = Intent()
         resultIntent.putExtra("location", editLocationPresenter.doGetLocation())
@@ -43,7 +45,7 @@ class EditLocationView : BaseView(),GoogleMap.OnMarkerDragListener,GoogleMap.OnM
         finish()
         return super.onOptionsItemSelected(item)
     }
-
+//  Back button pressed
     override fun onBackPressed() {
         editLocationPresenter.doOnBackPressed()
     }

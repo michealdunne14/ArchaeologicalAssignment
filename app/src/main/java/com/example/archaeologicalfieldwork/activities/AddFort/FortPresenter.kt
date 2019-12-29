@@ -20,12 +20,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_addfort.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
-import java.text.ParseException
-import java.text.SimpleDateFormat
 
 class FortPresenter(view: BaseView):
     BasePresenter(view){
@@ -36,7 +33,9 @@ class FortPresenter(view: BaseView):
     override var app : MainApp = view.application as MainApp
     var map: GoogleMap? = null
 
-    var listofImages = ArrayList<String>()
+    var listofImages = ArrayList<Images>()
+    var listofNotes= ArrayList<Notes>()
+    val stringList = ArrayList<String>()
 
     var editinghillfort = false
 
@@ -48,28 +47,38 @@ class FortPresenter(view: BaseView):
     var fireStore: HillfortFireStore? = null
 
     init {
+//        Set up firebase and get current user
         if (app.hillforts is HillfortFireStore) {
             fireStore = app.hillforts as HillfortFireStore
+            user = fireStore!!.currentUser()
         }
-        user = fireStore!!.findCurrentUser()
+//      If hillfort is being edited
         if (view.intent.hasExtra("hillfort_edit")){
             editinghillfort = true
             hillforts = view.intent.extras?.getParcelable("hillfort_edit")!!
-            listofImages = view.intent.extras?.getStringArrayList("images") as ArrayList<String>
+            listofImages = view.intent.extras?.getParcelableArrayList<Images>("images")!!
+            listofNotes = fireStore!!.getArrayListofNotes()
+            for (i in listofImages){
+                if (i.hillfortFbid == hillforts.fbId) {
+                    stringList.add(i.image)
+                }
+            }
+//          Input data in to each field
+            view.showLocation(hillforts.location)
+            view.showNotes(listofNotes)
             view.putHillfort(hillforts)
-            view.addImages(listofImages)
+            view.addImages(stringList)
+            view.showHillfortUpdate()
         }else{
+//            Set current Location
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
             }
         }
     }
 
-    fun doCancel() {
-        view.finish()
-    }
-
     fun doDelete() {
+//      Delete Hillfort
         doAsync {
             fireStore?.deleteHillforts(hillforts, user)
             uiThread {
@@ -79,52 +88,35 @@ class FortPresenter(view: BaseView):
     }
 
     fun doSelectImage(){
+//      Select Images
         showImagePicker(view,IMAGE_REQUEST)
     }
 
-    fun doRemoveImage(currentItem: Int,hillfort: HillFortModel) {
+    fun doRemoveImage(currentItem: Int) {
+//      Remove Image
+        fireStore?.deleteImage(listofImages,currentItem,stringList)
 
-//        app.hillforts.findHillfortImages(currentItem)
     }
-
-    fun doEditHillfort(hillfort: HillFortModel) {
-        view.putHillfort(hillfort)
-        view.addImages(listofImages)
-        findNotes()
-//          Formatting date to long to pass in to calender
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        try {
-            val date = formatter.parse(hillfort.datevisted)
-            val dateInLong = date.time
-            view.mHillFortDatePicker.date = dateInLong
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-//          View Pager for multiple images
-        editinghillfort = true
-        view.showHillfortAdd()
-    }
-
-
-    fun doAddFort(date: String, hillfort: HillFortModel) {
-        if(view.mHillFortAddDate.isChecked) {
-            hillfort.datevisted = date
-        }
+//  Add or save Hillfort Details
+    fun doAddFort(hillfort: HillFortModel) {
         hillfort.id = generateRandomId()
-        if (hillfort.name.isNotEmpty() && listofImages.size > 0){
+        if (hillfort.name.isNotEmpty() && stringList.size > 0){
             if(editinghillfort){
                 doAsync {
                     hillfort.fbId = hillforts.fbId
+                    hillfort.location = location
+                    hillforts.starCheck = hillfort.starCheck
+                    hillforts.visitCheck = hillfort.visitCheck
                     fireStore?.updateHillforts(hillfort.copy())
-                    fireStore?.updateImage(listofImages,hillfort.fbId)
+                    fireStore?.updateImage(stringList,hillfort.fbId)
                     uiThread {
                         view.navigateTo(VIEW.LIST)
                     }
                 }
             }else{
                 doAsync {
-                    fireStore?.createHillfort(hillfort.copy(),user,listofImages)
+                    hillfort.location = location
+                    fireStore?.createHillfort(hillfort.copy(),user,stringList)
                     uiThread {
                         view.navigateTo(VIEW.LIST)
                     }
@@ -135,16 +127,15 @@ class FortPresenter(view: BaseView):
             view.toast(view.getString(R.string.addfort_entertitleandimage))
         }
     }
-
+//  Configure map
     fun doConfigureMap(m: GoogleMap) {
         map = m
-        locationUpdate(location.lat,location.lng)
     }
-
+//  Set location
     fun doSetLocation() {
         view.navigateTo(VIEW.LOCATION, LOCATION_REQUEST, "location", Location(0,location.lat, location.lng, location.zoom))
     }
-
+//  Update Location to current location
     override fun doRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (isPermissionGranted(requestCode, grantResults)) {
             doSetCurrentLocation()
@@ -158,19 +149,25 @@ class FortPresenter(view: BaseView):
     fun doSetCurrentLocation() {
         locationService.lastLocation.addOnSuccessListener {
             locationUpdate(it.latitude, it.longitude)
+            view.showLocation(location)
         }
     }
 
+
+    fun updateLocation() {
+        locationUpdate(hillforts.location.lat,hillforts.location.lng)
+    }
+//  Set the location of the map
     fun locationUpdate(lat: Double, lng: Double) {
         location.lat = lat
         location.lng = lng
         location.zoom = 15f
+        hillforts.location = location
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
         val options = MarkerOptions().title(hillforts.name).position(LatLng(location.lat, location.lng))
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.lat, location.lng), location.zoom))
-        view.putHillfort(hillforts)
     }
 
     //  When a result comes back
@@ -178,8 +175,8 @@ class FortPresenter(view: BaseView):
         when(requestCode){
             IMAGE_REQUEST -> {
                 if (data != null){
-                    listofImages.add(data.data.toString())
-                    view.addImages(listofImages)
+                    stringList.add(data.data.toString())
+                    view.addImages(stringList)
                 }
             }
             LOCATION_REQUEST -> {
@@ -189,17 +186,7 @@ class FortPresenter(view: BaseView):
                 location.zoom = location.zoom
                 locationUpdate(location.lat, location.lng)
                 hillfort.location = location
-                view.showLocation(hillfort,location)
-            }
-        }
-    }
-
-
-    fun findNotes() {
-        doAsync {
-            val notes = fireStore!!.findNotes(hillforts)
-            uiThread {
-                view.showNotes(notes)
+                view.showLocation(location)
             }
         }
     }

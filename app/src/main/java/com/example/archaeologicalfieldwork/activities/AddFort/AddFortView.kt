@@ -1,7 +1,6 @@
 package com.example.archaeologicalfieldwork.activities.AddFort
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -14,7 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.BaseActivity.BaseView
 import com.example.archaeologicalfieldwork.activities.Main.MainView
-import com.example.archaeologicalfieldwork.adapter.ImageAdapterAddFort
+import com.example.archaeologicalfieldwork.adapter.ImageAdapter
 import com.example.archaeologicalfieldwork.adapter.NotesAdapter
 import com.example.archaeologicalfieldwork.models.HillFortModel
 import com.example.archaeologicalfieldwork.models.Location
@@ -23,7 +22,6 @@ import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.activity_addfort.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.text.SimpleDateFormat
 
 class AddFortView : BaseView(),AnkoLogger {
 
@@ -36,15 +34,17 @@ class AddFortView : BaseView(),AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addfort)
         mapView.onCreate(savedInstanceState)
+        //      Sets up the presenter
+        presenter = initPresenter(FortPresenter(this)) as FortPresenter
+//      Sets up map
         mapView.getMapAsync {
             map = it
             presenter.doConfigureMap(map)
+            presenter.updateLocation()
             it.setOnMapClickListener { presenter.doSetLocation() }
 
         }
-
-        presenter = initPresenter(FortPresenter(this)) as FortPresenter
-
+//      Sets Toolbar Title
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
 
@@ -80,14 +80,20 @@ class AddFortView : BaseView(),AnkoLogger {
         mHillFortBtnAdd.setOnClickListener{
             hillfort.description = mHillFortDescription.text.toString()
             hillfort.name = mHillFortName.text.toString()
-            mHillFortVisitedCheckbox.isChecked = hillfort.visitCheck
-            presenter.doAddFort(date,hillfort)
+            hillfort.rating = mRatingBar.rating.toInt()
+            hillfort.visitCheck = mHillFortVisitedCheckbox.isChecked
+            hillfort.starCheck = mHillFortStarCheckbox.isChecked
+            if(mHillFortAddDate.isChecked) {
+                hillfort.datevisted = date
+            }
+            presenter.doAddFort(hillfort)
         }
 
 //      Removes image from viewpager
         mHillFortRemoveImage.setOnClickListener {
-            presenter.doRemoveImage(mAddFortImagePager.currentItem,hillfort)
+            presenter.doRemoveImage(mAddFortImagePager.currentItem)
         }
+
 //      Adds image to view pager
         mAddImage.setOnClickListener{
             presenter.doSelectImage()
@@ -99,34 +105,36 @@ class AddFortView : BaseView(),AnkoLogger {
         return super.onCreateOptionsMenu(menu)
     }
 
+//  Put the details of the hillfort in to the view
     override fun putHillfort(hillFortModel: HillFortModel) {
         mHillFortName.setText(hillFortModel.name)
         mHillFortDescription.setText(hillFortModel.description)
         mHillFortVisitedCheckbox.isChecked = hillFortModel.visitCheck
-        mHillFortVisitedCheckbox.isChecked = hillFortModel.starCheck
+        mHillFortStarCheckbox.isChecked = hillFortModel.starCheck
+        mRatingBar.rating = hillFortModel.rating.toFloat()
     }
-
+//  add images to the Hillfort using the adapter
     override fun addImages(listofImages: ArrayList<String>){
         val viewPager = findViewById<ViewPager>(R.id.mAddFortImagePager)
-        val adapter = ImageAdapterAddFort(this, listofImages)
+        val adapter = ImageAdapter(this, listofImages)
         viewPager.adapter = adapter
     }
-
-    override fun showLocation(hillFortModel: HillFortModel, location: Location){
+//  Show the location in text
+    override fun showLocation(location: Location){
         mHillFortLocationText.text = location.toString()
     }
-
-    override fun showHillfortAdd(){
+//
+    override fun showHillfortUpdate(){
         mHillFortBtnAdd.text = getString(R.string.save_hillfort)
         mHillFortBtnDelete.visibility = View.VISIBLE
     }
-
+//  Show result in the console
     override fun showResult(hillFortModel: HillFortModel){
         info { "add Button Pressed: ${hillfort}" }
         setResult(Activity.RESULT_OK)
         finish()
     }
-
+//  Cancel the Selected Hillfort
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.item_cancel -> {
@@ -144,8 +152,15 @@ class AddFortView : BaseView(),AnkoLogger {
         }
     }
 
+    //  Show Notes for this hillfort
+    override fun showNotes(notes: List<Notes>) {
+        val layoutManager = LinearLayoutManager(this)
+        mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
+        mNotesRecyclerView.adapter = NotesAdapter(notes)
+    }
+
     override fun onBackPressed() {
-        presenter.doCancel()
+        finish()
     }
 
     override fun onDestroy() {
@@ -172,12 +187,4 @@ class AddFortView : BaseView(),AnkoLogger {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
     }
-
-
-    override fun showNotes(notes: List<Notes>) {
-        val layoutManager = LinearLayoutManager(this)
-        mNotesRecyclerView.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        mNotesRecyclerView.adapter = NotesAdapter(notes)
-    }
-
 }

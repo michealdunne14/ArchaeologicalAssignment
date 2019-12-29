@@ -39,20 +39,28 @@ class LoginPresenter(view: BaseView): BasePresenter(view), AnkoLogger {
 //                }
 //            }
 //        }
-
+//      Checks if email and password is not empty
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(view) { task ->
+//              If User signs in correctly
                 if (task.isSuccessful) {
                     if (fireStore != null) {
+                        doAsync {
+                            fireStore!!.findCurrentUser()
+                        }
                         fireStore!!.fetchHillforts {
                             view.hideProgress()
                             view.navigateTo(VIEW.LIST)
                         }
-                        view.navigateTo(VIEW.LIST)
                     } else {
-                        view.toast("Sign Up Failed: ${task.exception?.message}")
+                        view.hideProgress()
+                        view.toast("Sign In Failed: ${task.exception?.message}")
                     }
                     view.hideProgress()
+                }else{
+//                  If user does not exist then send appropriate error
+                    view.hideProgress()
+                    view.toast("Sign In Failed: ${task.exception?.message}")
                 }
             }
         }
