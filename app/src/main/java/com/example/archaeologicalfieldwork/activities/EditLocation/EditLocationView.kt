@@ -11,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.activity_maps.*
+import org.jetbrains.anko.info
 
 class EditLocationView : BaseView(),GoogleMap.OnMarkerDragListener,GoogleMap.OnMarkerClickListener {
 
@@ -20,6 +21,8 @@ class EditLocationView : BaseView(),GoogleMap.OnMarkerDragListener,GoogleMap.OnM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
+        info { "Edit Location Started" }
 
 //      Gets the location from the add fort activity
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
