@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.archaeologicalfieldwork.R
 import com.example.archaeologicalfieldwork.activities.AddFort.AddFortView
 import com.example.archaeologicalfieldwork.activities.EditLocation.EditLocationView
 import com.example.archaeologicalfieldwork.activities.Login.LoginView
@@ -49,13 +50,13 @@ open abstract class BaseView: AppCompatActivity(),AnkoLogger{
             VIEW.LIST -> intent = Intent(this,MainView::class.java)
             VIEW.LOGIN -> intent = Intent(this,LoginView::class.java)
             VIEW.REGISTER -> intent = Intent(this,RegisterView::class.java)
-            VIEW.START -> intent = Intent(this,
-                StartActivity::class.java)
+            VIEW.START -> intent = Intent(this, StartActivity::class.java)
         }
         if (key != ""){
             intent.putExtra(key,value)
         }
         startActivityForResult(intent,code)
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
     }
 //  Set Presenter
     fun initPresenter(presenter: BasePresenter): BasePresenter {
