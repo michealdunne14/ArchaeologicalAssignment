@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 
 import kotlinx.android.synthetic.main.content_hillfort_maps.*
+import org.jetbrains.anko.info
 
 class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
 
@@ -24,6 +25,7 @@ class HillfortMapsView : BaseView(),GoogleMap.OnMarkerClickListener {
         setContentView(R.layout.activity_hillfort_maps)
         mapView.onCreate(savedInstanceState)
         context = mapView.context
+        info { "Maps Started" }
 //      Sets up the map
         mapsPresenter = initPresenter(MapsPresenter(this)) as MapsPresenter
         mapView.getMapAsync {

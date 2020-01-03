@@ -22,6 +22,7 @@ class LoginView : BaseView(), AnkoLogger {
         progressBar.visibility = View.GONE
 //      Login button checking if user is valid
         mLoginButton.setOnClickListener {
+            info { "Login Started" }
             presenter.doLogin(mLoginEmail.text.toString(),mLoginPassword.text.toString())
         }
 
