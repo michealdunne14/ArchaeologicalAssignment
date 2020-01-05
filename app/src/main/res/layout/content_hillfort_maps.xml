@@ -8,29 +8,37 @@
     tools:context=".activities.Maps.HillfortMapsView"
     tools:showIn="@layout/activity_hillfort_maps">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="383dp"
-        android:layout_height="458dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <Button
+        android:id="@+id/mNaviagationButton"
+        android:layout_width="411dp"
+        android:layout_height="62dp"
+        android:background="@drawable/bluebutton"
+        android:text="@string/navigate"
+        android:textColor="@color/colorwhite"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/mNaviagationButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="382dp"
         android:layout_height="175dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.967" >
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,19 +47,15 @@
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/mViewPagerImages"
-                android:layout_width="206dp"
-                android:layout_height="177dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
                 android:contentDescription="@string/hillfort_image"
-                app:layout_constraintBottom_toTopOf="@+id/currentDescription"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/currentDescription"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <TextView
@@ -60,7 +64,6 @@
                 android:layout_height="21dp"
                 android:text="@string/hillfort_title"
                 app:layout_constraintBottom_toTopOf="@+id/currentDescription"
-                app:layout_constraintEnd_toStartOf="@+id/currentImage"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.722" />
@@ -72,7 +75,6 @@
                 android:layout_marginBottom="36dp"
                 android:text="@string/hillfort_description"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/currentImage"
                 app:layout_constraintHorizontal_bias="0.486"
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
