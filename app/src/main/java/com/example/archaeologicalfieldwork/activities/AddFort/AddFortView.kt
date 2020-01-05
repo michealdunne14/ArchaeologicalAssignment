@@ -42,7 +42,6 @@ class AddFortView : BaseView(),AnkoLogger {
             presenter.doConfigureMap(map)
             presenter.updateLocation()
             it.setOnMapClickListener { presenter.doSetLocation() }
-
         }
 //      Sets Toolbar Title
         toolbarAdd.title = title

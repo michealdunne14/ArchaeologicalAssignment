@@ -35,32 +35,24 @@ class MapsPresenter(view: HillfortMapsView): BasePresenter(view) {
     fun getImages(): List<Images> = fireStore!!.getImages()
 
     fun doMarkerClick(marker: String) {
-        doAsync {
-            val hillFortModel: HillFortModel = fireStore!!.findHillfort(marker)!!
-            uiThread {
-                val images = getImages()
-                val searchedImages = ArrayList<Images>()
-                for (i in images){
-                    if (i.hillfortFbid == hillFortModel.fbId){
-                        searchedImages.add(i)
-                    }
-                }
-                view.setMarkerDetails(searchedImages,hillFortModel)
+        val hillFortModel: HillFortModel = fireStore!!.findHillfort(marker)!!
+        val images = getImages()
+        val searchedImages = ArrayList<Images>()
+        for (i in images){
+            if (i.hillfortFbid == hillFortModel.fbId){
+                searchedImages.add(i)
             }
         }
+        view.setMarkerDetails(searchedImages,hillFortModel)
     }
 
     fun findHillforts(map: GoogleMap) {
-        doAsync {
-            val findHillforts = fireStore!!.findAllHillforts()
-            uiThread {
-                findHillforts.forEach {
-                    val loc = LatLng(it.location.lat, it.location.lng)
-                    val options = MarkerOptions().title(it.name).position(loc)
-                    map.addMarker(options).tag = it
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.location.zoom))
-                }
-            }
+        val findHillforts = fireStore!!.findAllHillforts()
+        findHillforts.forEach {
+            val loc = LatLng(it.location.lat, it.location.lng)
+            val options = MarkerOptions().title(it.name).position(loc)
+            map.addMarker(options).tag = it
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.location.zoom))
         }
     }
 }
